@@ -29,10 +29,15 @@ The following still need real client assets/approvals before this goes live to p
   A second token, `--gold-deep: #a6730f`, is the same hue deepened for gold text that sits on
   light backgrounds (hero and "look natural?" headlines) — the true bright gold reads clearly on
   dark backgrounds and as fills/borders, but is too light for body-size text on white/warm-white.
-- **Typography** — headlines now set in Playfair Display (an editorial serif, echoing the logo's
-  script/serif treatment) instead of bold uppercase Arial; body and labels set in Inter at lighter
-  weights (400–600 instead of 800–900) for a slimmer, more premium feel, per the brand guide's
+- **Typography** — whole site now set in Inter instead of default Arial/Helvetica; headlines at
+  weight 800 (vs. browser-default bold) and labels/nav/buttons dialed back from 800–900 to
+  400–600, for a slimmer, cleaner look closer to the approved mockup, per the brand guide's
   "cleaner premium editorial system" direction (§7).
+- **WhatsApp as primary contact channel** — every CTA on the page ("Talk To Terrence Now") now
+  opens a WhatsApp chat to +1 (586) 553-5504 with a prefilled greeting, instead of scrolling to
+  the form. The consultation form is kept as a secondary "prefer to write it out" option lower
+  on the same section. Update the phone number in every `wa.me/158655...` link (7 places) if it
+  ever changes.
 
 ## Structure
 
