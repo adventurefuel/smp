@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>The Comeback | SMP Consultation | Swurl Kurl Studios</title>
+  <meta
+    name="description"
+    content="Request an SMP consultation with Swurl Kurl Studios. The Comeback 21-day offer: two scalp micropigmentation sessions for $1,500."
+  />
+
+  <style>
+    :root {
+      --black: #0b0b0b;
+      --near-black: #161616;
+      --white: #ffffff;
+      --warm-white: #f7f5f1;
+      --gray: #6c6c6c;
+      --light-gray: #e8e5df;
+
+      /*
+        WORKING GOLD ONLY.
+        Replace this with the exact sampled gold
+        from the official Swurl Kurl Studios logo.
+      */
+      --gold: #b8954f;
+
+      --max-width: 1180px;
+      --radius: 4px;
+      --shadow: 0 14px 38px rgba(0,0,0,.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--black);
+      background: var(--white);
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .container {
+      width: min(calc(100% - 40px), var(--max-width));
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      color: var(--gold);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: .98;
+      letter-spacing: -.035em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 7vw, 6.5rem);
+    }
+
+    h2 {
+      font-size: clamp(2.2rem, 4vw, 4rem);
+    }
+
+    h3 {
+      font-size: clamp(1.35rem, 2.2vw, 2rem);
+    }
+
+    p {
+      margin: 0 0 18px;
+    }
+
+    .gold {
+      color: var(--gold);
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 52px;
+      padding: 14px 24px;
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: var(--black);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    .btn-dark {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+
+    /* ---------------------------
+       HEADER
+    --------------------------- */
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11,11,11,.97);
+      color: var(--white);
+      border-bottom: 1px solid rgba(184,149,79,.45);
+    }
+
+    .nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand img {
+      height: 54px;
+      width: auto;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: .8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    /* ---------------------------
+       HERO
+    --------------------------- */
+
+    .hero {
+      background: var(--warm-white);
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      min-height: 710px;
+      align-items: stretch;
+    }
+
+    .hero-copy {
+      padding: 90px 0 70px;
+      padding-right: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-copy h1 {
+      max-width: 780px;
+    }
+
+    .hero-copy .intro {
+      margin-top: 28px;
+      max-width: 650px;
+      font-size: 1.08rem;
+    }
+
+    .hero-image {
+      min-height: 650px;
+      background:
+        linear-gradient(
+          to right,
+          var(--warm-white) 0%,
+          rgba(247,245,241,.12) 22%,
+          rgba(247,245,241,0) 45%
+        ),
+        url("assets/terrence-hero.jpg") center / cover no-repeat;
+    }
+
+    .offer-card {
+      margin-top: 36px;
+      max-width: 590px;
+      padding: 30px;
+      background: var(--black);
+      color: var(--white);
+      border: 1px solid var(--gold);
+      box-shadow: var(--shadow);
+    }
+
+    .offer-card .offer-label {
+      color: var(--gold);
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: .08em;
+      font-size: .82rem;
+    }
+
+    .offer-price {
+      margin: 6px 0 2px;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .offer-regular {
+      margin-bottom: 20px;
+      color: #d0d0d0;
+      text-transform: uppercase;
+      font-size: .78rem;
+      letter-spacing: .08em;
+    }
+
+    .offer-card .btn {
+      width: 100%;
+    }
+
+    .offer-note {
+      margin: 14px 0 0;
+      text-align: center;
+      color: #c8c8c8;
+      font-size: .78rem;
+    }
+
+    /* ---------------------------
+       GENERAL SECTIONS
+    --------------------------- */
+
+    section {
+      padding: 90px 0;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-heading p {
+      max-width: 680px;
+      margin: 18px auto 0;
+      color: var(--gray);
+    }
+
+    /* ---------------------------
+       RESULTS
+    --------------------------- */
+
+    .results {
+      background: var(--white);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .result-card {
+      border: 1px solid var(--light-gray);
+      background: var(--white);
+    }
+
+    .result-images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .result-image {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: #ddd;
+    }
+
+    .result-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-label {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 7px;
+      background: rgba(0,0,0,.87);
+      color: var(--white);
+      text-align: center;
+      font-size: .68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .results-cta {
+      text-align: center;
+      margin-top: 34px;
+    }
+
+    /* ---------------------------
+       OBJECTION SECTION
+    --------------------------- */
+
+    .objection {
+      background: var(--warm-white);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px;
+      align-items: center;
+    }
+
+    .video-placeholder {
+      aspect-ratio: 16 / 10;
+      background:
+        linear-gradient(rgba(0,0,0,.14), rgba(0,0,0,.35)),
+        url("assets/terrence-video-thumbnail.jpg") center / cover no-repeat;
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+
+    .play-button {
+      width: 76px;
+      height: 76px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid var(--white);
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      font-size: 1.6rem;
+      background: rgba(0,0,0,.18);
+    }
+
+    .copy-block p {
+      font-size: 1.05rem;
+      color: #333;
+    }
+
+    /* ---------------------------
+       AUTHORITY
+    --------------------------- */
+
+    .authority {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .authority .copy-block p {
+      color: #e1e1e1;
+    }
+
+    .authority-image {
+      min-height: 520px;
+      background:
+        linear-gradient(to right, rgba(11,11,11,.15), rgba(11,11,11,.45)),
+        url("assets/terrence-portrait.jpg") center / cover no-repeat;
+    }
+
+    .brand-line {
+      margin-top: 28px;
+      color: var(--gold);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    /* ---------------------------
+       PROCESS
+    --------------------------- */
+
+    .process {
+      background: var(--white);
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--light-gray);
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .step {
+      padding: 34px 26px;
+      border-right: 1px solid var(--light-gray);
+    }
+
+    .step:last-child {
+      border-right: 0;
+    }
+
+    .step-number {
+      font-weight: 900;
+      color: var(--gold);
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
+
+    .step h3 {
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+      line-height: 1.1;
+    }
+
+    .step p {
+      color: var(--gray);
+      font-size: .92rem;
+    }
+
+    /* ---------------------------
+       OFFER BAND
+    --------------------------- */
+
+    .offer-band {
+      padding: 70px 0;
+      background: var(--gold);
+      color: var(--black);
+      text-align: center;
+    }
+
+    .offer-band h2 {
+      margin-bottom: 18px;
+    }
+
+    .offer-band .price {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1;
+      margin: 12px 0;
+    }
+
+    /* ---------------------------
+       FAQ
+    --------------------------- */
+
+    .faq {
+      background: var(--warm-white);
+    }
+
+    .faq-list {
+      max-width: 850px;
+      margin: 0 auto;
+      border-top: 1px solid #d8d4ce;
+    }
+
+    details {
+      border-bottom: 1px solid #d8d4ce;
+      padding: 22px 0;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+    }
+
+    details p {
+      padding-top: 16px;
+      color: var(--gray);
+    }
+
+    /* ---------------------------
+       FORM
+    --------------------------- */
+
+    .consultation {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .consultation-grid {
+      display: grid;
+      grid-template-columns: .75fr 1.25fr;
+      gap: 70px;
+      align-items: start;
+    }
+
+    .consultation-copy {
+      position: sticky;
+      top: 120px;
+    }
+
+    .consultation-copy p {
+      color: #d0d0d0;
+      margin-top: 20px;
+    }
+
+    .form-card {
+      background: var(--white);
+      color: var(--black);
+      padding: 38px;
+      box-shadow: var(--shadow);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: .78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px 14px;
+      border: 1px solid #cfcfcf;
+      background: var(--white);
+      color: var(--black);
+      border-radius: 0;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(184,149,79,.10);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .consent {
+      margin: 8px 0 20px;
+      font-size: .74rem;
+      color: #666;
+    }
+
+    .form-card .btn {
+      width: 100%;
+    }
+
+    .form-status {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: var(--warm-white);
+      border: 1px solid var(--light-gray);
+      font-size: .85rem;
+      color: var(--gray);
+      display: none;
+    }
+
+    .form-status.visible {
+      display: block;
+    }
+
+    /* ---------------------------
+       FOOTER
+    --------------------------- */
+
+    footer {
+      padding: 42px 0;
+      background: #050505;
+      color: #cfcfcf;
+      border-top: 1px solid rgba(184,149,79,.35);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .footer-brand img {
+      height: 60px;
+      width: auto;
+      margin-bottom: 14px;
+    }
+
+    .footer-small {
+      font-size: .75rem;
+      color: #888;
+    }
+
+    /* ---------------------------
+       MOBILE
+    --------------------------- */
+
+    @media (max-width: 900px) {
+
+      .nav-links a:not(.btn) {
+        display: none;
+      }
+
+      .hero-grid,
+      .two-col,
+      .consultation-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-copy {
+        padding: 65px 0 40px;
+        padding-right: 0;
+      }
+
+      .hero-image {
+        min-height: 520px;
+        order: -1;
+        background-position: center top;
+      }
+
+      .result-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .process-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .step:nth-child(2) {
+        border-right: 0;
+      }
+
+      .step:nth-child(-n+2) {
+        border-bottom: 1px solid var(--light-gray);
+      }
+
+      .consultation-copy {
+        position: static;
+      }
+    }
+
+    @media (max-width: 600px) {
+
+      .container {
+        width: min(calc(100% - 28px), var(--max-width));
+      }
+
+      section {
+        padding: 65px 0;
+      }
+
+      .nav {
+        min-height: 68px;
+      }
+
+      .brand img {
+        height: 46px;
+      }
+
+      .nav .btn {
+        padding: 10px 13px;
+        min-height: 42px;
+        font-size: .68rem;
+      }
+
+      .hero-image {
+        min-height: 390px;
+      }
+
+      .result-grid,
+      .process-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .step,
+      .step:nth-child(2) {
+        border-right: 0;
+        border-bottom: 1px solid var(--light-gray);
+      }
+
+      .step:last-child {
+        border-bottom: 0;
+      }
+
+      .form-group {
+        grid-column: 1 / -1;
+      }
+
+      .form-card {
+        padding: 26px 20px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ==================================
+       HEADER
+  =================================== -->
+  <header class="site-header">
+    <div class="container nav">
+
+      <a href="#" class="brand" aria-label="Swurl Kurl Studios">
+        <!-- USE THE OFFICIAL LOCKED LOGO FILE ONLY -->
+        <img
+          src="assets/swurl-kurl-studios-official-logo.png"
+          alt="Swurl Kurl Studios"
+        />
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#results">Results</a>
+        <a href="#about">About</a>
+        <a href="#process">Process</a>
+        <a href="#faq">FAQ</a>
+        <a href="#consultation" class="btn">Request Consultation</a>
+      </nav>
+
+    </div>
+  </header>
+
+
+  <main>
+
+    <!-- ==================================
+         HERO
+    =================================== -->
+    <section class="hero">
+      <div class="container hero-grid">
+
+        <div class="hero-copy">
+
+          <span class="eyebrow">Scalp Micropigmentation • Detroit</span>
+
+          <h1>
+            Your Hairline Changed.
+            <span class="gold">Your Confidence Doesn't Have To.</span>
+          </h1>
+
+          <p class="intro">
+            Scalp Micropigmentation (SMP) can help create the appearance
+            of a fuller, more defined hairline. At Swurl Kurl Studios,
+            we combine years of barbering experience with an understanding
+            of men's grooming to build an approach around you, your look,
+            and your goals.
+          </p>
+
+          <div class="offer-card">
+
+            <div class="offer-label">
+              The Comeback — 21-Day SMP Offer
+            </div>
+
+            <div class="offer-price">
+              2 SMP Sessions — <span class="gold">$1,500</span>
+            </div>
+
+            <div class="offer-regular">
+              Regularly $2,000
+            </div>
+
+            <a href="#consultation" class="btn">
+              Request Your Consultation
+            </a>
+
+            <p class="offer-note">
+              Start with a conversation. We'll help you understand the
+              process and determine whether SMP may be right for you.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div
+          class="hero-image"
+          role="img"
+          aria-label="Swurl Kurl Studios client or Terrence Hopson"
+        ></div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================================
+         RESULTS
+    =================================== -->
+    <section class="results" id="results">
+
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="eyebrow">The Work</span>
+          <h2>See The Difference.</h2>
+          <p>
+            Real clients. Real Swurl Kurl Studios work.
+          </p>
+        </div>
+
+        <div class="result-grid">
+
+          <!-- RESULT 1 -->
+          <article class="result-card">
+            <div class="result-images">
+
+              <div class="result-image">
+                <img
+                  src="assets/result-1-before.jpg"
+                  alt="SMP client before treatment"
+                />
+                <div class="image-label">Before</div>
+              </div>
+
+              <div class="result-image">
+                <img
+                  src="assets/result-1-after.jpg"
+                  alt="SMP client after treatment"
+                />
+                <div class="image-label">After</div>
+              </div>
+
+            </div>
+          </article>
+
+
+          <!-- RESULT 2 -->
+          <article class="result-card">
+            <div class="result-images">
+
+              <div class="result-image">
+                <img
+                  src="assets/result-2-before.jpg"
+                  alt="SMP client before treatment"
+                />
+                <div class="image-label">Before</div>
+              </div>
+
+              <div class="result-image">
+                <img
+                  src="assets/result-2-after.jpg"
+                  alt="SMP client after treatment"
+                />
+                <div class="image-label">After</div>
+              </div>
+
+            </div>
+          </article>
+
+
+          <!-- RESULT 3 -->
+          <article class="result-card">
+            <div class="result-images">
+
+              <div class="result-image">
+                <img
+                  src="assets/result-3-before.jpg"
+                  alt="SMP client before treatment"
+                />
+                <div class="image-label">Before</div>
+              </div>
+
+              <div class="result-image">
+                <img
+                  src="assets/result-3-after.jpg"
+                  alt="SMP client after treatment"
+                />
+                <div class="image-label">After</div>
+              </div>
+
+            </div>
+          </article>
+
+
+          <!-- RESULT 4 -->
+          <article class="result-card">
+            <div class="result-images">
+
+              <div class="result-image">
+                <img
+                  src="assets/result-4-before.jpg"
+                  alt="SMP client before treatment"
+                />
+                <div class="image-label">Before</div>
+              </div>
+
+              <div class="result-image">
+                <img
+                  src="assets/result-4-after.jpg"
+                  alt="SMP client after treatment"
+                />
+                <div class="image-label">After</div>
+              </div>
+
+            </div>
+          </article>
+
+        </div>
+
+        <div class="results-cta">
+          <a href="#consultation" class="btn btn-dark">
+            I'm Ready To Talk
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================================
+         NATURAL LOOK / VIDEO
+    =================================== -->
+    <section class="objection">
+
+      <div class="container two-col">
+
+        <div class="video-placeholder">
+          <div class="play-button">▶</div>
+        </div>
+
+        <div class="copy-block">
+
+          <span class="eyebrow">A Question We Hear</span>
+
+          <h2>
+            "But Will It
+            <span class="gold">Look Natural?"</span>
+          </h2>
+
+          <p style="margin-top:24px;">
+            It's one of the first questions many men have when considering
+            SMP — and it's an important one.
+          </p>
+
+          <p>
+            Your hairline is one of the first things people see. The goal
+            isn't simply to add pigment. It's to create an approach that
+            considers your existing hair, features, grooming style, and
+            desired appearance.
+          </p>
+
+          <p>
+            That's where experience matters.
+          </p>
+
+          <a href="#consultation" class="btn btn-dark">
+            Request Your Consultation
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================================
+         TERRENCE / AUTHORITY
+    =================================== -->
+    <section class="authority" id="about">
+
+      <div class="container two-col">
+
+        <div class="copy-block">
+
+          <span class="eyebrow">Experience Matters</span>
+
+          <h2>
+            25 Years Behind
+            <span class="gold">The Chair Matters.</span>
+          </h2>
+
+          <p style="margin-top:26px;">
+            A hairline isn't new territory for Terrence Hopson.
+          </p>
+
+          <p>
+            Terrence brings 25 years of barbering experience
+            and a career centered around grooming, education, and helping
+            people look and feel their best.
+          </p>
+
+          <p>
+            At Swurl Kurl Studios, SMP isn't approached as simply another
+            procedure. It's part of grooming. It's personal. And your
+            consultation starts with understanding the result you want to
+            see when you look in the mirror.
+          </p>
+
+          <div class="brand-line">
+            You Look Good. You Feel Good.
+          </div>
+
+          <div style="margin-top:30px;">
+            <a href="#consultation" class="btn">
+              Meet With Terrence
+            </a>
+          </div>
+
+        </div>
+
+        <div
+          class="authority-image"
+          role="img"
+          aria-label="Terrence Hopson of Swurl Kurl Studios"
+        ></div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================================
+         PROCESS
+    =================================== -->
+    <section class="process" id="process">
+
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="eyebrow">Simple Process</span>
+          <h2>What Happens Next?</h2>
+        </div>
+
+        <div class="process-grid">
+
+          <article class="step">
+            <div class="step-number">01</div>
+            <h3>Request Your Consultation</h3>
+            <p>
+              Tell us who you are and the main thing you'd like to improve.
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-number">02</div>
+            <h3>We'll Reach Out</h3>
+            <p>
+              Someone from Swurl Kurl Studios personally contacts you
+              to discuss your goals.
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-number">03</div>
+            <h3>Have Your Consultation</h3>
+            <p>
+              We'll answer your questions, discuss your desired look,
+              and explain appropriate next steps.
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-number">04</div>
+            <h3>Schedule Your Service</h3>
+            <p>
+              If you decide to move forward, we'll get your sessions
+              scheduled and explain what you need beforehand.
+            </p>
+          </article>
+
+        </div>
+
+        <div class="results-cta">
+          <a href="#consultation" class="btn">
+            Start With My Consultation
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================================
+         OFFER BAND
+    =================================== -->
+    <section class="offer-band">
+
+      <div class="container">
+
+        <span
+          class="eyebrow"
+          style="color:var(--black);"
+        >
+          The Comeback
+        </span>
+
+        <h2>Ready To Make Your Move?</h2>
+
+        <div class="price">$1,500</div>
+
+        <p>
+          Two SMP sessions during the 21-day campaign.<br />
+          Regularly $2,000.
+        </p>
+
+        <a href="#consultation" class="btn btn-dark">
+          Request Your Consultation
+        </a>
+
+      </div>
+    </section>
+
+
+    <!-- ==================================
+         FAQ
+    =================================== -->
+    <section class="faq" id="faq">
+
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="eyebrow">Questions</span>
+          <h2>SMP FAQ</h2>
+          <p>
+            Final factual answers should be reviewed and approved
+            by Swurl Kurl Studios before publication.
+          </p>
+        </div>
+
+        <div class="faq-list">
+
+          <details>
+            <summary>Will My SMP Look Natural?</summary>
+            <p>
+              Add Terrence-approved answer here.
+            </p>
+          </details>
+
+          <details>
+            <summary>How Many Sessions Will I Need?</summary>
+            <p>
+              Add Terrence-approved answer here.
+            </p>
+          </details>
+
+          <details>
+            <summary>Does SMP Hurt?</summary>
+            <p>
+              Add Terrence-approved answer here.
+            </p>
+          </details>
+
+          <details>
+            <summary>How Long Does SMP Last?</summary>
+            <p>
+              Add Terrence-approved answer here.
+            </p>
+          </details>
+
+          <details>
+            <summary>How Do You Choose My Hairline?</summary>
+            <p>
+              Add Terrence-approved answer here.
+            </p>
+          </details>
+
+          <details>
+            <summary>How Do I Know If I'm A Good Candidate?</summary>
+            <p>
+              Add Terrence-approved answer here.
+            </p>
+          </details>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================================
+         CONSULTATION FORM
+    =================================== -->
+    <section class="consultation" id="consultation">
+
+      <div class="container consultation-grid">
+
+        <div class="consultation-copy">
+
+          <span class="eyebrow">Your Next Step</span>
+
+          <h2>
+            Let's Talk About
+            <span class="gold">Your Hairline.</span>
+          </h2>
+
+          <p>
+            No giant questionnaire. Tell us the basics and someone
+            from Swurl Kurl Studios will personally follow up.
+          </p>
+
+          <p>
+            This conversation is designed to help you understand
+            the process, ask questions, and determine your next step.
+          </p>
+
+        </div>
+
+
+        <div class="form-card">
+
+          <!--
+            REPLACE action="" WITH YOUR REAL CRM / FORM ENDPOINT
+            Examples:
+            HubSpot
+            HighLevel
+            Formspree
+            Zapier webhook
+            Make webhook
+            custom backend
+          -->
+          <form
+            id="consultationForm"
+            action=""
+            method="POST"
+          >
+
+            <div class="form-grid">
+
+              <div class="form-group">
+                <label for="firstName">First Name *</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="first_name"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="lastName">Last Name *</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="last_name"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Mobile Number *</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                />
+              </div>
+
+              <div class="form-group full">
+                <label for="goal">
+                  What Would You Most Like To Improve?
+                </label>
+
+                <select id="goal" name="goal" required>
+                  <option value="">Select one</option>
+                  <option value="hairline">Hairline</option>
+                  <option value="thinning">Thinning Areas</option>
+                  <option value="crown">Crown</option>
+                  <option value="density">
+                    Overall Appearance / Density
+                  </option>
+                  <option value="scarring">Scarring</option>
+                  <option value="unsure">
+                    Not Sure — I'd Like A Recommendation
+                  </option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="contactPreference">
+                  Preferred Contact Method
+                </label>
+
+                <select
+                  id="contactPreference"
+                  name="contact_preference"
+                  required
+                >
+                  <option value="">Select one</option>
+                  <option value="text">Text</option>
+                  <option value="phone">Phone</option>
+                  <option value="email">Email</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="contactTime">
+                  Best Time To Reach You
+                </label>
+
+                <select
+                  id="contactTime"
+                  name="best_contact_time"
+                  required
+                >
+                  <option value="">Select one</option>
+                  <option value="morning">Morning</option>
+                  <option value="afternoon">Afternoon</option>
+                  <option value="evening">Evening</option>
+                </select>
+              </div>
+
+              <div class="form-group full">
+                <label for="source">
+                  How Did You Hear About Us?
+                </label>
+
+                <select
+                  id="source"
+                  name="lead_source"
+                  required
+                >
+                  <option value="">Select one</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="facebook">Facebook</option>
+                  <option value="email">Email</option>
+                  <option value="referral">Friend / Referral</option>
+                  <option value="client">Current or Previous Client</option>
+                  <option value="terrence">Terrence</option>
+                  <option value="google">Google / Website</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group full">
+                <label for="notes">
+                  Anything You'd Like Us To Know?
+                </label>
+
+                <textarea
+                  id="notes"
+                  name="notes"
+                  placeholder="Optional"
+                ></textarea>
+              </div>
+
+            </div>
+
+            <p class="consent">
+              By submitting this form, you agree that Swurl Kurl Studios
+              may contact you regarding your consultation request.
+              Replace this language with your final approved privacy,
+              email, and SMS consent language before launch.
+            </p>
+
+            <button type="submit" class="btn">
+              Request My Consultation
+            </button>
+
+            <div class="form-status" id="formStatus"></div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ==================================
+       FOOTER
+  =================================== -->
+  <footer>
+
+    <div class="container footer-grid">
+
+      <div class="footer-brand">
+
+        <img
+          src="assets/swurl-kurl-studios-official-logo.png"
+          alt="Swurl Kurl Studios"
+        />
+
+        <div>
+          Grooming • SMP • Education
+        </div>
+
+      </div>
+
+      <div class="footer-small">
+        © <span id="year"></span> Swurl Kurl Studios.
+        All rights reserved.
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script>
+    // Automatically updates the copyright year.
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+
+    /*
+      TEMPORARY FORM BEHAVIOR.
+
+      No CRM / lead endpoint has been connected yet. Until the client
+      picks one (HubSpot, HighLevel, Formspree, a Zapier/Make webhook,
+      or a custom backend), submissions are not sent or stored anywhere.
+      We surface an inline notice instead of losing the click silently,
+      and log the payload to the console so nothing is thrown away
+      during this staging period. Remove this block once form.action
+      points at a real endpoint.
+    */
+    const form = document.getElementById("consultationForm");
+    const status = document.getElementById("formStatus");
+
+    form.addEventListener("submit", function (event) {
+      if (!form.action) {
+        event.preventDefault();
+
+        const data = Object.fromEntries(new FormData(form).entries());
+        console.log("[Swurl Kurl consultation form — staging]", data);
+
+        status.textContent =
+          "Thanks — this site is still in staging, so your info wasn't sent anywhere yet. " +
+          "Connect this form to a CRM before launch.";
+        status.classList.add("visible");
+      }
+    });
+  </script>
+
+</body>
+</html>
