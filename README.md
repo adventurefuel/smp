@@ -7,8 +7,6 @@ design guide (v1.0) and the initial mockup/sample HTML.
 
 The following still need real client assets/approvals before this goes live to paid traffic:
 
-- **Logo** — `assets/swurl-kurl-studios-official-logo.png` is a placeholder wordmark. The brand
-  guide says the official circular gold logo is locked; swap in the client's real logo file.
 - **Photography** — hero image, Terrence's portrait, and the video thumbnail
   (`assets/terrence-*.jpg`) are placeholders. Replace with approved photography.
 - **Before/after results** — `assets/result-*-before.jpg` / `result-*-after.jpg` are placeholders.
@@ -22,8 +20,19 @@ The following still need real client assets/approvals before this goes live to p
   custom backend before launch.
 - **Consent/legal copy** — the consent line under the form is a placeholder; replace with the
   client's approved privacy/SMS/email consent language.
-- **Gold hex value** — `--gold: #b8954f` in the CSS is a working sample; the brand guide says the
-  exact gold must be sampled from the official logo file before the production palette is locked.
+
+## Resolved since v1
+
+- **Logo** — using the client's real official seal (`assets/swurl-kurl-studios-official-logo.png`),
+  used as supplied per the brand guide's "locked, use official asset only" rule.
+- **Gold** — `--gold: #e8b351` is sampled directly from the official logo file (brand guide §6).
+  A second token, `--gold-deep: #a6730f`, is the same hue deepened for gold text that sits on
+  light backgrounds (hero and "look natural?" headlines) — the true bright gold reads clearly on
+  dark backgrounds and as fills/borders, but is too light for body-size text on white/warm-white.
+- **Typography** — headlines now set in Playfair Display (an editorial serif, echoing the logo's
+  script/serif treatment) instead of bold uppercase Arial; body and labels set in Inter at lighter
+  weights (400–600 instead of 800–900) for a slimmer, more premium feel, per the brand guide's
+  "cleaner premium editorial system" direction (§7).
 
 ## Structure
 

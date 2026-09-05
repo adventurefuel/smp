@@ -10,6 +10,13 @@
     content="Request an SMP consultation with Swurl Kurl Studios. The Comeback 21-day offer: two scalp micropigmentation sessions for $1,500."
   />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
   <style>
     :root {
       --black: #0b0b0b;
@@ -20,11 +27,15 @@
       --light-gray: #e8e5df;
 
       /*
-        WORKING GOLD ONLY.
-        Replace this with the exact sampled gold
-        from the official Swurl Kurl Studios logo.
+        Sampled from the official Swurl Kurl Studios logo file.
+        --gold is the true brand gold (used for fills, borders,
+        buttons, and gold text on dark backgrounds).
+        --gold-deep is the same hue, deepened, used only for gold
+        text sitting on light backgrounds, where the bright true
+        gold doesn't read clearly enough against white/warm-white.
       */
-      --gold: #b8954f;
+      --gold: #e8b351;
+      --gold-deep: #a6730f;
 
       --max-width: 1180px;
       --radius: 4px;
@@ -41,7 +52,8 @@
 
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      font-weight: 400;
       color: var(--black);
       background: var(--white);
       line-height: 1.55;
@@ -73,7 +85,7 @@
       display: inline-block;
       color: var(--gold);
       font-size: .78rem;
-      font-weight: 800;
+      font-weight: 600;
       letter-spacing: .15em;
       text-transform: uppercase;
       margin-bottom: 12px;
@@ -83,8 +95,10 @@
     h2,
     h3 {
       margin: 0;
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      font-weight: 800;
       line-height: .98;
-      letter-spacing: -.035em;
+      letter-spacing: -.03em;
       text-transform: uppercase;
     }
 
@@ -108,6 +122,14 @@
       color: var(--gold);
     }
 
+    /* Gold headline text needs a deeper tone to stay legible on
+       light section backgrounds; true brand gold is reserved for
+       fills, borders, and gold text on dark backgrounds. */
+    .hero .gold,
+    .objection .gold {
+      color: var(--gold-deep);
+    }
+
     .btn {
       display: inline-flex;
       justify-content: center;
@@ -117,9 +139,9 @@
       border: 1px solid var(--gold);
       background: var(--gold);
       color: var(--black);
-      font-weight: 900;
+      font-weight: 600;
+      letter-spacing: .06em;
       text-transform: uppercase;
-      letter-spacing: .04em;
       cursor: pointer;
       transition: .2s ease;
     }
@@ -163,7 +185,7 @@
     }
 
     .brand img {
-      height: 54px;
+      height: 64px;
       width: auto;
     }
 
@@ -172,7 +194,7 @@
       align-items: center;
       gap: 24px;
       font-size: .8rem;
-      font-weight: 800;
+      font-weight: 500;
       text-transform: uppercase;
       letter-spacing: .06em;
     }
@@ -236,15 +258,17 @@
     .offer-card .offer-label {
       color: var(--gold);
       text-transform: uppercase;
-      font-weight: 900;
+      font-weight: 600;
       letter-spacing: .08em;
       font-size: .82rem;
     }
 
     .offer-price {
       margin: 6px 0 2px;
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
       font-size: clamp(2rem, 4vw, 3.4rem);
-      font-weight: 900;
+      font-weight: 800;
+      letter-spacing: -.02em;
       line-height: 1;
     }
 
@@ -333,7 +357,7 @@
       color: var(--white);
       text-align: center;
       font-size: .68rem;
-      font-weight: 800;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: .08em;
     }
@@ -411,7 +435,7 @@
     .brand-line {
       margin-top: 28px;
       color: var(--gold);
-      font-weight: 900;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: .08em;
     }
@@ -441,7 +465,8 @@
     }
 
     .step-number {
-      font-weight: 900;
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      font-weight: 700;
       color: var(--gold);
       font-size: 1.3rem;
       margin-bottom: 20px;
@@ -474,8 +499,10 @@
     }
 
     .offer-band .price {
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
       font-size: clamp(2.5rem, 6vw, 5rem);
-      font-weight: 900;
+      font-weight: 800;
+      letter-spacing: -.02em;
       line-height: 1;
       margin: 12px 0;
     }
@@ -501,9 +528,10 @@
 
     summary {
       cursor: pointer;
-      font-weight: 900;
+      font-weight: 600;
       font-size: 1.05rem;
       text-transform: uppercase;
+      letter-spacing: .02em;
     }
 
     details p {
@@ -562,7 +590,7 @@
 
     label {
       font-size: .78rem;
-      font-weight: 900;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: .05em;
     }
@@ -634,7 +662,7 @@
     }
 
     .footer-brand img {
-      height: 60px;
+      height: 76px;
       width: auto;
       margin-bottom: 14px;
     }
@@ -707,7 +735,7 @@
       }
 
       .brand img {
-        height: 46px;
+        height: 52px;
       }
 
       .nav .btn {
@@ -760,7 +788,6 @@
     <div class="container nav">
 
       <a href="#" class="brand" aria-label="Swurl Kurl Studios">
-        <!-- USE THE OFFICIAL LOCKED LOGO FILE ONLY -->
         <img
           src="assets/swurl-kurl-studios-official-logo.png"
           alt="Swurl Kurl Studios"
@@ -1437,6 +1464,7 @@
       <div class="footer-brand">
 
         <img
+          class="footer-logo"
           src="assets/swurl-kurl-studios-official-logo.png"
           alt="Swurl Kurl Studios"
         />
