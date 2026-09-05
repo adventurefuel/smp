@@ -7,8 +7,9 @@ design guide (v1.0) and the initial mockup/sample HTML.
 
 The following still need real client assets/approvals before this goes live to paid traffic:
 
-- **Photography** — hero image, Terrence's portrait, and the video thumbnail
-  (`assets/terrence-*.jpg`) are placeholders. Replace with approved photography.
+- **Photography** — Terrence's portrait and the video thumbnail (`assets/terrence-portrait.jpg`,
+  `assets/terrence-video-thumbnail.jpg`) are still placeholders. `assets/terrence-hero.jpg` is now
+  his real photo (see "Resolved since v1" below for how it's cropped).
 - **Before/after results** — `assets/result-*-before.jpg` / `result-*-after.jpg` are placeholders.
   Replace with real client photos once consent and final claims are verified (per brand guide §3, §11).
 - **Video** — the "But Will It Look Natural?" section has a play-button placeholder with no
@@ -38,6 +39,14 @@ The following still need real client assets/approvals before this goes live to p
   the form. The consultation form is kept as a secondary "prefer to write it out" option lower
   on the same section. Update the phone number in every `wa.me/158655...` link (7 places) if it
   ever changes.
+- **Real hero photo** — swapped in `assets/terrence-hero.jpg` (real photo, off-center composition:
+  subject on the right two-thirds, plain background on the left). Plain `background-position:
+  center` cropped this badly (mostly blank wall, hairline cut off), so `.hero-image` now uses
+  `80% 0%` on desktop and `70% 0%` on the stacked mobile layout to keep his face and hairline in
+  frame. **If a new hero photo is dropped in with a different composition, this position may need
+  retuning** — tell Claude "the hero photo is cropped wrong" and it'll adjust it, or manually try
+  values between `center` (dead center) and `100% 0%` (full right, full top) in that CSS rule
+  until the crop looks right at both desktop and mobile widths.
 
 ## Structure
 
