@@ -40,6 +40,13 @@
       --max-width: 1180px;
       --radius: 4px;
       --shadow: 0 14px 38px rgba(0,0,0,.10);
+
+      /*
+        Matches .container's own left/right inset at any viewport
+        width, so full-bleed elements (like the hero photo) can sit
+        outside .container while still lining up with it.
+      */
+      --edge-inset: max(20px, calc((100vw - 1180px) / 2));
     }
 
     * {
@@ -216,8 +223,11 @@
     }
 
     .hero-copy {
-      padding: 90px 0 70px;
-      padding-right: 60px;
+      /* hero-grid is no longer inside .container (so the photo can
+         bleed to the true edge of the viewport) — this replicates
+         .container's own left inset so the copy still lines up
+         with the rest of the page. */
+      padding: 90px 60px 70px var(--edge-inset);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -716,8 +726,7 @@
       }
 
       .hero-copy {
-        padding: 65px 0 40px;
-        padding-right: 0;
+        padding: 65px var(--edge-inset) 40px;
       }
 
       .hero-image {
@@ -751,6 +760,11 @@
 
       .container {
         width: min(calc(100% - 28px), var(--max-width));
+      }
+
+      .hero-copy {
+        padding-left: 14px;
+        padding-right: 14px;
       }
 
       section {
@@ -844,7 +858,7 @@
          HERO
     =================================== -->
     <section class="hero">
-      <div class="container hero-grid">
+      <div class="hero-grid">
 
         <div class="hero-copy">
 
