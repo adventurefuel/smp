@@ -590,6 +590,38 @@
       color: #999 !important;
     }
 
+    .scheduler-card {
+      margin-top: 32px;
+      padding: 26px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(184,149,79,.4);
+    }
+
+    .scheduler-heading {
+      margin-bottom: 18px;
+      font-size: .82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--gold);
+    }
+
+    .scheduler-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .scheduler-fields label {
+      color: #d0d0d0;
+    }
+
+    .scheduler-fields input,
+    .scheduler-fields select {
+      border-color: rgba(255,255,255,.2);
+    }
+
     .form-alt-heading {
       margin-bottom: 20px;
       padding-bottom: 20px;
@@ -831,6 +863,10 @@
         padding: 26px 20px;
       }
 
+      .scheduler-fields {
+        grid-template-columns: 1fr;
+      }
+
       .footer-grid {
         grid-template-columns: 1fr;
       }
@@ -863,6 +899,7 @@
           class="btn"
           target="_blank"
           rel="noopener noreferrer"
+          data-wa-source="nav"
         >Talk To Terrence Now</a>
       </nav>
 
@@ -914,6 +951,7 @@
               class="btn"
               target="_blank"
               rel="noopener noreferrer"
+              data-wa-source="hero"
             >
               Talk To Terrence Now
             </a>
@@ -1057,6 +1095,7 @@
             class="btn btn-dark"
             target="_blank"
             rel="noopener noreferrer"
+            data-wa-source="results"
           >
             Talk To Terrence Now
           </a>
@@ -1107,6 +1146,7 @@
             class="btn btn-dark"
             target="_blank"
             rel="noopener noreferrer"
+            data-wa-source="objection"
           >
             Talk To Terrence Now
           </a>
@@ -1160,6 +1200,7 @@
               class="btn"
               target="_blank"
               rel="noopener noreferrer"
+              data-wa-source="authority"
             >
               Talk To Terrence Now
             </a>
@@ -1234,6 +1275,7 @@
             class="btn"
             target="_blank"
             rel="noopener noreferrer"
+            data-wa-source="process"
           >
             Talk To Terrence Now
           </a>
@@ -1271,6 +1313,7 @@
           class="btn btn-dark"
           target="_blank"
           rel="noopener noreferrer"
+          data-wa-source="offer_band"
         >
           Talk To Terrence Now
         </a>
@@ -1376,6 +1419,7 @@
             class="btn whatsapp-btn"
             target="_blank"
             rel="noopener noreferrer"
+            data-wa-source="consultation"
           >
             Talk To Terrence Now
           </a>
@@ -1383,6 +1427,42 @@
           <p class="whatsapp-note">
             Fastest way to reach us — opens a WhatsApp chat directly with Terrence.
           </p>
+
+          <div class="scheduler-card">
+
+            <div class="scheduler-heading">
+              Have A Date In Mind? Request It Directly.
+            </div>
+
+            <div class="scheduler-fields">
+
+              <div class="form-group">
+                <label for="schedulerDate">Preferred Date</label>
+                <input type="date" id="schedulerDate" name="preferred_date" />
+              </div>
+
+              <div class="form-group">
+                <label for="schedulerTime">Preferred Time</label>
+                <select id="schedulerTime" name="preferred_time">
+                  <option value="">Select one</option>
+                  <option value="Morning">Morning</option>
+                  <option value="Afternoon">Afternoon</option>
+                  <option value="Evening">Evening</option>
+                </select>
+              </div>
+
+            </div>
+
+            <button type="button" id="schedulerSubmit" class="btn whatsapp-btn">
+              Send Request To Terrence
+            </button>
+
+            <p class="whatsapp-note">
+              Opens WhatsApp with your preferred date and time already filled in
+              — Terrence will confirm availability with you directly.
+            </p>
+
+          </div>
 
         </div>
 
@@ -1609,6 +1689,108 @@
     // Automatically updates the copyright year.
     document.getElementById("year").textContent =
       new Date().getFullYear();
+
+
+    /*
+      LIGHTWEIGHT ANALYTICS.
+
+      Logs page views and WhatsApp click-throughs to a Supabase table
+      (smp_analytics_events) so the /admin.html page can show simple
+      traffic + conversion numbers. The table only accepts inserts from
+      this public key (no read access), and every call fails silently
+      so analytics can never block or break the page for a visitor.
+    */
+    const SUPABASE_URL = "https://cjixvpcoivfipmgmvomi.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_r9lGmmPly-_NzXnM0pOUSA_X_7V1pJh";
+
+    function logEvent(eventType, source) {
+      try {
+        fetch(SUPABASE_URL + "/rest/v1/smp_analytics_events", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+            "Prefer": "return=minimal",
+          },
+          body: JSON.stringify({ event_type: eventType, source: source || null }),
+          keepalive: true,
+        }).catch(function () {
+          // Network hiccup or blocked request -- nothing to do, never
+          // surface this to the visitor.
+        });
+      } catch (e) {
+        // Some environments (privacy extensions, etc.) can throw on
+        // fetch itself. Analytics should never take down the page.
+      }
+    }
+
+    // One page_view per load.
+    logEvent("page_view", window.location.pathname);
+
+    // Every "Talk To Terrence Now" / WhatsApp button on the page carries
+    // a data-wa-source attribute identifying where it lives (nav, hero,
+    // results, objection, authority, process, offer_band, consultation).
+    document.querySelectorAll('a[href^="https://wa.me/"]').forEach(function (link) {
+      link.addEventListener("click", function () {
+        logEvent("whatsapp_click", link.dataset.waSource || "unlabeled");
+      });
+    });
+
+
+    /*
+      SCHEDULER.
+
+      "Have A Date In Mind?" card in the consultation section. Builds a
+      WhatsApp message that includes the visitor's chosen date/time (if
+      any) and opens the same WhatsApp number used everywhere else on
+      the site -- no email step, per client direction.
+    */
+    const schedulerDateInput = document.getElementById("schedulerDate");
+    const schedulerTimeInput = document.getElementById("schedulerTime");
+    const schedulerSubmit = document.getElementById("schedulerSubmit");
+
+    if (schedulerDateInput) {
+      // Don't let visitors pick a date in the past.
+      const todayStr = new Date().toISOString().split("T")[0];
+      schedulerDateInput.setAttribute("min", todayStr);
+    }
+
+    if (schedulerSubmit) {
+      schedulerSubmit.addEventListener("click", function () {
+        const dateVal = schedulerDateInput ? schedulerDateInput.value : "";
+        const timeVal = schedulerTimeInput ? schedulerTimeInput.value : "";
+
+        let message =
+          "Hi Terrence! I'd like to schedule an SMP consultation at Swurl Kurl Studios.";
+
+        if (dateVal) {
+          // Parse as a local date (not UTC) so the weekday shown matches
+          // what the visitor picked.
+          const dateObj = new Date(dateVal + "T00:00:00");
+          const formattedDate = dateObj.toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+          message += " Preferred date: " + formattedDate + ".";
+        }
+
+        if (timeVal) {
+          message += " Preferred time: " + timeVal + ".";
+        }
+
+        if (!dateVal && !timeVal) {
+          message += " I'd like to find a time that works.";
+        }
+
+        logEvent("whatsapp_click", "scheduler");
+
+        const url = "https://wa.me/15865535504?text=" + encodeURIComponent(message);
+        window.open(url, "_blank", "noopener,noreferrer");
+      });
+    }
 
 
     /*

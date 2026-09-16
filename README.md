@@ -50,8 +50,48 @@ The following still need real client assets/approvals before this goes live to p
 
 ## Structure
 
-- `index.html` — the whole page (inline CSS/JS, no build step)
-- `assets/` — images referenced by the page
+- `index.html` — the main landing page (inline CSS/JS, no build step)
+- `admin.html` — passcode-protected analytics dashboard (site visits + WhatsApp click-throughs)
+- `assets/` — images referenced by the pages
+
+## Scheduler
+
+The consultation section has a "Have A Date In Mind? Request It Directly." card with a date
+picker and a Morning/Afternoon/Evening time select. Clicking **Send Request To Terrence**
+builds a WhatsApp message that includes whatever date/time was chosen (or a generic "I'd like
+to find a time that works" line if left blank) and opens it at the same WhatsApp number used
+everywhere else on the site — `wa.me/15865535504`. There is no email step; per the client's
+explicit direction this is WhatsApp-only, same as every other CTA on the page.
+
+To change the WhatsApp number, update it in this scheduler's JS block near the bottom of
+`index.html` **and** in the 8 `wa.me/158655...` button links (see "WhatsApp as primary
+contact channel" above).
+
+## Analytics & admin dashboard
+
+Site visits and WhatsApp click-throughs are logged to a Supabase table (`smp_analytics_events`)
+in the agency's shared Supabase project, and `admin.html` shows the aggregated numbers.
+
+**How it works:**
+
+- `index.html` posts one `page_view` event on every page load, and one `whatsapp_click` event
+  (tagged with a `source`, e.g. `hero`, `nav`, `consultation`, `scheduler`) whenever a visitor
+  clicks any of the 8 "Talk To Terrence Now" / WhatsApp buttons or submits the scheduler. This
+  uses a public "publishable" Supabase key that can only *insert* rows — it has no permission
+  to read data back, so it's safe to leave in the page source.
+- `admin.html` is gated by a passcode prompt. On success, it calls a Supabase Edge Function
+  (`smp-admin-stats`) that checks the passcode server-side, then uses a private service-role
+  key (never exposed to the browser) to aggregate the raw events into totals, a last-24-hours
+  snapshot, a breakdown by button/source, and a 30-day daily trend.
+- The passcode is cached in the browser tab's `sessionStorage` only (cleared when the tab is
+  closed), so refreshing the dashboard doesn't require re-entering it, but it's never stored
+  in a cookie or `localStorage`.
+
+**Current admin passcode:** `TalkToTerrence2026` — change this in the Supabase Edge Function
+source (`smp-admin-stats`, the `ADMIN_PASSCODE` constant) if it needs to be rotated; it is not
+stored anywhere in this repo.
+
+**Admin dashboard URL (once deployed):** `https://swurl-kurl.onrender.com/admin.html`
 
 ## Deploy
 

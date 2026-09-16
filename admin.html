@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <title>Admin | Swurl Kurl Studios</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --black: #0b0b0b;
+      --near-black: #161616;
+      --white: #ffffff;
+      --warm-white: #f7f5f1;
+      --gray: #6c6c6c;
+      --light-gray: #e8e5df;
+      --gold: #e8b351;
+      --gold-deep: #a6730f;
+      --max-width: 1100px;
+      --shadow: 0 14px 38px rgba(0,0,0,.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      color: var(--black);
+      background: var(--warm-white);
+      line-height: 1.55;
+    }
+
+    .container {
+      width: min(calc(100% - 40px), var(--max-width));
+      margin: 0 auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    /* ---------------------------
+       GATE
+    --------------------------- */
+
+    .gate-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--black);
+      color: var(--white);
+      padding: 20px;
+    }
+
+    .gate-card {
+      width: 100%;
+      max-width: 380px;
+      padding: 40px 34px;
+      background: var(--near-black);
+      border: 1px solid rgba(184,149,79,.4);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .gate-card img {
+      height: 56px;
+      width: auto;
+      margin: 0 auto 22px;
+    }
+
+    .gate-card h1 {
+      margin: 0 0 6px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -.01em;
+    }
+
+    .gate-card p {
+      margin: 0 0 24px;
+      font-size: .85rem;
+      color: #b8b8b8;
+    }
+
+    .gate-card input {
+      width: 100%;
+      padding: 14px 14px;
+      margin-bottom: 14px;
+      border: 1px solid #3a3a3a;
+      background: #0f0f0f;
+      color: var(--white);
+      outline: none;
+      text-align: center;
+      letter-spacing: .08em;
+    }
+
+    .gate-card input:focus {
+      border-color: var(--gold);
+    }
+
+    .gate-card button {
+      width: 100%;
+      min-height: 50px;
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: var(--black);
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .gate-card button:hover {
+      filter: brightness(1.04);
+    }
+
+    .gate-card button:disabled {
+      opacity: .6;
+      cursor: default;
+    }
+
+    .gate-error {
+      margin-top: 16px;
+      font-size: .8rem;
+      color: #ff8080;
+      display: none;
+    }
+
+    .gate-error.visible {
+      display: block;
+    }
+
+    /* ---------------------------
+       DASHBOARD
+    --------------------------- */
+
+    .dashboard {
+      display: none;
+    }
+
+    .dashboard.visible {
+      display: block;
+    }
+
+    .admin-header {
+      background: var(--black);
+      color: var(--white);
+      border-bottom: 1px solid rgba(184,149,79,.45);
+      padding: 22px 0;
+    }
+
+    .admin-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .admin-brand img {
+      height: 40px;
+      width: auto;
+    }
+
+    .admin-brand span {
+      font-size: .78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+    }
+
+    .admin-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .admin-actions button,
+    .admin-actions a {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.3);
+      color: var(--white);
+      padding: 9px 16px;
+      font-size: .75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .admin-actions button:hover,
+    .admin-actions a:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    main.container {
+      padding: 44px 0 70px;
+    }
+
+    .updated-line {
+      margin-bottom: 30px;
+      font-size: .78rem;
+      color: var(--gray);
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--light-gray);
+      padding: 24px 22px;
+    }
+
+    .stat-label {
+      font-size: .72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--gray);
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .stat-value.gold {
+      color: var(--gold-deep);
+    }
+
+    .stat-sub {
+      margin-top: 6px;
+      font-size: .74rem;
+      color: var(--gray);
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: 1.3fr .9fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--light-gray);
+      padding: 26px 26px 22px;
+    }
+
+    .panel h2 {
+      margin: 0 0 20px;
+      font-size: .95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    /* Trend bars: plain CSS, no chart library needed */
+    .trend-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 40px;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: .78rem;
+    }
+
+    .trend-date {
+      color: var(--gray);
+    }
+
+    .trend-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .trend-bar-track {
+      height: 8px;
+      background: var(--light-gray);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trend-bar-fill {
+      height: 100%;
+      background: var(--gray);
+    }
+
+    .trend-bar-fill.wa {
+      background: var(--gold);
+    }
+
+    .trend-count {
+      text-align: right;
+      color: var(--black);
+      font-weight: 600;
+    }
+
+    .trend-legend {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 18px;
+      font-size: .74rem;
+      color: var(--gray);
+    }
+
+    .trend-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      display: inline-block;
+      background: var(--gray);
+    }
+
+    .legend-dot.wa {
+      background: var(--gold);
+    }
+
+    .source-row {
+      display: grid;
+      grid-template-columns: 1fr auto 70px;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--light-gray);
+      font-size: .85rem;
+    }
+
+    .source-row:last-child {
+      border-bottom: 0;
+    }
+
+    .source-name {
+      text-transform: capitalize;
+      font-weight: 500;
+    }
+
+    .source-count {
+      font-weight: 700;
+    }
+
+    .source-bar-track {
+      grid-column: 1 / -1;
+      height: 6px;
+      background: var(--light-gray);
+      margin-top: -4px;
+      margin-bottom: 4px;
+    }
+
+    .source-bar-fill {
+      height: 100%;
+      background: var(--gold);
+    }
+
+    .empty-note {
+      color: var(--gray);
+      font-size: .85rem;
+    }
+
+    .refresh-note {
+      margin-top: 30px;
+      font-size: .74rem;
+      color: var(--gray);
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .stat-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .panel-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-header .container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ==================================
+       PASSCODE GATE
+  =================================== -->
+  <div class="gate-screen" id="gateScreen">
+    <div class="gate-card">
+
+      <img
+        src="assets/swurl-kurl-studios-official-logo.png"
+        alt="Swurl Kurl Studios"
+      />
+
+      <h1>Admin Access</h1>
+      <p>Enter the passcode to view site analytics.</p>
+
+      <form id="gateForm">
+        <input
+          type="password"
+          id="passcodeInput"
+          placeholder="Passcode"
+          autocomplete="off"
+          required
+        />
+        <button type="submit" id="gateSubmit">Unlock Dashboard</button>
+      </form>
+
+      <div class="gate-error" id="gateError">
+        That passcode isn't correct. Try again.
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================================
+       DASHBOARD
+  =================================== -->
+  <div class="dashboard" id="dashboard">
+
+    <header class="admin-header">
+      <div class="container">
+
+        <div class="admin-brand">
+          <img
+            src="assets/swurl-kurl-studios-official-logo.png"
+            alt="Swurl Kurl Studios"
+          />
+          <span>Analytics</span>
+        </div>
+
+        <div class="admin-actions">
+          <button type="button" id="refreshBtn">Refresh</button>
+          <a href="index.html">View Site</a>
+          <button type="button" id="lockBtn">Lock</button>
+        </div>
+
+      </div>
+    </header>
+
+    <main class="container">
+
+      <div class="updated-line" id="updatedLine">Loading…</div>
+
+      <div class="stat-grid">
+
+        <div class="stat-card">
+          <div class="stat-label">Total Site Visits</div>
+          <div class="stat-value" id="statPageViews">—</div>
+          <div class="stat-sub" id="statPageViews24h">last 24h: —</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">WhatsApp Click-Throughs</div>
+          <div class="stat-value gold" id="statWaClicks">—</div>
+          <div class="stat-sub" id="statWaClicks24h">last 24h: —</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Visit → WhatsApp Rate</div>
+          <div class="stat-value" id="statConversion">—</div>
+          <div class="stat-sub">of all visits click through</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Top Source</div>
+          <div class="stat-value" id="statTopSource" style="font-size:1.4rem;">—</div>
+          <div class="stat-sub" id="statTopSourceCount">—</div>
+        </div>
+
+      </div>
+
+      <div class="panel-grid">
+
+        <div class="panel">
+          <h2>Last 30 Days</h2>
+
+          <div class="trend-legend">
+            <span><span class="legend-dot"></span> Site Visits</span>
+            <span><span class="legend-dot wa"></span> WhatsApp Clicks</span>
+          </div>
+
+          <div id="trendList">
+            <p class="empty-note">No data yet.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>WhatsApp Clicks By Button</h2>
+
+          <div id="sourceList">
+            <p class="empty-note">No data yet.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="refresh-note">
+        Pulls live from the site's analytics table. Refresh anytime to see the latest numbers.
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <script>
+    /*
+      Admin dashboard for the Swurl Kurl SMP landing page.
+
+      Passcode is checked server-side by the smp-admin-stats Supabase
+      Edge Function -- this page never has read access to the raw
+      analytics table itself, only whatever that function returns to a
+      correct passcode. The passcode is cached in sessionStorage only
+      (cleared when the tab closes) so a refresh doesn't force
+      re-entry, but it's never written to localStorage or a cookie.
+    */
+
+    const SUPABASE_URL = "https://cjixvpcoivfipmgmvomi.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_r9lGmmPly-_NzXnM0pOUSA_X_7V1pJh";
+    const SESSION_KEY = "smp_admin_passcode";
+
+    const gateScreen = document.getElementById("gateScreen");
+    const gateForm = document.getElementById("gateForm");
+    const passcodeInput = document.getElementById("passcodeInput");
+    const gateSubmit = document.getElementById("gateSubmit");
+    const gateError = document.getElementById("gateError");
+    const dashboard = document.getElementById("dashboard");
+
+    function getCachedPasscode() {
+      try {
+        return sessionStorage.getItem(SESSION_KEY) || "";
+      } catch (e) {
+        return "";
+      }
+    }
+
+    function setCachedPasscode(value) {
+      try {
+        sessionStorage.setItem(SESSION_KEY, value);
+      } catch (e) {
+        // Private browsing / blocked storage -- fine, just re-ask next time.
+      }
+    }
+
+    function clearCachedPasscode() {
+      try {
+        sessionStorage.removeItem(SESSION_KEY);
+      } catch (e) {
+        // no-op
+      }
+    }
+
+    async function fetchStats(passcode) {
+      const res = await fetch(
+        SUPABASE_URL + "/functions/v1/smp-admin-stats",
+        {
+          method: "GET",
+          headers: {
+            "x-admin-key": passcode,
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          },
+        }
+      );
+
+      if (res.status === 401) {
+        throw new Error("unauthorized");
+      }
+
+      if (!res.ok) {
+        throw new Error("server_error");
+      }
+
+      return res.json();
+    }
+
+    function formatSourceLabel(key) {
+      return String(key).replace(/_/g, " ");
+    }
+
+    function renderStats(data) {
+      document.getElementById("statPageViews").textContent =
+        data.totalPageViews.toLocaleString();
+      document.getElementById("statPageViews24h").textContent =
+        "last 24h: " + data.last24h.page_view.toLocaleString();
+
+      document.getElementById("statWaClicks").textContent =
+        data.totalWhatsappClicks.toLocaleString();
+      document.getElementById("statWaClicks24h").textContent =
+        "last 24h: " + data.last24h.whatsapp_click.toLocaleString();
+
+      document.getElementById("statConversion").textContent =
+        data.conversionRate + "%";
+
+      const sourceEntries = Object.entries(data.bySource || {}).sort(
+        (a, b) => b[1] - a[1]
+      );
+
+      if (sourceEntries.length > 0) {
+        document.getElementById("statTopSource").textContent =
+          formatSourceLabel(sourceEntries[0][0]);
+        document.getElementById("statTopSourceCount").textContent =
+          sourceEntries[0][1].toLocaleString() + " clicks";
+      } else {
+        document.getElementById("statTopSource").textContent = "—";
+        document.getElementById("statTopSourceCount").textContent =
+          "no clicks yet";
+      }
+
+      // By-source breakdown panel
+      const sourceList = document.getElementById("sourceList");
+      if (sourceEntries.length === 0) {
+        sourceList.innerHTML = '<p class="empty-note">No WhatsApp clicks logged yet.</p>';
+      } else {
+        const maxCount = sourceEntries[0][1];
+        sourceList.innerHTML = sourceEntries
+          .map(function ([source, count]) {
+            const pct = maxCount > 0 ? Math.round((count / maxCount) * 100) : 0;
+            return (
+              '<div class="source-row">' +
+              '<span class="source-name">' + formatSourceLabel(source) + '</span>' +
+              '<span class="source-count">' + count.toLocaleString() + '</span>' +
+              '<span></span>' +
+              '</div>' +
+              '<div class="source-bar-track"><div class="source-bar-fill" style="width:' + pct + '%;"></div></div>'
+            );
+          })
+          .join("");
+      }
+
+      // Daily trend panel
+      const trendList = document.getElementById("trendList");
+      const series = data.dailySeries || [];
+
+      if (series.length === 0) {
+        trendList.innerHTML = '<p class="empty-note">No visits logged yet.</p>';
+      } else {
+        const maxDaily = series.reduce(function (max, day) {
+          return Math.max(max, day.page_view, day.whatsapp_click);
+        }, 1);
+
+        trendList.innerHTML = series
+          .slice()
+          .reverse()
+          .map(function (day) {
+            const label = new Date(day.date + "T00:00:00").toLocaleDateString(
+              "en-US",
+              { month: "short", day: "numeric" }
+            );
+            const pvPct = Math.round((day.page_view / maxDaily) * 100);
+            const waPct = Math.round((day.whatsapp_click / maxDaily) * 100);
+
+            return (
+              '<div class="trend-row">' +
+              '<span class="trend-date">' + label + '</span>' +
+              '<span class="trend-bars">' +
+              '<span class="trend-bar-track"><span class="trend-bar-fill" style="width:' + pvPct + '%;"></span></span>' +
+              '<span class="trend-bar-track"><span class="trend-bar-fill wa" style="width:' + waPct + '%;"></span></span>' +
+              '</span>' +
+              '<span class="trend-count">' + day.page_view + ' / ' + day.whatsapp_click + '</span>' +
+              '</div>'
+            );
+          })
+          .join("");
+      }
+
+      document.getElementById("updatedLine").textContent =
+        "Updated " + new Date(data.generatedAt).toLocaleString();
+    }
+
+    async function loadDashboard(passcode) {
+      gateSubmit.disabled = true;
+      gateSubmit.textContent = "Checking…";
+      gateError.classList.remove("visible");
+
+      try {
+        const data = await fetchStats(passcode);
+        setCachedPasscode(passcode);
+        renderStats(data);
+        gateScreen.style.display = "none";
+        dashboard.classList.add("visible");
+      } catch (err) {
+        clearCachedPasscode();
+        gateError.textContent =
+          err.message === "unauthorized"
+            ? "That passcode isn't correct. Try again."
+            : "Couldn't load analytics right now. Try again in a moment.";
+        gateError.classList.add("visible");
+      } finally {
+        gateSubmit.disabled = false;
+        gateSubmit.textContent = "Unlock Dashboard";
+      }
+    }
+
+    gateForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const value = passcodeInput.value.trim();
+      if (value) {
+        loadDashboard(value);
+      }
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", function () {
+      const passcode = getCachedPasscode();
+      if (passcode) {
+        loadDashboard(passcode);
+      }
+    });
+
+    document.getElementById("lockBtn").addEventListener("click", function () {
+      clearCachedPasscode();
+      dashboard.classList.remove("visible");
+      gateScreen.style.display = "flex";
+      passcodeInput.value = "";
+      passcodeInput.focus();
+    });
+
+    // If a passcode is already cached for this tab session, skip the
+    // gate and load straight into the dashboard.
+    const cached = getCachedPasscode();
+    if (cached) {
+      loadDashboard(cached);
+    }
+  </script>
+
+</body>
+</html>
