@@ -14,7 +14,6 @@ The following still need real client assets/approvals before this goes live to p
   Replace with real client photos once consent and final claims are verified (per brand guide §3, §11).
 - **Video** — the "But Will It Look Natural?" section has a play-button placeholder with no
   actual video wired up yet.
-- **FAQ answers** — all six FAQ entries are still "Add Terrence-approved answer here."
 - **Consultation form** — has no CRM/lead endpoint connected (`<form action="">`). Submissions
   currently just show an inline "still in staging" notice and log to the browser console instead
   of being lost silently. Wire it to HubSpot, HighLevel, a Zapier/Make webhook, Formspree, or a
@@ -24,6 +23,11 @@ The following still need real client assets/approvals before this goes live to p
 
 ## Resolved since v1
 
+- **FAQ answers** — all six entries now have real, client-provided answers (natural-looking
+  results, typically two sessions, no pain with numbing options available, permanent results,
+  hairline chosen through consultation with an emphasis on age-appropriate looks for clients
+  50+, and starting the conversation as soon as thinning begins). Wording can still be refined
+  with the client, but the placeholder copy is gone.
 - **Logo** — using the client's real official seal (`assets/swurl-kurl-studios-official-logo.png`),
   used as supplied per the brand guide's "locked, use official asset only" rule.
 - **Gold** — `--gold: #e8b351` is sampled directly from the official logo file (brand guide §6).
