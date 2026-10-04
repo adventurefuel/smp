@@ -53,6 +53,12 @@
       box-sizing: border-box;
     }
 
+    /* Keep the HTML "hidden" attribute working on elements that have
+       their own display rule (e.g. .form-group is display:flex). */
+    [hidden] {
+      display: none !important;
+    }
+
     html {
       scroll-behavior: smooth;
     }
@@ -760,10 +766,259 @@
     }
 
     /* ---------------------------
+       SERVICES
+    --------------------------- */
+
+    .services {
+      background: var(--warm-white);
+    }
+
+    .inline-link {
+      color: var(--gold-deep);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .service-loading {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: var(--gray);
+    }
+
+    .service-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+      border: 1px solid var(--light-gray);
+      padding: 26px 24px 24px;
+    }
+
+    .service-card.featured {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--gold);
+    }
+
+    .service-tag {
+      align-self: flex-start;
+      margin-bottom: 14px;
+      padding: 3px 10px;
+      background: var(--light-gray);
+      color: #444;
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .service-card.featured .service-tag {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .service-card h3 {
+      font-size: 1.25rem;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .service-desc {
+      flex: 1;
+      margin: 0 0 16px;
+      font-size: .92rem;
+      color: var(--gray);
+    }
+
+    .service-card.featured .service-desc {
+      color: #cfcfcf;
+    }
+
+    .service-price {
+      margin-bottom: 4px;
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      line-height: 1.1;
+    }
+
+    .service-price small {
+      font-size: .78rem;
+      font-weight: 500;
+      letter-spacing: 0;
+      color: var(--gray);
+    }
+
+    .service-price s {
+      margin-left: 8px;
+      font-size: .9rem;
+      font-weight: 500;
+      color: #999;
+    }
+
+    .service-card.featured .service-price {
+      color: var(--gold);
+    }
+
+    .service-opts {
+      margin: 0 0 18px;
+      padding: 0;
+      list-style: none;
+      font-size: .82rem;
+      color: var(--gray);
+    }
+
+    .service-card .btn {
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .btn-outline-dark {
+      background: transparent;
+      color: var(--black);
+      border-color: var(--black);
+    }
+
+    .offer-band .btn + .btn {
+      margin-left: 12px;
+    }
+
+    .reserve-link {
+      background: none;
+      border: 0;
+      padding: 2px 0;
+      color: var(--gold);
+      font-size: .82rem;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+    }
+
+    /* ---------------------------
+       BOOKING DIALOG
+    --------------------------- */
+
+    .book-dialog {
+      width: min(calc(100% - 24px), 520px);
+      max-height: 92vh;
+      padding: 0;
+      border: 1px solid var(--gold);
+      background: var(--white);
+      color: var(--black);
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+      overflow: auto;
+    }
+
+    .book-dialog::backdrop {
+      background: rgba(0,0,0,.68);
+    }
+
+    .book-inner {
+      position: relative;
+      padding: 34px 30px 28px;
+    }
+
+    .book-inner h3 {
+      font-size: 1.7rem;
+      margin-bottom: 8px;
+    }
+
+    .book-inner .eyebrow {
+      color: var(--gold-deep);
+    }
+
+    .book-close {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      background: none;
+      font-size: 1.9rem;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--gray);
+    }
+
+    .book-sub {
+      margin: 0 0 18px;
+      font-size: .92rem;
+      color: var(--gray);
+    }
+
+    .book-inner .form-group {
+      margin-bottom: 14px;
+    }
+
+    .book-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .book-total {
+      margin: 4px 0 14px;
+      padding: 12px 14px;
+      background: var(--warm-white);
+      border: 1px solid var(--light-gray);
+      font-weight: 700;
+    }
+
+    .book-fine {
+      margin: 12px 0 0;
+      text-align: center;
+      font-size: .74rem;
+      color: var(--gray);
+    }
+
+    .book-inner .btn {
+      width: 100%;
+    }
+
+    .book-inner .btn + .btn {
+      margin-top: 10px;
+    }
+
+    .btn-ghost-dark {
+      background: transparent;
+      color: var(--black);
+      border-color: #bdb8ae;
+    }
+
+    .book-dialog .whatsapp-btn {
+      margin-top: 18px;
+    }
+
+    .form-status.error {
+      background: #fdecea;
+      border-color: #f1b5ad;
+      color: #8a2a1f;
+    }
+
+    .form-status.success {
+      background: #eaf6ee;
+      border-color: #a9d8b8;
+      color: #1d5a33;
+    }
+
+    /* ---------------------------
        MOBILE
     --------------------------- */
 
     @media (max-width: 900px) {
+
+      .service-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
 
       .nav-links a:not(.btn) {
         display: none;
@@ -867,6 +1122,23 @@
         grid-template-columns: 1fr;
       }
 
+      .service-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .book-row {
+        grid-template-columns: 1fr;
+      }
+
+      .book-inner {
+        padding: 30px 20px 24px;
+      }
+
+      .offer-band .btn + .btn {
+        margin-left: 0;
+        margin-top: 10px;
+      }
+
       .footer-grid {
         grid-template-columns: 1fr;
       }
@@ -892,6 +1164,7 @@
       <nav class="nav-links" aria-label="Primary navigation">
         <a href="#results">Results</a>
         <a href="#about">About</a>
+        <a href="#services">Services</a>
         <a href="#process">Process</a>
         <a href="#faq">FAQ</a>
         <a
@@ -959,6 +1232,12 @@
             <p class="offer-note">
               Start with a conversation. We'll help you understand the
               process and determine whether SMP may be right for you.
+            </p>
+
+            <p class="offer-note">
+              <button type="button" class="reserve-link" data-open-service="comeback">
+                Ready now? Reserve The Comeback online →
+              </button>
             </p>
 
           </div>
@@ -1286,6 +1565,40 @@
 
 
     <!-- ==================================
+         SERVICES
+         Loaded live from the store database (so price edits in the
+         Swurl Kurl store app show up here). The list below is only a
+         fallback snapshot used if the database can't be reached.
+    =================================== -->
+    <section class="services" id="services">
+
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="eyebrow">Services</span>
+          <h2>Book Your Next Appointment.</h2>
+          <p>
+            Pick a service to request a time, or schedule a consultation
+            if you'd like to talk it through first. Prefer to chat?
+            <a
+              href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20your%20services."
+              target="_blank"
+              rel="noopener noreferrer"
+              data-wa-source="services"
+              class="inline-link"
+            >Message Terrence on WhatsApp.</a>
+          </p>
+        </div>
+
+        <div class="service-grid" id="serviceGrid" aria-live="polite">
+          <p class="service-loading">Loading services…</p>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================================
          OFFER BAND
     =================================== -->
     <section class="offer-band">
@@ -1317,6 +1630,10 @@
         >
           Talk To Terrence Now
         </a>
+
+        <button type="button" class="btn btn-outline-dark" data-open-service="comeback">
+          Reserve The Comeback
+        </button>
 
       </div>
     </section>
@@ -1457,6 +1774,16 @@
             <div class="scheduler-fields">
 
               <div class="form-group">
+                <label for="schedulerName">Your Name</label>
+                <input type="text" id="schedulerName" name="scheduler_name" autocomplete="name" />
+              </div>
+
+              <div class="form-group">
+                <label for="schedulerPhone">Mobile Number</label>
+                <input type="tel" id="schedulerPhone" name="scheduler_phone" autocomplete="tel" inputmode="tel" />
+              </div>
+
+              <div class="form-group">
                 <label for="schedulerDate">Preferred Date</label>
                 <input type="date" id="schedulerDate" name="preferred_date" />
               </div>
@@ -1477,9 +1804,10 @@
               Send Request To Terrence
             </button>
 
-            <p class="whatsapp-note">
-              Opens WhatsApp with your preferred date and time already filled in
-              — Terrence will confirm availability with you directly.
+            <p class="whatsapp-note" id="schedulerNote">
+              Sends your request to Terrence and opens WhatsApp with your
+              preferred date and time already filled in — he'll confirm
+              availability with you directly.
             </p>
 
           </div>
@@ -1705,6 +2033,89 @@
   </footer>
 
 
+  <!-- ==================================
+       BOOKING / CONSULTATION / RESERVE DIALOG
+       One dialog serves every service card and the Comeback reserve button.
+  =================================== -->
+  <dialog id="bookDialog" class="book-dialog" aria-labelledby="bookTitle">
+    <div class="book-inner">
+
+      <button type="button" class="book-close" id="bookClose" aria-label="Close">×</button>
+
+      <div id="bookFormView">
+        <span class="eyebrow" id="bookEyebrow">Book</span>
+        <h3 id="bookTitle">Service</h3>
+        <p class="book-sub" id="bookSub"></p>
+
+        <form id="bookForm" novalidate>
+
+          <div class="form-group" id="bookOptionWrap" hidden>
+            <label for="bookOption">Duration</label>
+            <select id="bookOption"></select>
+          </div>
+
+          <div class="book-row">
+            <div class="form-group">
+              <label for="bookDate" id="bookDateLabel">Preferred Date</label>
+              <input type="date" id="bookDate" />
+            </div>
+            <div class="form-group" id="bookTimeWrap">
+              <label for="bookTime" id="bookTimeLabel">Preferred Time</label>
+              <select id="bookTime">
+                <option value="">Select one</option>
+                <option value="Morning">Morning</option>
+                <option value="Afternoon">Afternoon</option>
+                <option value="Evening">Evening</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="book-row">
+            <div class="form-group">
+              <label for="bookName">Your Name *</label>
+              <input type="text" id="bookName" autocomplete="name" required />
+            </div>
+            <div class="form-group">
+              <label for="bookPhone">Mobile Number *</label>
+              <input type="tel" id="bookPhone" autocomplete="tel" inputmode="tel" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="bookEmail">Email (optional)</label>
+            <input type="email" id="bookEmail" autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label for="bookNotes">Anything we should know? (optional)</label>
+            <textarea id="bookNotes" style="min-height:70px"></textarea>
+          </div>
+
+          <p class="book-total" id="bookTotal" hidden></p>
+
+          <button type="submit" class="btn" id="bookSubmit">Request Booking</button>
+          <p class="book-fine" id="bookFine">
+            Sends your request to Terrence and opens WhatsApp so you can
+            confirm. No payment is taken online.
+          </p>
+          <div class="form-status" id="bookStatus" role="alert"></div>
+        </form>
+      </div>
+
+      <div id="bookDoneView" hidden>
+        <span class="eyebrow">Request Sent</span>
+        <h3>You're on Terrence's list.</h3>
+        <p id="bookDoneText"></p>
+        <a class="btn whatsapp-btn" id="bookDoneWa" href="#" target="_blank" rel="noopener noreferrer" data-wa-source="booking_done">
+          Open WhatsApp
+        </a>
+        <button type="button" class="btn btn-ghost-dark" id="bookDoneClose">Close</button>
+      </div>
+
+    </div>
+  </dialog>
+
+
   <script>
     // Automatically updates the copyright year.
     document.getElementById("year").textContent =
@@ -1759,85 +2170,446 @@
 
 
     /*
-      SCHEDULER.
+      STORE BACKEND — appointments, bookings and purchase requests.
 
-      "Have A Date In Mind?" card in the consultation section. Builds a
-      WhatsApp message that includes the visitor's chosen date/time (if
-      any) and opens the same WhatsApp number used everywhere else on
-      the site -- no email step, per client direction.
+      Lives in the dedicated "SwurlKurl" Supabase project (separate from the
+      analytics project above). The public key below can only (a) call the
+      request functions and (b) read the active services list — it cannot
+      read anyone's requests. Every saved request instantly buzzes Terrence's
+      phone through the store app (store.html).
     */
+    const STORE_URL = "https://eyzhywxehxoqtrjzooab.supabase.co";
+    const STORE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5emh5d3hlaHhvcXRyanpvb2FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjc1MTksImV4cCI6MjEwNjcwMzUxOX0.bhlbwLEPFIkfhnGbYY5y8jffRHDZz6DQpclWLFiGNoU";
+    const WA_NUMBER = "15865535504";
+
+    async function storeRpc(fn, args) {
+      const res = await fetch(STORE_URL + "/rest/v1/rpc/" + fn, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": STORE_KEY,
+          "Authorization": "Bearer " + STORE_KEY,
+        },
+        body: JSON.stringify(args),
+      });
+      let body = null;
+      try { body = await res.json(); } catch (e) { /* non-JSON error body */ }
+      if (!res.ok) {
+        throw new Error((body && body.message) || "Something went wrong. Please try again.");
+      }
+      return body;
+    }
+
+    async function storeGet(path) {
+      const res = await fetch(STORE_URL + "/rest/v1/" + path, {
+        headers: { "apikey": STORE_KEY, "Authorization": "Bearer " + STORE_KEY },
+      });
+      if (!res.ok) throw new Error("Could not load.");
+      return res.json();
+    }
+
+    const esc = function (s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    };
+    const money = function (n) {
+      return "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 });
+    };
+    const phoneDigits = function (s) { return String(s || "").replace(/\D/g, ""); };
+    const waUrl = function (msg) {
+      return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
+    };
+    const prettyDate = function (iso) {
+      return new Date(iso + "T12:00:00").toLocaleDateString("en-US", {
+        weekday: "long", month: "long", day: "numeric", year: "numeric",
+      });
+    };
+    const todayIso = function () {
+      const d = new Date();
+      return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    };
+
+
+    /*
+      SERVICES.
+
+      Loaded live from the store database so price/visibility edits made in
+      the store app show up here without touching the site. FALLBACK_SERVICES
+      is only a snapshot used if the database can't be reached.
+    */
+    const FALLBACK_SERVICES = [
+      { id: "comeback", name: "The Comeback — 2 SMP Sessions", description: "Two scalp micropigmentation sessions during the 21-day campaign.", price: 1500, regular_price: 2000, kind: "package", options: [] },
+      { id: "microblading", name: "Eyebrow Precision Microblading", description: "Precision-shaped, natural-looking brows.", price: 325, kind: "book", options: [] },
+      { id: "haircut", name: "Designer Haircut", description: "A precision cut tailored to you, from a barber with 25 years behind the chair.", price: 100, kind: "book", options: [] },
+      { id: "massage", name: "Massage Therapy", description: "Therapeutic massage, booked by the hour.", price: 70, kind: "book", options: [{ label: "1 hour", price: 70 }, { label: "90 minutes", price: 100 }] },
+      { id: "couples-massage", name: "Couples Massage", description: "Side-by-side massage for two. 1 hour.", price: 130, kind: "book", options: [{ label: "1 hour (for two)", price: 130 }] },
+      { id: "facials", name: "Facials & Exfoliation", description: "Pricing is shared during your consultation.", price: 0, kind: "consult", options: [] },
+      { id: "trt", name: "TRT Consultation", description: "Schedule a consultation to talk through your goals and next steps.", price: 0, kind: "consult", options: [] },
+      { id: "hormone", name: "Hormone Therapy", description: "Schedule a consultation to talk through your goals and next steps.", price: 0, kind: "consult", options: [] },
+      { id: "weight-loss", name: "Weight Loss", description: "Schedule a consultation to talk through your goals and next steps.", price: 0, kind: "consult", options: [] },
+      { id: "iv-therapy", name: "IV Therapy", description: "Schedule a consultation to talk through your goals and next steps.", price: 0, kind: "consult", options: [] },
+    ];
+    let SERVICES = FALLBACK_SERVICES;
+
+    function serviceCardHtml(s) {
+      const opts = Array.isArray(s.options) ? s.options : [];
+      let tag = "Consultation";
+      let price = "";
+      let list = "";
+      let btn = '<button type="button" class="btn btn-outline-dark" data-open-service="' + esc(s.id) + '">Schedule Consultation</button>';
+
+      if (s.kind === "package") {
+        tag = "21-Day Offer";
+        price = '<div class="service-price">' + money(s.price) +
+          (s.regular_price ? "<s>" + money(s.regular_price) + "</s>" : "") + "</div>";
+        btn = '<button type="button" class="btn" data-open-service="' + esc(s.id) + '">Reserve This Offer</button>';
+      } else if (s.kind === "book") {
+        tag = "Booking";
+        if (opts.length > 1) {
+          const low = Math.min.apply(null, opts.map(function (o) { return Number(o.price); }));
+          price = '<div class="service-price"><small>From </small>' + money(low) + "</div>";
+          list = '<ul class="service-opts">' + opts.map(function (o) {
+            return "<li>" + esc(o.label) + " — " + money(o.price) + "</li>";
+          }).join("") + "</ul>";
+        } else {
+          const p = opts.length === 1 ? opts[0].price : s.price;
+          price = '<div class="service-price">' + money(p) + "</div>";
+          if (opts.length === 1) list = '<ul class="service-opts"><li>' + esc(opts[0].label) + "</li></ul>";
+        }
+        btn = '<button type="button" class="btn btn-dark" data-open-service="' + esc(s.id) + '">Book Now</button>';
+      }
+
+      return '<article class="service-card' + (s.kind === "package" ? " featured" : "") + '">' +
+        '<span class="service-tag">' + tag + "</span>" +
+        "<h3>" + esc(s.name) + "</h3>" +
+        '<p class="service-desc">' + esc(s.description || "") + "</p>" +
+        price + list + btn + "</article>";
+    }
+
+    function renderServices() {
+      const grid = document.getElementById("serviceGrid");
+      if (!grid) return;
+      grid.innerHTML = SERVICES.map(serviceCardHtml).join("");
+    }
+
+    renderServices();
+    storeGet("offers?select=id,name,description,price,regular_price,kind,options,sort&active=eq.true&order=sort.asc")
+      .then(function (rows) {
+        if (Array.isArray(rows) && rows.length) {
+          SERVICES = rows;
+          renderServices();
+        }
+      })
+      .catch(function () { /* keep the fallback snapshot */ });
+
+
+    /*
+      BOOKING / CONSULTATION / RESERVE DIALOG.
+
+      One dialog for every service card and the Comeback "Reserve" buttons.
+      On submit it (1) opens WhatsApp with the details pre-filled — WhatsApp
+      stays the primary channel — and (2) saves the request to the store
+      database, which buzzes Terrence's phone. No payment is taken online.
+    */
+    const dlg = document.getElementById("bookDialog");
+    const bookForm = document.getElementById("bookForm");
+    const bookStatus = document.getElementById("bookStatus");
+    const bookOption = document.getElementById("bookOption");
+    const bookDate = document.getElementById("bookDate");
+    const bookTime = document.getElementById("bookTime");
+    let currentService = null;
+
+    function setBookStatus(text, kind) {
+      bookStatus.textContent = text || "";
+      bookStatus.className = "form-status" + (text ? " visible " + (kind || "") : "");
+    }
+
+    function selectedOption() {
+      if (!currentService || !currentService.options || !currentService.options.length) return null;
+      return currentService.options.find(function (o) { return o.label === bookOption.value; }) || null;
+    }
+
+    function updateBookTotal() {
+      const el = document.getElementById("bookTotal");
+      const s = currentService;
+      if (!s) return;
+      if (s.kind === "book") {
+        const opt = selectedOption();
+        const p = opt ? opt.price : s.price;
+        el.textContent = "Your price: " + money(p) + (opt ? " · " + opt.label : "") + " — paid in person";
+        el.hidden = false;
+      } else if (s.kind === "package") {
+        el.textContent = "Total: " + money(s.price) + (s.regular_price ? " (regularly " + money(s.regular_price) + ")" : "") +
+          " — Terrence will arrange payment with you";
+        el.hidden = false;
+      } else {
+        el.hidden = true;
+      }
+    }
+
+    function openService(id) {
+      const s = SERVICES.find(function (x) { return x.id === id; }) ||
+        FALLBACK_SERVICES.find(function (x) { return x.id === id; });
+      if (!s) return;
+      currentService = s;
+
+      bookForm.reset();
+      setBookStatus("");
+      document.getElementById("bookFormView").hidden = false;
+      document.getElementById("bookDoneView").hidden = true;
+      bookDate.setAttribute("min", todayIso());
+
+      const timeWrap = document.getElementById("bookTimeWrap");
+      const optWrap = document.getElementById("bookOptionWrap");
+      const submit = document.getElementById("bookSubmit");
+
+      document.getElementById("bookTitle").textContent = s.name;
+      timeWrap.hidden = false;
+      optWrap.hidden = true;
+
+      if (s.kind === "package") {
+        document.getElementById("bookEyebrow").textContent = "Reserve";
+        document.getElementById("bookSub").textContent = s.description || "";
+        document.getElementById("bookDateLabel").textContent = "Preferred Start Date (optional)";
+        timeWrap.hidden = true;
+        submit.textContent = "Reserve This Offer";
+        document.getElementById("bookFine").textContent =
+          "Sends your reservation to Terrence and opens WhatsApp. No payment is taken online.";
+      } else if (s.kind === "book") {
+        document.getElementById("bookEyebrow").textContent = "Book";
+        document.getElementById("bookSub").textContent = s.description || "";
+        document.getElementById("bookDateLabel").textContent = "Preferred Date *";
+        document.getElementById("bookTimeLabel").textContent = "Preferred Time *";
+        submit.textContent = "Request Booking";
+        document.getElementById("bookFine").textContent =
+          "Sends your request to Terrence and opens WhatsApp so you can confirm. No payment is taken online.";
+        if (s.options && s.options.length) {
+          optWrap.hidden = false;
+          bookOption.innerHTML = (s.options.length > 1 ? '<option value="">Select one</option>' : "") +
+            s.options.map(function (o) {
+              return '<option value="' + esc(o.label) + '">' + esc(o.label) + " — " + money(o.price) + "</option>";
+            }).join("");
+        }
+      } else {
+        document.getElementById("bookEyebrow").textContent = "Consultation";
+        document.getElementById("bookSub").textContent =
+          "Tell us when works and Terrence will reach out to talk through your goals.";
+        document.getElementById("bookDateLabel").textContent = "Preferred Date (optional)";
+        document.getElementById("bookTimeLabel").textContent = "Preferred Time (optional)";
+        submit.textContent = "Request Consultation";
+        document.getElementById("bookFine").textContent =
+          "Sends your request to Terrence and opens WhatsApp so you can chat.";
+      }
+
+      submit.disabled = false;
+      updateBookTotal();
+
+      if (typeof dlg.showModal === "function") {
+        dlg.showModal();
+      } else {
+        window.open(waUrl("Hi Terrence! I'm interested in " + s.name + "."), "_blank", "noopener,noreferrer");
+      }
+    }
+
+    function closeDialog() {
+      if (dlg.open) dlg.close();
+    }
+
+    document.addEventListener("click", function (event) {
+      const trigger = event.target.closest("[data-open-service]");
+      if (trigger) {
+        event.preventDefault();
+        openService(trigger.getAttribute("data-open-service"));
+      }
+    });
+    document.getElementById("bookClose").addEventListener("click", closeDialog);
+    document.getElementById("bookDoneClose").addEventListener("click", closeDialog);
+    dlg.addEventListener("click", function (event) {
+      if (event.target === dlg) closeDialog(); // click on the dark backdrop
+    });
+    bookOption.addEventListener("change", updateBookTotal);
+    document.getElementById("bookDoneWa").addEventListener("click", function () {
+      logEvent("whatsapp_click", "booking_done");
+    });
+
+    bookForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const s = currentService;
+      if (!s) return;
+
+      const name = document.getElementById("bookName").value.trim();
+      const phone = document.getElementById("bookPhone").value.trim();
+      const email = document.getElementById("bookEmail").value.trim();
+      const notes = document.getElementById("bookNotes").value.trim();
+      const date = bookDate.value || null;
+      const time = bookTime.value || null;
+      const opt = selectedOption();
+
+      if (name.length < 2) return setBookStatus("Please add your name.", "error");
+      if (phoneDigits(phone).length < 10) return setBookStatus("Please enter a 10-digit mobile number.", "error");
+      if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return setBookStatus("That email address looks off.", "error");
+      if (s.kind === "book") {
+        if (s.options && s.options.length && !opt) return setBookStatus("Please pick a duration.", "error");
+        if (!date || !time) return setBookStatus("Please pick a date and a time for your booking.", "error");
+      }
+
+      // Build the WhatsApp message first and open it right away (inside the
+      // click gesture, so browsers don't block it).
+      let msg;
+      const when = (date ? " on " + prettyDate(date) : "") + (time ? " (" + time.toLowerCase() + ")" : "");
+      if (s.kind === "book") {
+        msg = "Hi Terrence! I'd like to book " + s.name + (opt ? " (" + opt.label + ")" : "") +
+          " — " + money(opt ? opt.price : s.price) + when + ". My name is " + name + ".";
+      } else if (s.kind === "package") {
+        msg = "Hi Terrence! I'd like to reserve " + s.name + " (" + money(s.price) + ")" +
+          (date ? ". I'd like to start around " + prettyDate(date) : "") + ". My name is " + name + ".";
+      } else {
+        msg = "Hi Terrence! I'd like to schedule a consultation about " + s.name +
+          (date ? ". Preferred date: " + prettyDate(date) : "") + (time ? ". Preferred time: " + time : "") +
+          ". My name is " + name + ".";
+      }
+      const link = waUrl(msg);
+      window.open(link, "_blank", "noopener,noreferrer");
+      logEvent("whatsapp_click", s.kind === "package" ? "reserve" : "booking");
+
+      const submit = document.getElementById("bookSubmit");
+      submit.disabled = true;
+      submit.textContent = "Sending…";
+      setBookStatus("");
+
+      try {
+        const result = s.kind === "package"
+          ? await storeRpc("reserve_offer", {
+              p_offer: s.id, p_qty: 1, p_name: name, p_phone: phone,
+              p_email: email || null, p_date: date, p_notes: notes || null,
+            })
+          : await storeRpc("book_service", {
+              p_service: s.id, p_option: opt ? opt.label : null, p_name: name, p_phone: phone,
+              p_email: email || null, p_date: date, p_time: time, p_notes: notes || null,
+            });
+
+        document.getElementById("bookDoneText").textContent =
+          "Your request (" + result.code + ") was sent to Terrence. WhatsApp should have opened with your " +
+          "details — send that message to confirm. If it didn't open, tap the button below.";
+        document.getElementById("bookDoneWa").setAttribute("href", link);
+        document.getElementById("bookFormView").hidden = true;
+        document.getElementById("bookDoneView").hidden = false;
+      } catch (err) {
+        submit.disabled = false;
+        submit.textContent = "Try Again";
+        setBookStatus(
+          err.message + " WhatsApp has your details ready — send that message and Terrence will take it from there.",
+          "error"
+        );
+      }
+    });
+
+
+    /*
+      SCHEDULER (consultation card).
+
+      Name + mobile + optional date/time. Sends the request to the store
+      database (buzzing Terrence's phone) and opens WhatsApp with the
+      details pre-filled.
+    */
+    const schedulerNameInput = document.getElementById("schedulerName");
+    const schedulerPhoneInput = document.getElementById("schedulerPhone");
     const schedulerDateInput = document.getElementById("schedulerDate");
     const schedulerTimeInput = document.getElementById("schedulerTime");
     const schedulerSubmit = document.getElementById("schedulerSubmit");
+    const schedulerNote = document.getElementById("schedulerNote");
 
     if (schedulerDateInput) {
-      // Don't let visitors pick a date in the past.
-      const todayStr = new Date().toISOString().split("T")[0];
-      schedulerDateInput.setAttribute("min", todayStr);
+      schedulerDateInput.setAttribute("min", todayIso());
+    }
+
+    function setSchedulerNote(text, color) {
+      schedulerNote.textContent = text;
+      schedulerNote.style.setProperty("color", color || "#999", "important");
     }
 
     if (schedulerSubmit) {
       schedulerSubmit.addEventListener("click", function () {
-        const dateVal = schedulerDateInput ? schedulerDateInput.value : "";
-        const timeVal = schedulerTimeInput ? schedulerTimeInput.value : "";
+        const name = schedulerNameInput.value.trim();
+        const phone = schedulerPhoneInput.value.trim();
+        const dateVal = schedulerDateInput.value;
+        const timeVal = schedulerTimeInput.value;
 
-        let message =
-          "Hi Terrence! I'd like to schedule an SMP consultation at Swurl Kurl Studios.";
-
-        if (dateVal) {
-          // Parse as a local date (not UTC) so the weekday shown matches
-          // what the visitor picked.
-          const dateObj = new Date(dateVal + "T00:00:00");
-          const formattedDate = dateObj.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          });
-          message += " Preferred date: " + formattedDate + ".";
+        if (name.length < 2 || phoneDigits(phone).length < 10) {
+          setSchedulerNote("Add your name and a 10-digit mobile number so Terrence can reach you.", "#ff8a80");
+          (name.length < 2 ? schedulerNameInput : schedulerPhoneInput).focus();
+          return;
         }
 
-        if (timeVal) {
-          message += " Preferred time: " + timeVal + ".";
-        }
-
-        if (!dateVal && !timeVal) {
-          message += " I'd like to find a time that works.";
-        }
+        let message = "Hi Terrence! I'd like to schedule an SMP consultation at Swurl Kurl Studios.";
+        if (dateVal) message += " Preferred date: " + prettyDate(dateVal) + ".";
+        if (timeVal) message += " Preferred time: " + timeVal + ".";
+        if (!dateVal && !timeVal) message += " I'd like to find a time that works.";
+        message += " My name is " + name + ".";
 
         logEvent("whatsapp_click", "scheduler");
+        window.open(waUrl(message), "_blank", "noopener,noreferrer");
 
-        const url = "https://wa.me/15865535504?text=" + encodeURIComponent(message);
-        window.open(url, "_blank", "noopener,noreferrer");
+        schedulerSubmit.disabled = true;
+        setSchedulerNote("Sending your request…");
+
+        storeRpc("request_appointment", {
+          p_name: name, p_phone: phone, p_email: null, p_source: "scheduler", p_goal: "SMP consultation",
+          p_contact_pref: null, p_best_time: null, p_lead_source: null,
+          p_date: dateVal || null, p_time: timeVal || null, p_notes: null,
+        }).then(function () {
+          setSchedulerNote("Request sent — Terrence has been notified. WhatsApp opened so you can confirm.", "#7ee2a0");
+        }).catch(function (err) {
+          setSchedulerNote(err.message + " Your WhatsApp message is ready — send it and Terrence will take it from there.", "#ff8a80");
+        }).finally(function () {
+          schedulerSubmit.disabled = false;
+        });
       });
     }
 
 
     /*
-      TEMPORARY FORM BEHAVIOR.
+      CONSULTATION FORM.
 
-      No CRM / lead endpoint has been connected yet. Until the client
-      picks one (HubSpot, HighLevel, Formspree, a Zapier/Make webhook,
-      or a custom backend), submissions are not sent or stored anywhere.
-      We surface an inline notice instead of losing the click silently,
-      and log the payload to the console so nothing is thrown away
-      during this staging period. Remove this block once form.action
-      points at a real endpoint.
+      Saves the request to the store database (buzzing Terrence's phone).
     */
-    const form = document.getElementById("consultationForm");
-    const status = document.getElementById("formStatus");
+    const consultForm = document.getElementById("consultationForm");
+    const consultStatus = document.getElementById("formStatus");
 
-    form.addEventListener("submit", function (event) {
-      if (!form.action) {
-        event.preventDefault();
+    function setConsultStatus(text, kind) {
+      consultStatus.textContent = text;
+      consultStatus.className = "form-status visible " + (kind || "");
+    }
 
-        const data = Object.fromEntries(new FormData(form).entries());
-        console.log("[Swurl Kurl consultation form — staging]", data);
+    consultForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const fd = new FormData(consultForm);
+      const goalSelect = document.getElementById("goal");
+      const button = consultForm.querySelector('button[type="submit"]');
 
-        status.textContent =
-          "Thanks — this site is still in staging, so your info wasn't sent anywhere yet. " +
-          "Connect this form to a CRM before launch.";
-        status.classList.add("visible");
+      button.disabled = true;
+      setConsultStatus("Sending your request…");
+
+      try {
+        await storeRpc("request_appointment", {
+          p_name: (String(fd.get("first_name") || "") + " " + String(fd.get("last_name") || "")).trim(),
+          p_phone: String(fd.get("phone") || ""),
+          p_email: String(fd.get("email") || "") || null,
+          p_source: "form",
+          p_goal: goalSelect.options[goalSelect.selectedIndex].text,
+          p_contact_pref: String(fd.get("contact_preference") || "") || null,
+          p_best_time: String(fd.get("best_contact_time") || "") || null,
+          p_lead_source: String(fd.get("lead_source") || "") || null,
+          p_date: null, p_time: null,
+          p_notes: String(fd.get("notes") || "") || null,
+        });
+        consultForm.reset();
+        setConsultStatus("Thanks — your request is in. Terrence has been notified and will reach out personally.", "success");
+      } catch (err) {
+        setConsultStatus(err.message + " You can also message Terrence directly on WhatsApp using the button above.", "error");
+      } finally {
+        button.disabled = false;
       }
     });
   </script>

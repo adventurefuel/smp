@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Swurl Kurl Store</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b0b0b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Swurl Kurl">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0b0b0b;--ink:#161616;--line:#2a2a2a;--white:#fff;--warm:#f7f5f1;--gray:#6c6c6c;--lgray:#e8e5df;--gold:#e8b351;--gold-deep:#a6730f;--green:#25D366;--red:#c0392b;--blue:#2f6fb5}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:'Inter',Arial,Helvetica,sans-serif;background:var(--warm);color:var(--black);line-height:1.5;padding-bottom:env(safe-area-inset-bottom)}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+.wrap{width:min(100% - 28px,980px);margin:0 auto}
+.top{position:sticky;top:0;z-index:50;background:var(--black);color:var(--white);border-bottom:1px solid rgba(232,179,81,.45);padding-top:env(safe-area-inset-top)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand img{height:42px;width:auto}
+.brand b{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.nav a{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;text-decoration:none;color:#ddd;padding:8px 6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:10px 18px;border:1px solid var(--gold);background:var(--gold);color:var(--black);font-weight:600;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;text-decoration:none;border-radius:2px}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.ghost{background:transparent;color:var(--black);border-color:#bdb8ae}
+.top .btn.ghost{color:#eee;border-color:#555}
+.btn.sm{min-height:38px;padding:7px 12px;font-size:.72rem}
+.btn.wa{background:var(--green);border-color:var(--green)}
+.btn.danger{background:transparent;border-color:#d9a79f;color:var(--red)}
+.btn.ok{background:var(--black);border-color:var(--black);color:var(--white)}
+.linkbtn{background:none;border:0;padding:4px 2px;text-decoration:underline;cursor:pointer;font-size:.8rem;color:var(--gray)}
+.loading{padding:70px 0;text-align:center;color:var(--gray)}
+.note{font-size:.82rem;color:var(--gray)}
+/* auth */
+.authbox{max-width:400px;margin:44px auto;background:var(--white);border:1px solid var(--lgray);padding:30px 26px;box-shadow:0 14px 38px rgba(0,0,0,.08)}
+.authbox h1{margin:0 0 6px;font-size:1.55rem;font-weight:800;letter-spacing:-.02em}
+.authbox label{display:block;margin:14px 0 6px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.authbox input{width:100%;padding:13px;border:1px solid #cfcfcf;background:#fff;border-radius:0;outline:none}
+.authbox input:focus,.field:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(232,179,81,.25)}
+.authbox .btn{width:100%;margin-top:20px}
+.tabs2{display:flex;gap:6px;margin-bottom:6px}
+.tabs2 button{flex:1;padding:10px;border:0;border-bottom:2px solid var(--lgray);background:none;font-weight:600;font-size:.82rem;cursor:pointer;color:var(--gray)}
+.tabs2 button.on{border-color:var(--gold);color:var(--black)}
+.err{margin-top:14px;padding:10px 12px;background:#fdecea;border:1px solid #f1b5ad;color:#8a2a1f;font-size:.84rem}
+.okbox{margin-top:14px;padding:10px 12px;background:#eaf6ee;border:1px solid #a9d8b8;color:#1d5a33;font-size:.84rem}
+/* alerts */
+.alerts{margin:18px 0 6px;padding:14px 16px;background:var(--black);color:#eee;border:1px solid rgba(232,179,81,.5);display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between;font-size:.84rem}
+.alerts b{color:var(--gold)}
+.alerts .note{color:#aaa}
+.alerts.on{background:#fff;color:var(--black);border-color:var(--lgray)}
+.alerts.on .linkbtn{color:var(--gray)}
+.warnbox{margin:18px 0 6px;padding:12px 14px;background:#fff6e0;border:1px solid #ecd28c;font-size:.84rem}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.stat{background:#fff;border:1px solid var(--lgray);padding:14px 14px 12px}
+.stat span{display:block;font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gray)}
+.stat b{display:block;font-size:1.55rem;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+.stat.hot b{color:var(--gold-deep)}
+/* tabs */
+.tabs{display:flex;gap:4px;margin:10px 0 14px;border-bottom:1px solid var(--lgray);overflow-x:auto}
+.tabs button{padding:12px 16px;border:0;border-bottom:3px solid transparent;background:none;font-weight:600;font-size:.86rem;cursor:pointer;color:var(--gray);white-space:nowrap}
+.tabs button.on{border-color:var(--gold);color:var(--black)}
+.tabs i{font-style:normal;display:inline-block;min-width:20px;margin-left:6px;padding:1px 6px;background:var(--gold);color:var(--black);border-radius:10px;font-size:.7rem}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chips button{padding:7px 13px;border:1px solid #cfc9bd;background:#fff;border-radius:20px;font-size:.78rem;font-weight:600;cursor:pointer}
+.chips button.on{background:var(--black);border-color:var(--black);color:#fff}
+/* cards */
+.card{background:#fff;border:1px solid var(--lgray);padding:16px 16px 14px;margin-bottom:12px}
+.card.fresh{border-color:var(--gold);box-shadow:0 0 0 2px rgba(232,179,81,.25)}
+.card .hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.card h3{margin:0;font-size:1.05rem;font-weight:700}
+.card .meta{font-size:.78rem;color:var(--gray)}
+.badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.66rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:var(--lgray);color:#444}
+.badge.new{background:var(--gold);color:var(--black)}
+.badge.confirmed{background:#dbe9f7;color:#1d4d82}
+.badge.completed,.badge.paid{background:#dcf1e3;color:#1d5a33}
+.badge.cancelled,.badge.no_show{background:#f6dcd8;color:#8a2a1f}
+.badge.type{background:var(--black);color:var(--gold)}
+.svc{margin:8px 0 2px;font-weight:600}
+.svc em{font-style:normal;color:var(--gold-deep)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:10px 0;font-size:.88rem}
+.kv span{color:var(--gray)}
+.kv b{font-weight:500;word-break:break-word}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+textarea.field,input.field,select.field{width:100%;padding:10px 11px;border:1px solid #cfcfcf;background:#fff;border-radius:0;outline:none;font-size:.9rem}
+textarea.field{min-height:56px;resize:vertical}
+.empty{padding:40px 10px;text-align:center;color:var(--gray);border:1px dashed #cfc9bd;background:#fff}
+/* services editor */
+.svc-ed{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;margin-top:10px}
+.svc-ed label{display:block;font-size:.66rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--gray);margin-bottom:4px}
+.svc-ed .full{grid-column:1/-1}
+.toasts{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;z-index:200;pointer-events:none;align-items:center}
+.toast{pointer-events:auto;max-width:460px;width:100%;background:var(--black);color:#fff;padding:12px 15px;border-left:4px solid var(--gold);font-size:.88rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.toast small{display:block;font-weight:400;color:#ccc;margin-top:2px}
+@media(max-width:640px){.stats{grid-template-columns:1fr 1fr}.svc-ed{grid-template-columns:1fr}.nav a.hide-sm{display:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="store.html#appointments"><img src="img/icon-192.png" alt="Swurl Kurl"><b>Store</b></a>
+  <nav class="nav"><a class="hide-sm" href="admin.html">Site analytics</a><a class="hide-sm" href="index.html" target="_blank" rel="noopener">View site</a><button class="btn ghost sm" id="signout" hidden>Sign out</button></nav>
+</div></header>
+<main id="view"><div class="loading">Loading…</div></main>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const CFG={
+  URL:'https://eyzhywxehxoqtrjzooab.supabase.co',
+  KEY:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5emh5d3hlaHhvcXRyanpvb2FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjc1MTksImV4cCI6MjEwNjcwMzUxOX0.bhlbwLEPFIkfhnGbYY5y8jffRHDZz6DQpclWLFiGNoU',
+  VAPID_PUBLIC:'BBhfctT3gn-NwAVFWL4--gEWyjhHsOTX1_vzfbeSAZetfTnfmXyipG4XKrrKoSQtg20LKoGQW1NWprjWCQle4qQ',
+  WA_NUMBER:'15865535504'
+};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
+const errMsg=e=>(e&&(e.message||e.error_description||e.msg))||'Something went wrong. Check your connection and try again.';
+const sb=window.supabase.createClient(CFG.URL,CFG.KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+const V=()=>$('#view');
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+
+function toast(msg,sub){const el=document.createElement('div');el.className='toast';el.innerHTML=esc(msg)+(sub?`<small>${esc(sub)}</small>`:'');$('#toasts').appendChild(el);setTimeout(()=>el.remove(),6500)}
+const dayLabel=d=>d?new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}):'';
+const ago=ts=>{const s=(Date.now()-new Date(ts))/1000;if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' hr ago';return new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric'})};
+const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const waLink=(phone,msg)=>'https://wa.me/1'+String(phone).replace(/\D/g,'').slice(-10)+'?text='+encodeURIComponent(msg);
+const first=n=>String(n||'').trim().split(/\s+/)[0]||'there';
+
+/* ---------- state ---------- */
+let user=null,A={appts:[],orders:[],offers:[]},tab=(location.hash.replace('#','')||'appointments'),fAppt='new',fOrd='new',channel=null,swReg=null,fresh=new Set();
+if(!['appointments','purchases','services'].includes(tab))tab='appointments';
+
+/* ---------- service worker + push ---------- */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js').then(r=>{swReg=r;refreshPush()}).catch(()=>{});
+  navigator.serviceWorker.addEventListener('message',e=>{if(e.data?.type==='push'&&document.visibilityState==='visible')reloadData()});
+}
+const b64ToU8=b=>{const p='='.repeat((4-b.length%4)%4),s=(b+p).replace(/-/g,'+').replace(/_/g,'/'),r=atob(s);return Uint8Array.from([...r].map(c=>c.charCodeAt(0)))};
+/* The service worker can fail to register (blocked, private mode, unsupported host). Never let that
+   block the dashboard: wait a few seconds for it, then fall back to "no alerts on this device". */
+async function getReg(){
+  if(swReg)return swReg;
+  try{return await Promise.race([navigator.serviceWorker.ready,new Promise(r=>setTimeout(()=>r(null),3000))])}catch(_){return null}
+}
+let ps=null;
+async function refreshPush(){ps=await pushState();if(user)render()}
+async function pushState(){
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window))return isIOS&&!standalone?'ios-install':'unsupported';
+  if(isIOS&&!standalone)return'ios-install';
+  if(Notification.permission==='denied')return'denied';
+  try{const reg=await getReg();if(!reg)return'unsupported';const sub=await reg.pushManager.getSubscription();return sub&&Notification.permission==='granted'?'on':'off'}catch(_){return'off'}
+}
+async function enablePush(){
+  try{
+    const perm=await Notification.requestPermission();
+    if(perm!=='granted'){toast('Alerts are blocked','Allow notifications for this app in your phone settings, then try again.');return refreshPush()}
+    const reg=await getReg();if(!reg)throw new Error('The app is still starting up. Reload and try again.');
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(CFG.VAPID_PUBLIC)});
+    const j=sub.toJSON();
+    const label=(isIOS?'iPhone':/android/i.test(navigator.userAgent)?'Android':'Computer')+(standalone?' app':' browser');
+    const {error}=await sb.from('push_subscriptions').upsert({endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth,user_id:user.id,label},{onConflict:'endpoint'});
+    if(error)throw error;
+    toast('Phone alerts are on','Sending a test alert now…');await refreshPush();setTimeout(testPush,600);
+  }catch(e){toast('Could not turn on alerts',errMsg(e));refreshPush()}
+}
+async function disablePush(){
+  const reg=await getReg();const sub=reg?await reg.pushManager.getSubscription():null;
+  if(sub){await sb.from('push_subscriptions').delete().eq('endpoint',sub.endpoint);await sub.unsubscribe()}
+  toast('Alerts turned off on this device');refreshPush();
+}
+async function testPush(){
+  try{
+    const {data:{session}}=await sb.auth.getSession();
+    const r=await fetch(CFG.URL+'/functions/v1/notify-request',{method:'POST',headers:{'Content-Type':'application/json','apikey':CFG.KEY,'Authorization':'Bearer '+session.access_token},body:'{}'});
+    const j=await r.json();
+    if(!r.ok)throw new Error(j.error||'Test failed');
+    toast(j.sent?'Test alert sent':'No device is registered yet',j.sent?`Delivered to ${j.sent} device${j.sent>1?'s':''}.`:'Turn on phone alerts first.');
+  }catch(e){toast('Test alert failed',errMsg(e))}
+}
+
+/* ---------- auth ---------- */
+let authMode='in';
+function vAuth(mode,msg,kind){
+  authMode=mode;$('#signout').hidden=true;
+  if(mode==='newpw'){V().innerHTML=`<div class="authbox"><h1>New password</h1><label for="npw">Choose a new password</label><input id="npw" type="password" minlength="8" autocomplete="new-password"><button class="btn" id="npwgo">Save password</button><div id="amsg"></div></div>`;
+    $('#npwgo').onclick=async()=>{const pw=$('#npw').value;if(pw.length<8)return $('#amsg').innerHTML='<div class="err">Use at least 8 characters.</div>';
+      const {error}=await sb.auth.updateUser({password:pw});if(error)return $('#amsg').innerHTML=`<div class="err">${esc(errMsg(error))}</div>`;toast('Password updated');boot()};return}
+  const up=mode==='up';
+  V().innerHTML=`<div class="authbox"><div class="tabs2"><button data-m="in" class="${up?'':'on'}">Sign in</button><button data-m="up" class="${up?'on':''}">First-time setup</button></div>
+   <h1>${up?'Create the owner login':'Store login'}</h1><p class="note" style="margin:0 0 4px">${up?'Use the one-time setup code you were given.':'Appointments and purchases for Swurl Kurl Studios.'}</p>
+   <label for="em">Email</label><input id="em" type="email" autocomplete="email" inputmode="email">
+   <label for="pw">Password</label><input id="pw" type="password" autocomplete="${up?'new-password':'current-password'}" minlength="8">
+   ${up?'<label for="code">Setup code</label><input id="code" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false">':''}
+   <button class="btn" id="go">${up?'Create login':'Sign in'}</button>
+   ${up?'':'<div style="margin-top:12px;text-align:center"><button class="linkbtn" id="forgot">Forgot password?</button></div>'}
+   <div id="amsg">${msg?`<div class="${kind==='ok'?'okbox':'err'}">${esc(msg)}</div>`:''}</div></div>`;
+  document.querySelectorAll('.tabs2 button').forEach(b=>b.onclick=()=>vAuth(b.dataset.m));
+  const go=async()=>{
+    const email=$('#em').value.trim(),pw=$('#pw').value;
+    if(!email||pw.length<8)return $('#amsg').innerHTML='<div class="err">Enter your email and a password of at least 8 characters.</div>';
+    $('#go').disabled=true;
+    try{
+      if(!up){const {error}=await sb.auth.signInWithPassword({email,password:pw});if(error)throw error;return boot()}
+      const code=$('#code').value.trim();if(!code)throw new Error('Enter your setup code.');
+      sessionStorage.setItem('sk_claim',code);
+      const {data,error}=await sb.auth.signUp({email,password:pw,options:{emailRedirectTo:location.origin+'/store.html'}});
+      if(error)throw error;
+      if(data.session)return boot();
+      vAuth('in','Check your email and confirm your address, then sign in here. You will be asked for your setup code once.','ok');
+    }catch(e){$('#amsg').innerHTML=`<div class="err">${esc(errMsg(e))}</div>`;$('#go').disabled=false}
+  };
+  $('#go').onclick=go;[...document.querySelectorAll('.authbox input')].forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')go()}));
+  const f=$('#forgot');if(f)f.onclick=async()=>{const email=$('#em').value.trim();if(!email)return $('#amsg').innerHTML='<div class="err">Type your email above first.</div>';
+    const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/store.html'});$('#amsg').innerHTML=error?`<div class="err">${esc(errMsg(error))}</div>`:'<div class="okbox">If that email has a login, a reset link is on its way.</div>'};
+}
+function vClaim(msg){
+  $('#signout').hidden=false;
+  V().innerHTML=`<div class="authbox"><h1>One more step</h1><p class="note">${esc(user.email)} is signed in but is not set up as an owner yet. Enter your one-time setup code.</p>
+  <label for="code">Setup code</label><input id="code" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" value="${esc(sessionStorage.getItem('sk_claim')||'')}">
+  <button class="btn" id="claimgo">Activate owner access</button><div id="amsg">${msg?`<div class="err">${esc(msg)}</div>`:''}</div></div>`;
+  $('#claimgo').onclick=async()=>{const {error}=await sb.rpc('claim_owner',{p_code:$('#code').value});if(error)return vClaim(errMsg(error));sessionStorage.removeItem('sk_claim');boot()};
+}
+
+/* ---------- data ---------- */
+async function reloadData(){
+  const [a,o,s]=await Promise.all([
+    sb.from('appointments').select('*').order('created_at',{ascending:false}).limit(500),
+    sb.from('orders').select('*').order('created_at',{ascending:false}).limit(500),
+    sb.from('offers').select('*').order('sort')]);
+  if(a.error)throw a.error;if(o.error)throw o.error;if(s.error)throw s.error;
+  A.appts=a.data;A.orders=o.data;A.offers=s.data;
+  document.title=(newCount()?`(${newCount()}) `:'')+'Swurl Kurl Store';
+  render();
+}
+const newCount=()=>A.appts.filter(x=>x.status==='new').length+A.orders.filter(x=>x.status==='new').length;
+function subscribe(){
+  if(channel)sb.removeChannel(channel);
+  channel=sb.channel('owner-live')
+   .on('postgres_changes',{event:'INSERT',schema:'public',table:'appointments'},p=>{fresh.add(p.new.id);const r=p.new;toast(r.request_type==='booking'?'New booking':'New consultation request',`${r.name}${r.service_name?' · '+r.service_name:''}`);reloadData()})
+   .on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},p=>{fresh.add(p.new.id);toast('New purchase request',`${p.new.name} · ${money(p.new.total)}`);reloadData()})
+   .on('postgres_changes',{event:'UPDATE',schema:'public',table:'appointments'},()=>reloadData())
+   .on('postgres_changes',{event:'UPDATE',schema:'public',table:'orders'},()=>reloadData())
+   .subscribe();
+}
+
+/* ---------- views ---------- */
+function alertsBar(){
+  if(ps===null)return'';
+  if(ps==='on')return`<div class="alerts on"><span>🔔 Phone alerts are on for this device.</span><span><button class="linkbtn" id="testpush">Send test alert</button> <button class="linkbtn" id="offpush">Turn off here</button></span></div>`;
+  if(ps==='ios-install')return`<div class="alerts"><span><b>Get a buzz on your iPhone for every new request.</b><br><span class="note">Tap the Share button in Safari, choose <b>Add to Home Screen</b>, then open Swurl Kurl from your home screen and turn on alerts.</span></span></div>`;
+  if(ps==='denied')return`<div class="warnbox">Notifications are blocked for this app. Turn them on in your phone or browser settings for this site, then reload.</div>`;
+  if(ps==='unsupported')return`<div class="warnbox">This browser can't receive push alerts. Use Chrome on Android, Safari on iPhone (added to the home screen), or Chrome/Edge/Safari on a computer.</div>`;
+  return`<div class="alerts"><span><b>Get a buzz on your phone for every new appointment and purchase.</b><br><span class="note">Works even when the app is closed. No text messages involved.</span></span><button class="btn sm" id="onpush">Turn on phone alerts</button></div>`;
+}
+function stats(){
+  const t=todayStr();
+  const nNew=newCount();
+  const upcoming=A.appts.filter(a=>a.status==='confirmed'&&(!a.preferred_date||a.preferred_date>=t)).length;
+  const awaiting=A.orders.filter(o=>o.status==='confirmed').reduce((s,o)=>s+Number(o.total),0);
+  const paid=A.orders.filter(o=>['paid','completed'].includes(o.status)).reduce((s,o)=>s+Number(o.total),0)
+    +A.appts.filter(a=>a.status==='completed'&&a.price).reduce((s,a)=>s+Number(a.price),0);
+  return`<div class="stats"><div class="stat ${nNew?'hot':''}"><span>Needs a reply</span><b>${nNew}</b></div><div class="stat"><span>Upcoming confirmed</span><b>${upcoming}</b></div><div class="stat"><span>Awaiting payment</span><b>${money(awaiting)}</b></div><div class="stat"><span>Collected</span><b>${money(paid)}</b></div></div>`;
+}
+function apptCard(a){
+  const when=[dayLabel(a.preferred_date),a.preferred_time].filter(Boolean).join(' · ')||'No date picked';
+  const svc=a.service_name?`<div class="svc">${esc(a.service_name)}${a.option_label?' · '+esc(a.option_label):''}${a.price?` · <em>${money(a.price)}</em>`:''}</div>`:'';
+  const msg=a.request_type==='booking'
+    ?`Hi ${first(a.name)}, it's Terrence at Swurl Kurl Studios. I got your booking request for ${a.service_name}${a.preferred_date?' on '+dayLabel(a.preferred_date):''}${a.preferred_time?' ('+a.preferred_time.toLowerCase()+')':''}. Let me confirm the exact time with you.`
+    :`Hi ${first(a.name)}, it's Terrence at Swurl Kurl Studios. Thanks for reaching out${a.service_name?' about '+a.service_name:''}${a.preferred_date?' — I see you were hoping for '+dayLabel(a.preferred_date):''}. When's a good time to talk?`;
+  const acts=[];
+  if(a.status==='new')acts.push(['confirmed','Confirm','ok']);
+  if(a.status==='confirmed')acts.push(['completed','Mark completed','ok'],['no_show','No-show','ghost']);
+  if(['new','confirmed'].includes(a.status))acts.push(['cancelled','Cancel','danger']);
+  if(['cancelled','no_show','completed'].includes(a.status))acts.push(['new','Reopen','ghost']);
+  return`<div class="card ${fresh.has(a.id)?'fresh':''}" data-id="${a.id}" data-t="appointments">
+   <div class="hd"><div><h3>${esc(a.name)}</h3><div class="meta">${esc(a.code)} · ${ago(a.created_at)}</div></div>
+    <div><span class="badge type">${a.request_type==='booking'?'Booking':'Consultation'}</span> <span class="badge ${a.status}">${a.status.replace('_',' ')}</span></div></div>
+   ${svc}
+   <div class="kv"><span>When</span><b>${esc(when)}</b><span>Phone</span><b>${esc(a.phone)}</b>${a.email?`<span>Email</span><b>${esc(a.email)}</b>`:''}${a.goal?`<span>Goal</span><b>${esc(a.goal)}</b>`:''}${a.contact_pref?`<span>Prefers</span><b>${esc(a.contact_pref)}${a.best_time?' · '+esc(a.best_time):''}</b>`:''}${a.lead_source?`<span>Heard via</span><b>${esc(a.lead_source)}</b>`:''}${a.notes?`<span>Notes</span><b>${esc(a.notes)}</b>`:''}</div>
+   <textarea class="field" data-note placeholder="Private notes (only you can see these)">${esc(a.admin_notes||'')}</textarea>
+   <div class="acts"><a class="btn wa sm" href="${waLink(a.phone,msg)}" target="_blank" rel="noopener">WhatsApp</a><a class="btn ghost sm" href="tel:${a.phone.replace(/\D/g,'')}">Call</a>
+    ${acts.map(([s,l,c])=>`<button class="btn ${c} sm" data-status="${s}">${l}</button>`).join('')}
+    ${a.status==='cancelled'?'<button class="btn danger sm" data-del>Delete</button>':''}</div></div>`;
+}
+function orderCard(o){
+  const msg=`Hi ${first(o.name)}, it's Terrence at Swurl Kurl Studios. I got your reservation for ${o.offer_name} (${money(o.total)}). Let's get you set up — how would you like to take care of payment?`;
+  const acts=[];
+  if(o.status==='new')acts.push(['confirmed','Confirm','ok']);
+  if(['new','confirmed'].includes(o.status))acts.push(['paid','Mark paid','ok']);
+  if(o.status==='paid')acts.push(['completed','Mark completed','ok']);
+  if(['new','confirmed'].includes(o.status))acts.push(['cancelled','Cancel','danger']);
+  if(['cancelled','completed'].includes(o.status))acts.push(['new','Reopen','ghost']);
+  return`<div class="card ${fresh.has(o.id)?'fresh':''}" data-id="${o.id}" data-t="orders">
+   <div class="hd"><div><h3>${esc(o.name)}</h3><div class="meta">${esc(o.code)} · ${ago(o.created_at)}</div></div><div><span class="badge ${o.status}">${o.status}</span></div></div>
+   <div class="svc">${o.qty>1?o.qty+' × ':''}${esc(o.offer_name)} · <em>${money(o.total)}</em></div>
+   <div class="kv"><span>Phone</span><b>${esc(o.phone)}</b>${o.email?`<span>Email</span><b>${esc(o.email)}</b>`:''}${o.preferred_date?`<span>Start</span><b>${esc(dayLabel(o.preferred_date))}</b>`:''}${o.notes?`<span>Notes</span><b>${esc(o.notes)}</b>`:''}${o.paid_at?`<span>Paid</span><b>${esc(new Date(o.paid_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}))}</b>`:''}</div>
+   <textarea class="field" data-note placeholder="Private notes (payment method, etc.)">${esc(o.admin_notes||'')}</textarea>
+   <div class="acts"><a class="btn wa sm" href="${waLink(o.phone,msg)}" target="_blank" rel="noopener">WhatsApp</a><a class="btn ghost sm" href="tel:${o.phone.replace(/\D/g,'')}">Call</a>
+    ${acts.map(([s,l,c])=>`<button class="btn ${c} sm" data-status="${s}">${l}</button>`).join('')}
+    ${o.status==='cancelled'?'<button class="btn danger sm" data-del>Delete</button>':''}</div></div>`;
+}
+function svcCard(s){
+  const opts=(s.options||[]).map(o=>`${o.label} | ${o.price}`).join('\n');
+  return`<div class="card" data-sid="${esc(s.id)}"><div class="hd"><div><h3>${esc(s.name)}</h3><div class="meta">${esc(s.id)}</div></div><span class="badge ${s.active?'paid':'cancelled'}">${s.active?'showing on site':'hidden'}</span></div>
+  <div class="svc-ed">
+   <div class="full"><label>Name</label><input class="field" data-f="name" value="${esc(s.name)}"></div>
+   <div class="full"><label>Description</label><textarea class="field" data-f="description">${esc(s.description||'')}</textarea></div>
+   <div><label>Type</label><select class="field" data-f="kind"><option value="book" ${s.kind==='book'?'selected':''}>Bookable (price + date/time)</option><option value="consult" ${s.kind==='consult'?'selected':''}>Consultation only</option><option value="package" ${s.kind==='package'?'selected':''}>Package (reserve &amp; pay)</option></select></div>
+   <div><label>Price ($)</label><input class="field" data-f="price" inputmode="decimal" value="${s.price??''}"></div>
+   <div class="full"><label>Duration options — one per line: label | price</label><textarea class="field" data-f="options" placeholder="1 hour | 70&#10;90 minutes | 100">${esc(opts)}</textarea></div>
+   <div><label>Regular price (for packages)</label><input class="field" data-f="regular_price" inputmode="decimal" value="${s.regular_price??''}"></div>
+   <div><label>Sort order</label><input class="field" data-f="sort" inputmode="numeric" value="${s.sort}"></div>
+   <div class="full"><label><input type="checkbox" data-f="active" ${s.active?'checked':''}> Show on the website</label></div>
+  </div><div class="acts"><button class="btn sm" data-savesvc>Save changes</button></div></div>`;
+}
+function render(){
+  if(!user)return;
+  const bar=alertsBar();
+  const nA=A.appts.filter(a=>a.status==='new').length,nO=A.orders.filter(o=>o.status==='new').length;
+  let body='';
+  if(tab==='appointments'){
+    const fs=[['new','New'],['confirmed','Confirmed'],['completed','Completed'],['cancelled','Cancelled / no-show'],['all','All']];
+    const list=A.appts.filter(a=>fAppt==='all'||(fAppt==='cancelled'?['cancelled','no_show'].includes(a.status):a.status===fAppt));
+    body=`<div class="chips">${fs.map(([k,l])=>`<button data-fa="${k}" class="${fAppt===k?'on':''}">${l}</button>`).join('')}</div>${list.length?list.map(apptCard).join(''):'<div class="empty">Nothing here yet. New requests show up instantly and buzz your phone.</div>'}`;
+  }else if(tab==='purchases'){
+    const fs=[['new','New'],['confirmed','Awaiting payment'],['paid','Paid'],['completed','Completed'],['cancelled','Cancelled'],['all','All']];
+    const list=A.orders.filter(o=>fOrd==='all'||o.status===fOrd);
+    body=`<div class="chips">${fs.map(([k,l])=>`<button data-fo="${k}" class="${fOrd===k?'on':''}">${l}</button>`).join('')}</div>${list.length?list.map(orderCard).join(''):'<div class="empty">No purchase requests in this view.</div>'}`;
+  }else{
+    body=`<p class="note" style="margin-top:0">Changes here update the website's Services section right away. To add a new service, use the button at the bottom.</p>${A.offers.map(svcCard).join('')}<div class="acts"><button class="btn ghost" id="addsvc">+ Add a service</button></div>`;
+  }
+  const active=document.activeElement;const keep=active&&active.matches&&active.matches('textarea,input')?null:null;
+  V().innerHTML=`<div class="wrap">${bar}${stats()}
+   <div class="tabs"><button data-tab="appointments" class="${tab==='appointments'?'on':''}">Appointments${nA?`<i>${nA}</i>`:''}</button><button data-tab="purchases" class="${tab==='purchases'?'on':''}">Purchases${nO?`<i>${nO}</i>`:''}</button><button data-tab="services" class="${tab==='services'?'on':''}">Services</button></div>
+   ${body}<p class="note" style="text-align:center;margin:26px 0 40px"><a href="admin.html">Site analytics</a> · <a href="index.html" target="_blank" rel="noopener">View site</a></p></div>`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('button,a');if(!t)return;
+  if(t.id==='signout'){await sb.auth.signOut();location.reload();return}
+  if(t.id==='onpush'){enablePush();return}
+  if(t.id==='offpush'){disablePush();return}
+  if(t.id==='testpush'){testPush();return}
+  if(t.dataset.tab){tab=t.dataset.tab;history.replaceState(null,'','#'+tab);render();return}
+  if(t.dataset.fa){fAppt=t.dataset.fa;render();return}
+  if(t.dataset.fo){fOrd=t.dataset.fo;render();return}
+  const card=t.closest('.card');
+  if(t.dataset.status&&card){
+    const table=card.dataset.t,id=card.dataset.id;t.disabled=true;
+    const {error}=await sb.from(table).update({status:t.dataset.status}).eq('id',id);
+    if(error){toast('Not saved',errMsg(error));t.disabled=false;return}
+    fresh.delete(id);toast('Updated','Status changed to '+t.dataset.status.replace('_',' '));reloadData();return}
+  if(t.hasAttribute('data-del')&&card){
+    if(!confirm('Delete this record for good?'))return;
+    const {error}=await sb.from(card.dataset.t).delete().eq('id',card.dataset.id);
+    if(error)return toast('Not deleted',errMsg(error));reloadData();return}
+  if(t.hasAttribute('data-savesvc')&&card)return saveService(card);
+  if(t.id==='addsvc')return addService();
+});
+document.addEventListener('focusout',async e=>{
+  const n=e.target.closest&&e.target.closest('textarea[data-note]');if(!n)return;
+  const card=n.closest('.card');const rec=(card.dataset.t==='orders'?A.orders:A.appts).find(x=>x.id===card.dataset.id);
+  if(!rec||(rec.admin_notes||'')===n.value)return;
+  const {error}=await sb.from(card.dataset.t).update({admin_notes:n.value||null}).eq('id',card.dataset.id);
+  if(error)toast('Note not saved',errMsg(error));else{rec.admin_notes=n.value||null;toast('Note saved',null)}
+});
+async function saveService(card){
+  const g=f=>card.querySelector(`[data-f="${f}"]`);
+  const options=[];
+  for(const line of g('options').value.split('\n').map(l=>l.trim()).filter(Boolean)){
+    const m=line.match(/^(.+?)\s*\|\s*\$?(\d+(?:\.\d+)?)$/);
+    if(!m)return toast('Check the duration options','Each line should look like:  1 hour | 70');
+    options.push({label:m[1].trim(),price:Number(m[2])});
+  }
+  const kind=g('kind').value,price=Number(g('price').value||0);
+  const rec={name:g('name').value.trim(),description:g('description').value.trim()||null,kind,price:isFinite(price)?price:0,
+    regular_price:g('regular_price').value?Number(g('regular_price').value):null,options,sort:parseInt(g('sort').value||'0',10)||0,active:g('active').checked};
+  if(!rec.name)return toast('Add a name');
+  if(kind==='book'&&!options.length&&!(rec.price>0))return toast('Add a price','Bookable services need a price or duration options.');
+  const {error}=await sb.from('offers').update(rec).eq('id',card.dataset.sid);
+  if(error)return toast('Not saved',errMsg(error));
+  toast('Service saved','The website will show it right away.');reloadData();
+}
+async function addService(){
+  const name=prompt('Name of the new service?');if(!name||!name.trim())return;
+  const id=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40)||('svc-'+Date.now());
+  const {error}=await sb.from('offers').insert({id,name:name.trim(),kind:'consult',price:0,category:'general',options:[],sort:(A.offers.reduce((m,o)=>Math.max(m,o.sort),0)+1),active:false,description:'Schedule a consultation to talk through your goals and next steps.'});
+  if(error)return toast('Not added',errMsg(error));
+  toast('Service added','It is hidden until you tick "Show on the website" and save.');reloadData();
+}
+
+/* ---------- boot ---------- */
+async function boot(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){user=null;return vAuth('in')}
+  user=session.user;
+  const {data:ok,error}=await sb.rpc('is_admin');
+  if(error||!ok)return vClaim();
+  $('#signout').hidden=false;
+  refreshPush();
+  try{await reloadData();subscribe()}catch(e){V().innerHTML=`<div class="wrap loading">Couldn't load the store. ${esc(errMsg(e))}</div>`}
+}
+sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){user=null;vAuth('newpw')}else if(ev==='SIGNED_IN'&&!user)boot()});
+window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(['appointments','purchases','services'].includes(h)&&h!==tab){tab=h;render()}});
+setInterval(()=>{if(user&&document.visibilityState==='visible'&&!document.activeElement?.matches?.('textarea,input,select'))render()},60000);
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "Swurl Kurl Studios Store",
+  "short_name": "Swurl Kurl",
+  "description": "Live appointment requests and purchases for Swurl Kurl Studios.",
+  "id": "/store.html",
+  "start_url": "/store.html#appointments",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0b0b",
+  "theme_color": "#0b0b0b",
+  "icons": [
+    { "src": "/img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/img/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/img/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

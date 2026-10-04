@@ -14,15 +14,13 @@ The following still need real client assets/approvals before this goes live to p
   Replace with real client photos once consent and final claims are verified (per brand guide §3, §11).
 - **Video** — the "But Will It Look Natural?" section has a play-button placeholder with no
   actual video wired up yet.
-- **Consultation form** — has no CRM/lead endpoint connected (`<form action="">`). Submissions
-  currently just show an inline "still in staging" notice and log to the browser console instead
-  of being lost silently. Wire it to HubSpot, HighLevel, a Zapier/Make webhook, Formspree, or a
-  custom backend before launch.
 - **Consent/legal copy** — the consent line under the form is a placeholder; replace with the
   client's approved privacy/SMS/email consent language.
 
 ## Resolved since v1
 
+- **Consultation form** — now saves to the store database and buzzes the owner's phone (see
+  "Store app" below). No third-party CRM is connected; add a webhook later if one is wanted.
 - **FAQ answers** — all six entries now have real, client-provided answers (natural-looking
   results, typically two sessions, no pain with numbing options available, permanent results,
   hairline chosen through consultation with an emphasis on age-appropriate looks for clients
@@ -56,20 +54,63 @@ The following still need real client assets/approvals before this goes live to p
 
 - `index.html` — the main landing page (inline CSS/JS, no build step)
 - `admin.html` — passcode-protected analytics dashboard (site visits + WhatsApp click-throughs)
+- `store.html` — the owner's store app (login, appointments, purchases, services). Installable on a phone
+- `sw.js` + `manifest.webmanifest` — make the store app installable and receive phone push alerts
+- `img/` — app icons (generated from the official logo)
+- `supabase/` — database migrations and the `notify-request` push function (already applied to the live
+  project; kept here for reference)
 - `assets/` — images referenced by the pages
 
-## Scheduler
+## Scheduler, services and bookings
 
-The consultation section has a "Have A Date In Mind? Request It Directly." card with a date
-picker and a Morning/Afternoon/Evening time select. Clicking **Send Request To Terrence**
-builds a WhatsApp message that includes whatever date/time was chosen (or a generic "I'd like
-to find a time that works" line if left blank) and opens it at the same WhatsApp number used
-everywhere else on the site — `wa.me/15865535504`. There is no email step; per the client's
-explicit direction this is WhatsApp-only, same as every other CTA on the page.
+Everything here uses WhatsApp as the primary channel, and also saves the request to the store
+database so it appears in the store app and buzzes the owner's phone.
 
-To change the WhatsApp number, update it in this scheduler's JS block near the bottom of
-`index.html` **and** in the 8 `wa.me/158655...` button links (see "WhatsApp as primary
-contact channel" above).
+- **Scheduler card** (consultation section): name, mobile, optional date and time. Saves a
+  consultation request and opens WhatsApp (`wa.me/15865535504`) with the details pre-filled.
+- **Services section** (`#services`): loaded live from the `offers` table, so price edits made in
+  the store app show up on the site with no redeploy. A snapshot of the same list is baked into
+  `index.html` (`FALLBACK_SERVICES`) and is used only if the database can't be reached.
+  - *Bookable* services (microblading, haircut, massage, couples massage) take a date, time and
+    (where it applies) a duration, and show the price. Prices are enforced on the server.
+  - *Consultation-only* services (facials, TRT, hormone therapy, weight loss, IV therapy) take a
+    preferred date/time and no price.
+  - *Package* (The Comeback, $1,500) is a reservation: it lands under **Purchases**.
+- **No online payment.** Payment is arranged by the owner (in person, Zelle, etc.). Adding card
+  payments (Stripe) is a possible later phase.
+- To change the WhatsApp number, update `WA_NUMBER` in the script at the bottom of `index.html`
+  **and** the `wa.me/158655...` button links.
+
+## Store app (owner login + phone alerts)
+
+`store.html` is the owner's app, built the same way as the Cargo+420 dashboard. Backend: a dedicated
+Supabase project named `SwurlKurl` (separate from the agency's shared project, so the owner's login
+never mixes with other clients' users).
+
+- **Appointments** — consultation requests and service bookings. Confirm, complete, no-show or
+  cancel; private notes; one-tap WhatsApp reply and call.
+- **Purchases** — package reservations: new → confirmed → paid → completed, with totals.
+- **Services** — edit names, descriptions, prices, duration options, visibility, or add services.
+- **Phone alerts** — web push. Install the app to the phone's home screen (iPhone: Safari → Share →
+  Add to Home Screen; Android: browser menu → Install app), open it, tap **Turn on phone alerts**.
+  Every new request then buzzes the phone even when the app is closed.
+
+How a request flows: the visitor submits → a database function validates it (and fixes the price)
+→ a database trigger calls the `notify-request` function → web push to every registered device →
+the app updates live.
+
+**Owner login setup:** the first time, open `/store.html`, choose *First-time setup*, enter an email,
+a password and a one-time setup code. Setup codes are single-use and are kept in the database
+(`claim_codes` table), never in this repo. If email confirmation is on, confirm the email, sign in,
+and enter the setup code once.
+
+**One manual Supabase setting:** in the Supabase dashboard → Authentication → URL Configuration, set
+*Site URL* to `https://swurl-kurl.onrender.com` and add it under *Redirect URLs*, so confirmation
+and password-reset emails send people to the right place.
+
+**Secrets:** the push private key and the function's hook secret live only in the database
+(`private_config`, readable by the service role only). The keys in `store.html` / `index.html` are
+publishable and protected by row-level security.
 
 ## Analytics & admin dashboard
 
@@ -91,9 +132,9 @@ in the agency's shared Supabase project, and `admin.html` shows the aggregated n
   closed), so refreshing the dashboard doesn't require re-entering it, but it's never stored
   in a cookie or `localStorage`.
 
-**Current admin passcode:** `TalkToTerrence2026` — change this in the Supabase Edge Function
-source (`smp-admin-stats`, the `ADMIN_PASSCODE` constant) if it needs to be rotated; it is not
-stored anywhere in this repo.
+**Admin passcode:** set in the Supabase Edge Function source (`smp-admin-stats`, the
+`ADMIN_PASSCODE` constant) and shared with the owner directly. It is deliberately not written in
+this repo. To rotate it, redeploy that function with a new value.
 
 **Admin dashboard URL (once deployed):** `https://swurl-kurl.onrender.com/admin.html`
 
