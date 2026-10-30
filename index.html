@@ -1028,12 +1028,18 @@
       }
 
       .hero-copy {
-        padding: 65px var(--edge-inset) 40px;
+        padding: 0 var(--edge-inset) 40px;
       }
 
+      /* compact, head-and-torso crop so the headline shows in the first screen */
       .hero-image {
-        min-height: 560px;
+        min-height: 0;
+        height: 340px;
         order: -1;
+        background-position: 50% 0%;
+        background-size: auto 150%;
+        -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
       }
 
       .result-grid {
@@ -1090,7 +1096,8 @@
       }
 
       .hero-image {
-        min-height: 390px;
+        height: 300px;
+        background-size: auto 150%;
       }
 
       .result-grid,
