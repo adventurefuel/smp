@@ -251,38 +251,10 @@
       font-size: 1.08rem;
     }
 
+    /* The customer, cut out, standing flush on the page (no panel). */
     .hero-image {
-      position: relative;
       min-height: 650px;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 24%, rgba(232,179,81,.34) 0, rgba(232,179,81,.10) 34%, rgba(232,179,81,0) 62%),
-        linear-gradient(160deg, #1c1c1c 0%, #0b0b0b 70%);
-    }
-
-    /* gold ring, sits behind the portrait */
-    .hero-image::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 25%;
-      width: min(86%, 500px);
-      aspect-ratio: 1;
-      transform: translate(-50%, -50%);
-      border: 2px solid rgba(232,179,81,.6);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    /* the customer, cut out, in front of the ring */
-    .hero-image::after {
-      content: "";
-      position: absolute;
-      inset: 36px 0 0 0;
-      background:
-        linear-gradient(to top, #0b0b0b 0%, rgba(11,11,11,0) 14%),
-        url("assets/hero-customer.webp") 50% 0% / auto 100% no-repeat;
-      pointer-events: none;
+      background: url("assets/hero-customer.webp") 50% 100% / contain no-repeat;
     }
 
     .offer-card {
