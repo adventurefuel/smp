@@ -1031,15 +1031,16 @@
         padding: 0 var(--edge-inset) 40px;
       }
 
-      /* compact, head-and-torso crop so the headline shows in the first screen */
+      /* man + before/after composite, sized so the headline starts in the first screen */
       .hero-image {
         min-height: 0;
-        height: 340px;
+        height: min(104vw, 440px);
         order: -1;
-        background-position: 50% 0%;
-        background-size: auto 150%;
-        -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
-        mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+        background-image: url("assets/hero-customer-ba.webp");
+        background-position: 50% 100%;
+        background-size: contain;
+        -webkit-mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
       }
 
       .result-grid {
@@ -1096,8 +1097,7 @@
       }
 
       .hero-image {
-        height: 300px;
-        background-size: auto 150%;
+        height: min(104vw, 440px);
       }
 
       .result-grid,
