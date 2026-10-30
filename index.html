@@ -219,11 +219,12 @@
     .hero {
       background: var(--warm-white);
       overflow: hidden;
+      padding: 0;
     }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.05fr .95fr;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
       min-height: 710px;
       align-items: stretch;
     }
@@ -241,6 +242,7 @@
 
     .hero-copy h1 {
       max-width: 780px;
+      font-size: clamp(3rem, 5vw, 4.6rem);
     }
 
     .hero-copy .intro {
@@ -250,15 +252,37 @@
     }
 
     .hero-image {
+      position: relative;
       min-height: 650px;
+      overflow: hidden;
       background:
-        linear-gradient(
-          to right,
-          var(--warm-white) 0%,
-          rgba(247,245,241,.12) 22%,
-          rgba(247,245,241,0) 45%
-        ),
-        url("assets/terrence-hero.jpg") 80% 0% / cover no-repeat;
+        radial-gradient(circle at 50% 24%, rgba(232,179,81,.34) 0, rgba(232,179,81,.10) 34%, rgba(232,179,81,0) 62%),
+        linear-gradient(160deg, #1c1c1c 0%, #0b0b0b 70%);
+    }
+
+    /* gold ring, sits behind the portrait */
+    .hero-image::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 25%;
+      width: min(86%, 500px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border: 2px solid rgba(232,179,81,.6);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    /* the customer, cut out, in front of the ring */
+    .hero-image::after {
+      content: "";
+      position: absolute;
+      inset: 36px 0 0 0;
+      background:
+        linear-gradient(to top, #0b0b0b 0%, rgba(11,11,11,0) 14%),
+        url("assets/hero-customer.webp") 50% 0% / auto 100% no-repeat;
+      pointer-events: none;
     }
 
     .offer-card {
@@ -782,7 +806,8 @@
 
     .service-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(280px, 440px));
+      justify-content: center;
       gap: 16px;
     }
 
@@ -1016,7 +1041,7 @@
     @media (max-width: 900px) {
 
       .service-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 440px));
       }
 
 
@@ -1035,9 +1060,8 @@
       }
 
       .hero-image {
-        min-height: 520px;
+        min-height: 560px;
         order: -1;
-        background-position: 70% 0%;
       }
 
       .result-grid {
@@ -1167,7 +1191,7 @@
       <nav class="nav-links" aria-label="Primary navigation">
         <a href="#results">Results</a>
         <a href="#about">About</a>
-        <a href="#services">Services</a>
+        <a href="#services">The Offer</a>
         <a href="#process">Process</a>
         <a href="#faq">FAQ</a>
         <a
@@ -1250,7 +1274,7 @@
         <div
           class="hero-image"
           role="img"
-          aria-label="Swurl Kurl Studios client or Terrence Hopson"
+          aria-label="A Swurl Kurl Studios SMP client with a sharp, defined hairline"
         ></div>
 
       </div>
@@ -1554,18 +1578,18 @@
       <div class="container">
 
         <div class="section-heading">
-          <span class="eyebrow">Services</span>
-          <h2>Book Your Next Appointment.</h2>
+          <span class="eyebrow">The Offer</span>
+          <h2>Reserve Your Comeback.</h2>
           <p>
-            Pick a service to request a time, or schedule a consultation
-            if you'd like to talk it through first. Prefer to chat?
+            Reserve your spot, or have questions first? Message Terrence
+            directly on WhatsApp.
             <a
-              href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20your%20services."
+              href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20The%20Comeback."
               target="_blank"
               rel="noopener noreferrer"
               data-wa-source="services"
               class="inline-link"
-            >Message Terrence on WhatsApp.</a>
+            >Talk to Terrence now.</a>
           </p>
         </div>
 
@@ -2219,15 +2243,6 @@
     */
     const FALLBACK_SERVICES = [
       { id: "comeback", name: "The Comeback — 2 SMP Sessions", description: "Two scalp micropigmentation sessions during the 21-day campaign.", price: 1500, regular_price: 2000, kind: "package", options: [] },
-      { id: "microblading", name: "Eyebrow Precision Microblading", description: "Precision-shaped, natural-looking brows.", price: 325, kind: "book", options: [] },
-      { id: "haircut", name: "Designer Haircut", description: "A precision cut tailored to you, from a barber with 25 years behind the chair.", price: 100, kind: "book", options: [] },
-      { id: "massage", name: "Massage Therapy", description: "Therapeutic massage, booked by the hour.", price: 70, kind: "book", options: [{ label: "1 hour", price: 70 }, { label: "90 minutes", price: 100 }] },
-      { id: "couples-massage", name: "Couples Massage", description: "Side-by-side massage for two. 1 hour.", price: 130, kind: "book", options: [{ label: "1 hour (for two)", price: 130 }] },
-      { id: "facials", name: "Facials & Exfoliation", description: "Pricing is shared during your consultation.", price: 0, kind: "consult", options: [] },
-      { id: "trt", name: "TRT Consultation", description: "Schedule a consultation to talk through your goals and next steps.", price: 0, kind: "consult", options: [] },
-      { id: "hormone", name: "Hormone Therapy", description: "Schedule a consultation to talk through your goals and next steps.", price: 0, kind: "consult", options: [] },
-      { id: "weight-loss", name: "Weight Loss", description: "Schedule a consultation to talk through your goals and next steps.", price: 0, kind: "consult", options: [] },
-      { id: "iv-therapy", name: "IV Therapy", description: "Schedule a consultation to talk through your goals and next steps.", price: 0, kind: "consult", options: [] },
     ];
     let SERVICES = FALLBACK_SERVICES;
 
