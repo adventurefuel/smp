@@ -163,6 +163,23 @@ async function pushState(){
   if(Notification.permission==='denied')return'denied';
   try{const reg=await getReg();if(!reg)return'unsupported';const sub=await reg.pushManager.getSubscription();return sub&&Notification.permission==='granted'?'on':'off'}catch(_){return'off'}
 }
+const deviceLabel=()=>(isIOS?'iPhone':/android/i.test(navigator.userAgent)?'Android':'Computer')+(standalone?' app':' browser');
+/* Save this device's browser subscription to the database (safe to repeat). Returns an error or null. */
+async function saveSub(sub){
+  const j=sub.toJSON();
+  const {error}=await sb.from('push_subscriptions').upsert({endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth,user_id:user.id,label:deviceLabel()},{onConflict:'endpoint'});
+  return error||null;
+}
+/* Self-heal: if this phone already has a browser subscription (alerts "on") but it never reached the
+   database, register it now. Runs after every sign-in and right before a test alert. */
+async function syncPush(){
+  try{
+    if(!user||!('Notification' in window)||Notification.permission!=='granted')return null;
+    const reg=await getReg();if(!reg)return null;
+    const sub=await reg.pushManager.getSubscription();if(!sub)return null;
+    return await saveSub(sub);
+  }catch(e){return e}
+}
 async function enablePush(){
   try{
     const perm=await Notification.requestPermission();
@@ -170,9 +187,7 @@ async function enablePush(){
     const reg=await getReg();if(!reg)throw new Error('The app is still starting up. Reload and try again.');
     let sub=await reg.pushManager.getSubscription();
     if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(CFG.VAPID_PUBLIC)});
-    const j=sub.toJSON();
-    const label=(isIOS?'iPhone':/android/i.test(navigator.userAgent)?'Android':'Computer')+(standalone?' app':' browser');
-    const {error}=await sb.from('push_subscriptions').upsert({endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth,user_id:user.id,label},{onConflict:'endpoint'});
+    const error=await saveSub(sub);
     if(error)throw error;
     toast('Phone alerts are on','Sending a test alert now…');await refreshPush();setTimeout(testPush,600);
   }catch(e){toast('Could not turn on alerts',errMsg(e));refreshPush()}
@@ -184,11 +199,15 @@ async function disablePush(){
 }
 async function testPush(){
   try{
+    const serr=await syncPush();
+    if(serr){toast('This phone could not be registered',errMsg(serr));return}
     const {data:{session}}=await sb.auth.getSession();
     const r=await fetch(CFG.URL+'/functions/v1/notify-request',{method:'POST',headers:{'Content-Type':'application/json','apikey':CFG.KEY,'Authorization':'Bearer '+session.access_token},body:'{}'});
     const j=await r.json();
     if(!r.ok)throw new Error(j.error||'Test failed');
-    toast(j.sent?'Test alert sent':'No device is registered yet',j.sent?`Delivered to ${j.sent} device${j.sent>1?'s':''}.`:'Turn on phone alerts first.');
+    if(j.sent)toast('Test alert sent',`Delivered to ${j.sent} device${j.sent>1?'s':''}.`);
+    else if(j.failures&&j.failures.length)toast('Alert could not be delivered',String(j.failures[0].msg||j.failures[0].code).slice(0,140));
+    else toast('No device is registered yet','Tap "Turn off here", then "Turn on phone alerts".');
   }catch(e){toast('Test alert failed',errMsg(e))}
 }
 
@@ -428,7 +447,7 @@ async function boot(){
   const {data:ok,error}=await sb.rpc('is_admin');
   if(error||!ok)return vClaim();
   $('#signout').hidden=false;
-  refreshPush();
+  syncPush().then(refreshPush);
   try{await reloadData();subscribe()}catch(e){V().innerHTML=`<div class="wrap loading">Couldn't load the store. ${esc(errMsg(e))}</div>`}
 }
 sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){user=null;vAuth('newpw')}else if(ev==='SIGNED_IN'&&!user)boot()});
