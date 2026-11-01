@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn SMP | Training For Barbers | Swurl Kurl Studios</title>
+  <meta name="description" content="Add scalp micropigmentation to your chair. Hands-on SMP training for barbers and beauty pros with Master Educator T. Hopson. Apply here." />
+  <meta property="og:title" content="Learn SMP | Training For Barbers" />
+  <meta property="og:description" content="Hands-on SMP education with Master Educator T. Hopson. Apply for the next class." />
+  <meta property="og:image" content="https://swurl-kurl.onrender.com/assets/learn-flyer.jpg" />
+  <link rel="icon" href="img/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root{--black:#0b0b0b;--ink:#161616;--panel:#121212;--line:#2c2616;--white:#fff;--gold:#e8b351;--gold-deep:#a6730f;--muted:#b9b4a8;--red:#ff8a7a}
+    *{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{margin:0;background:var(--black);color:var(--white);font-family:'Inter',Arial,Helvetica,sans-serif;line-height:1.5;
+      background-image:radial-gradient(900px 420px at 50% -80px,rgba(232,179,81,.16),transparent 70%)}
+    a{color:var(--gold)}
+    .wrap{max-width:720px;margin:0 auto;padding:0 16px}
+    .bar{display:flex;justify-content:space-between;align-items:center;padding:14px 0}
+    .bar a{color:var(--muted);font-size:.82rem;text-decoration:none;font-weight:600}
+    .bar a:hover{color:var(--gold)}
+    .bar img{height:30px;width:auto;display:block}
+
+    /* flyer */
+    .flyer{position:relative;border:1px solid rgba(232,179,81,.55);border-radius:14px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 0 1px #000;background:#000}
+    .flyer img{display:block;width:100%;height:auto}
+    .flyer .apply{position:absolute;left:69.6%;top:55.4%;width:29%;height:40%;
+      background:linear-gradient(160deg,#1a1405,#050505);border:2px solid var(--gold);border-radius:10px;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+      color:var(--gold);font-weight:800;text-transform:uppercase;letter-spacing:.04em;line-height:1.15;
+      font-size:clamp(.6rem,2.6vw,1.05rem);padding:4px;text-decoration:none;box-shadow:0 0 18px rgba(232,179,81,.35)}
+    .flyer .apply span{display:block;font-size:2.1em;margin-top:.15em;animation:nudge 1.6s ease-in-out infinite}
+    @keyframes nudge{50%{transform:translateY(4px)}}
+    @media (prefers-reduced-motion:reduce){.flyer .apply span{animation:none}}
+
+    /* intro + form */
+    .intro{text-align:center;margin:22px 0 6px}
+    .eyebrow{color:var(--gold);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700}
+    h1{margin:6px 0 8px;font-size:clamp(1.65rem,6vw,2.3rem);line-height:1.12}
+    h1 em{font-style:normal;color:var(--gold)}
+    .intro p{margin:0 auto;max-width:520px;color:var(--muted);font-size:.98rem}
+    .form{margin:20px 0 10px;background:linear-gradient(180deg,#171309,var(--panel) 120px);border:1px solid rgba(232,179,81,.45);border-radius:14px;padding:20px 18px 22px}
+    .sec{margin:0 0 6px;padding-top:6px;color:var(--gold);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;border-top:1px solid var(--line)}
+    .sec:first-of-type{border-top:0;padding-top:0}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:560px){.row{grid-template-columns:1fr}}
+    label.f{display:block;margin:10px 0 0;font-size:.84rem;font-weight:600;color:#ece7da}
+    label.f small{font-weight:400;color:var(--muted)}
+    input,select,textarea{width:100%;margin-top:5px;background:#0a0a0a;color:var(--white);border:1px solid #3a3320;border-radius:8px;padding:12px 13px;font:inherit;font-size:1rem;min-height:46px}
+    textarea{min-height:92px;resize:vertical}
+    select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 20px) 20px,calc(100% - 14px) 20px;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
+    input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold)}
+    ::placeholder{color:#6e6a5e}
+    .req{color:var(--gold)}
+    fieldset{border:0;margin:10px 0 0;padding:0}
+    legend{font-size:.84rem;font-weight:600;padding:0;color:#ece7da}
+    .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:7px}
+    .pills input{position:absolute;opacity:0;width:1px;height:1px;min-height:0;margin:0}
+    .pills label{cursor:pointer}
+    .pills span{display:inline-block;padding:10px 16px;border:1px solid #3a3320;border-radius:999px;font-size:.92rem;font-weight:600;color:#ddd7c7;background:#0a0a0a}
+    .pills input:checked+span{background:var(--gold);color:#000;border-color:var(--gold)}
+    .pills input:focus-visible+span{outline:2px solid #fff;outline-offset:2px}
+    .go{width:100%;margin-top:18px;min-height:54px;border:0;border-radius:10px;cursor:pointer;font:inherit;font-weight:800;font-size:1.05rem;letter-spacing:.03em;text-transform:uppercase;color:#000;background:linear-gradient(180deg,#f3c76a,var(--gold) 60%,#c98f2a);box-shadow:0 8px 22px rgba(232,179,81,.28)}
+    .go:disabled{opacity:.6;cursor:wait}
+    .fine{margin:10px 2px 0;color:var(--muted);font-size:.76rem;text-align:center}
+    .msg{margin-top:12px;color:var(--red);font-weight:600;font-size:.92rem;min-height:1px}
+    .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+    .done{text-align:center;padding:18px 6px 8px}
+    .done .tick{width:62px;height:62px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#000;background:var(--gold)}
+    .done h2{margin:0 0 8px;font-size:1.5rem}
+    .done p{margin:0 auto 10px;max-width:440px;color:#d8d2c3}
+    .code{display:inline-block;margin:4px 0 14px;padding:6px 14px;border:1px dashed var(--gold);border-radius:8px;color:var(--gold);font-weight:800;letter-spacing:.08em}
+    .btn2{display:inline-block;margin-top:6px;padding:12px 20px;border:1px solid var(--gold);border-radius:10px;color:var(--gold);text-decoration:none;font-weight:700}
+    .why{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 6px}
+    @media (max-width:560px){.why{grid-template-columns:1fr}}
+    .why div{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#101010;font-size:.88rem;color:#d8d2c3}
+    .why b{display:block;color:var(--gold);margin-bottom:2px;font-size:.92rem}
+    footer{padding:22px 0 34px;text-align:center;color:#7d786a;font-size:.78rem}
+    footer a{color:#a39e8e}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="bar">
+      <a href="index.html">&larr; Swurl Kurl Studios</a>
+      <a href="index.html#consultation">Looking for SMP yourself?</a>
+    </div>
+
+    <div class="flyer">
+      <img src="assets/learn-flyer.jpg" width="705" height="633" alt="Learn SMP. Training for barbers. Add a premium service to your chair. Hands-on education with Master Educator T. Hopson. Hands-on training, high-income skill, barber-friendly education." />
+      <a class="apply" href="#apply" aria-label="Jump to the application form">Apply<br>below<span aria-hidden="true">&darr;</span></a>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">Student Application</div>
+      <h1>Add SMP to <em>your chair.</em></h1>
+      <p>Tell us a little about you. Terrence reads every application and reaches out personally about the next class. Takes about two minutes.</p>
+    </div>
+
+    <form class="form" id="apply" novalidate>
+      <div id="formView">
+        <p class="sec">About you</p>
+        <div class="row">
+          <label class="f">Full name <span class="req">*</span>
+            <input id="name" name="name" autocomplete="name" maxlength="80" required placeholder="First and last name"></label>
+          <label class="f">Mobile number <span class="req">*</span>
+            <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" required placeholder="(313) 555-0123"></label>
+        </div>
+        <label class="f">Email <small>(optional)</small>
+          <input id="email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120" placeholder="you@example.com"></label>
+
+        <p class="sec" style="margin-top:20px">Your background</p>
+        <label class="f">Where are you in your career? <span class="req">*</span>
+          <select id="level" required>
+            <option value="">Choose one</option>
+            <option>Licensed barber</option>
+            <option>Licensed cosmetologist</option>
+            <option>Barber / cosmetology student</option>
+            <option>Tattoo or other beauty artist</option>
+            <option>New to the industry</option>
+            <option>Already doing SMP, want to level up</option>
+          </select></label>
+        <div class="row">
+          <label class="f">Where do you work? <small>(shop or studio)</small>
+            <input id="shop" maxlength="60" placeholder="Shop name, or &ldquo;booth rental&rdquo;"></label>
+          <label class="f">Which barbershop referred you? <small>(optional)</small>
+            <input id="referral" maxlength="80" placeholder="Shop name"></label>
+        </div>
+        <label class="f">Why do you want to learn SMP? <small>(optional)</small>
+          <textarea id="why" maxlength="300" placeholder="Add a service for your clients, grow your income, start something new&hellip;"></textarea></label>
+
+        <p class="sec" style="margin-top:20px">Timing</p>
+        <div class="row">
+          <label class="f">When do you want to start? <span class="req">*</span>
+            <select id="start" required>
+              <option value="">Choose one</option>
+              <option>As soon as possible</option>
+              <option>Within 1&ndash;3 months</option>
+              <option>Just exploring for now</option>
+            </select></label>
+          <label class="f">Which class days work best?
+            <select id="days">
+              <option>Either weekdays or weekends</option>
+              <option>Weekdays</option>
+              <option>Weekends</option>
+            </select></label>
+        </div>
+
+        <p class="sec" style="margin-top:20px">How should Terrence reach you?</p>
+        <fieldset>
+          <legend class="sr" style="position:absolute;left:-9999px">Preferred contact method</legend>
+          <div class="pills" id="pref">
+            <label><input type="radio" name="pref" value="Call"><span>Call</span></label>
+            <label><input type="radio" name="pref" value="Text" checked><span>Text</span></label>
+            <label><input type="radio" name="pref" value="Email"><span>Email</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Best time of day</legend>
+          <div class="pills" id="besttime">
+            <label><input type="radio" name="bt" value="Morning"><span>Morning</span></label>
+            <label><input type="radio" name="bt" value="Afternoon"><span>Afternoon</span></label>
+            <label><input type="radio" name="bt" value="Evening"><span>Evening</span></label>
+            <label><input type="radio" name="bt" value="Anytime" checked><span>Anytime</span></label>
+          </div>
+        </fieldset>
+
+        <div class="hp" aria-hidden="true"><label>Leave this empty <input id="website" tabindex="-1" autocomplete="off"></label></div>
+
+        <button class="go" id="submit" type="submit">Send My Application</button>
+        <div class="msg" id="msg" role="alert" aria-live="polite"></div>
+        <p class="fine">Goes straight to Terrence&rsquo;s phone. By sending, you agree he may call or text you about training. No spam, ever.</p>
+      </div>
+
+      <div class="done" id="doneView" hidden>
+        <div class="tick" aria-hidden="true">&check;</div>
+        <h2>Application received</h2>
+        <p id="doneText">Terrence will reach out to you personally.</p>
+        <div class="code" id="doneCode"></div>
+        <p>Keep an eye on your phone for a call or text from Terrence. Save his number when it comes in so you don&rsquo;t miss it.</p>
+        <a class="btn2" href="index.html">Back to the main site</a>
+      </div>
+    </form>
+
+    <div class="why">
+      <div><b>Hands-on training</b>Learn with a Master Educator, with real technique and real practice.</div>
+      <div><b>High-income skill</b>SMP is a premium service you can add to the chair you already have.</div>
+      <div><b>Barber-friendly</b>Built for barbers and beauty pros, not a one-size-fits-all course.</div>
+    </div>
+
+    <footer>&copy; Swurl Kurl Studios &middot; <a href="index.html">swurl-kurl.onrender.com</a></footer>
+  </div>
+
+  <script>
+    /* Saves to the same store database as the main site, which buzzes Terrence's phone
+       and files this under Training in the store app. Only the public anon key lives here;
+       the database function validates and rate-limits every submission. */
+    const STORE_URL = "https://eyzhywxehxoqtrjzooab.supabase.co";
+    const STORE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5emh5d3hlaHhvcXRyanpvb2FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjc1MTksImV4cCI6MjEwNjcwMzUxOX0.bhlbwLEPFIkfhnGbYY5y8jffRHDZz6DQpclWLFiGNoU";
+    const $ = (id) => document.getElementById(id);
+
+    async function storeRpc(fn, args) {
+      const res = await fetch(STORE_URL + "/rest/v1/rpc/" + fn, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: STORE_KEY, Authorization: "Bearer " + STORE_KEY },
+        body: JSON.stringify(args),
+      });
+      let body = null;
+      try { body = await res.json(); } catch (e) {}
+      if (!res.ok) throw new Error((body && body.message) || "Something went wrong. Please try again.");
+      return body;
+    }
+
+    // Where did they come from? The flyer QR code should point to learn.html?src=flyer
+    const SRC = (() => {
+      const s = (new URLSearchParams(location.search).get("src") || "").toLowerCase().replace(/[^a-z0-9 _-]/g, "").slice(0, 24);
+      const map = { flyer: "Training flyer QR", qr: "Training flyer QR", ig: "Instagram", instagram: "Instagram", fb: "Facebook", facebook: "Facebook", text: "Text message" };
+      return map[s] || (s ? "Training page: " + s : "Training page");
+    })();
+
+    const radio = (name) => (document.querySelector('input[name="' + name + '"]:checked') || {}).value || "";
+    const digits = (s) => String(s).replace(/\D/g, "");
+
+    $("apply").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const msg = $("msg"); msg.textContent = "";
+      const name = $("name").value.trim(), phone = $("phone").value.trim(), email = $("email").value.trim();
+      const level = $("level").value, start = $("start").value;
+
+      if ($("website").value) { // bot trap: pretend it worked
+        $("formView").hidden = true; $("doneView").hidden = false; return;
+      }
+      if (name.length < 2) { msg.textContent = "Please add your name."; $("name").focus(); return; }
+      if (digits(phone).length < 10) { msg.textContent = "Please enter a 10-digit mobile number."; $("phone").focus(); return; }
+      if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { msg.textContent = "That email address looks off."; $("email").focus(); return; }
+      if (!level) { msg.textContent = "Tell us where you are in your career."; $("level").focus(); return; }
+      if (!start) { msg.textContent = "Tell us when you want to start."; $("start").focus(); return; }
+      if (radio("pref") === "Email" && !email) { msg.textContent = "Add your email so Terrence can reach you that way."; $("email").focus(); return; }
+
+      const shop = $("shop").value.trim(), why = $("why").value.trim();
+      const notes = [
+        shop && "Works at: " + shop,
+        "Start: " + start,
+        "Class days: " + $("days").value,
+        why && "Why SMP: " + why,
+      ].filter(Boolean).join(" | ").slice(0, 500);
+
+      const btn = $("submit");
+      btn.disabled = true; btn.textContent = "Sending…";
+      try {
+        const r = await storeRpc("submit_request", {
+          p_name: name, p_phone: phone, p_email: email || null, p_source: "form",
+          p_goal: level, p_contact_pref: radio("pref") || null, p_best_time: radio("bt") || null,
+          p_lead_source: SRC, p_date: null, p_time: null, p_notes: notes,
+          p_referred_by: $("referral").value.trim() || null, p_inquiry: "training",
+        });
+        const pref = (radio("pref") || "contact").toLowerCase();
+        $("doneText").textContent = "Thanks, " + name.split(/\s+/)[0] + ". Your application went straight to Terrence's phone, and he'll " + (pref === "call" ? "call" : pref === "email" ? "email" : "text") + " you personally.";
+        $("doneCode").textContent = r && r.code ? "Reference " + r.code : "";
+        $("doneCode").hidden = !(r && r.code);
+        $("formView").hidden = true; $("doneView").hidden = false;
+        $("apply").scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (err) {
+        btn.disabled = false; btn.textContent = "Send My Application";
+        msg.textContent = err.message;
+      }
+    });
+  </script>
+</body>
+</html>
