@@ -498,13 +498,13 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-label">WhatsApp Click-Throughs</div>
+          <div class="stat-label">Contact Button Clicks</div>
           <div class="stat-value gold" id="statWaClicks">—</div>
           <div class="stat-sub" id="statWaClicks24h">last 24h: —</div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-label">Visit → WhatsApp Rate</div>
+          <div class="stat-label">Visit → Contact Rate</div>
           <div class="stat-value" id="statConversion">—</div>
           <div class="stat-sub">of all visits click through</div>
         </div>
@@ -524,7 +524,7 @@
 
           <div class="trend-legend">
             <span><span class="legend-dot"></span> Site Visits</span>
-            <span><span class="legend-dot wa"></span> WhatsApp Clicks</span>
+            <span><span class="legend-dot wa"></span> Contact Clicks</span>
           </div>
 
           <div id="trendList">
@@ -533,7 +533,7 @@
         </div>
 
         <div class="panel">
-          <h2>WhatsApp Clicks By Button</h2>
+          <h2>Contact Clicks By Button</h2>
 
           <div id="sourceList">
             <p class="empty-note">No data yet.</p>
@@ -658,7 +658,7 @@
       // By-source breakdown panel
       const sourceList = document.getElementById("sourceList");
       if (sourceEntries.length === 0) {
-        sourceList.innerHTML = '<p class="empty-note">No WhatsApp clicks logged yet.</p>';
+        sourceList.innerHTML = '<p class="empty-note">No contact clicks logged yet.</p>';
       } else {
         const maxCount = sourceEntries[0][1];
         sourceList.innerHTML = sourceEntries

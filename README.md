@@ -36,11 +36,11 @@ The following still need real client assets/approvals before this goes live to p
   weight 800 (vs. browser-default bold) and labels/nav/buttons dialed back from 800–900 to
   400–600, for a slimmer, cleaner look closer to the approved mockup, per the brand guide's
   "cleaner premium editorial system" direction (§7).
-- **WhatsApp as primary contact channel** — every CTA on the page ("Talk To Terrence Now") now
-  opens a WhatsApp chat to +1 (586) 553-5504 with a prefilled greeting, instead of scrolling to
-  the form. The consultation form is kept as a secondary "prefer to write it out" option lower
-  on the same section. Update the phone number in every `wa.me/158655...` link (7 places) if it
-  ever changes.
+- **Phone-alert requests (replaced WhatsApp)** — every "Talk To Terrence Now" button opens a short
+  request form (name, mobile, best time, referring barbershop, note). Submitting it saves the
+  request to the store database and instantly buzzes the owner's phone through the store app. The
+  site no longer links to WhatsApp anywhere. (The store app still has an optional WhatsApp reply
+  button next to Text and Call for the owner's convenience.)
 - **Real hero photo** — swapped in `assets/terrence-hero.jpg` (real photo, off-center composition:
   subject on the right two-thirds, plain background on the left). Plain `background-position:
   center` cropped this badly (mostly blank wall, hairline cut off), so `.hero-image` now uses
@@ -53,7 +53,7 @@ The following still need real client assets/approvals before this goes live to p
 ## Structure
 
 - `index.html` — the main landing page (inline CSS/JS, no build step)
-- `admin.html` — passcode-protected analytics dashboard (site visits + WhatsApp click-throughs)
+- `admin.html` — passcode-protected analytics dashboard (site visits + contact-button clicks)
 - `store.html` — the owner's store app (login, appointments, purchases, services). Installable on a phone
 - `sw.js` + `manifest.webmanifest` — make the store app installable and receive phone push alerts
 - `img/` — app icons (generated from the official logo)
@@ -63,11 +63,11 @@ The following still need real client assets/approvals before this goes live to p
 
 ## Scheduler, services and bookings
 
-Everything here uses WhatsApp as the primary channel, and also saves the request to the store
-database so it appears in the store app and buzzes the owner's phone.
+Every request is saved to the store database so it appears in the store app and buzzes the
+owner's phone. There is no WhatsApp hand-off on the site.
 
 - **Scheduler card** (consultation section): name, mobile, optional date and time. Saves a
-  consultation request and opens WhatsApp (`wa.me/15865535504`) with the details pre-filled.
+  consultation request (with the optional referring barbershop).
 - **Services section** (`#services`): loaded live from the `offers` table, so price edits made in
   the store app show up on the site with no redeploy. A snapshot of the same list is baked into
   `index.html` (`FALLBACK_SERVICES`) and is used only if the database can't be reached.
@@ -75,11 +75,19 @@ database so it appears in the store app and buzzes the owner's phone.
     (where it applies) a duration, and show the price. Prices are enforced on the server.
   - *Consultation-only* services (facials, TRT, hormone therapy, weight loss, IV therapy) take a
     preferred date/time and no price.
-  - *Package* (The Comeback, $1,500) is a reservation: it lands under **Purchases**.
+  - *Package* (The Comeback, $2,000 limited-time, regularly $2,500) is a reservation: it lands under **Purchases**.
 - **No online payment.** Payment is arranged by the owner (in person, Zelle, etc.). Adding card
   payments (Stripe) is a possible later phase.
-- To change the WhatsApp number, update `WA_NUMBER` in the script at the bottom of `index.html`
-  **and** the `wa.me/158655...` button links.
+- **Barbershop referral program.** The scheduler, consultation form, "Talk To Terrence" form and
+  the Comeback reservation ask "Which barbershop referred you?" (optional). It is stored in
+  `referred_by`, shown on each card in the store app, included in the phone alert, and totaled per
+  barbershop under the store app's **Referrals** tab.
+- **Learn how to SMP.** The "Want To Learn How To SMP?" section (and "Learn SMP" in the nav) opens
+  a training inquiry form. It lands in the store app as a "Training" request (filter chip on the
+  Appointments tab) and sends its own phone alert.
+- **Pricing.** The Comeback is $2,000 (limited-time) against a regular $2,500. The price shown in
+  the page copy is typed in `index.html`; the reservation price comes from the `offers` table in
+  the store database (editable in the store app's Services tab), so change both together.
 
 ## Store app (owner login + phone alerts)
 
@@ -88,7 +96,8 @@ Supabase project named `SwurlKurl` (separate from the agency's shared project, s
 never mixes with other clients' users).
 
 - **Appointments** — consultation requests and service bookings. Confirm, complete, no-show or
-  cancel; private notes; one-tap WhatsApp reply and call.
+  cancel; private notes; one-tap Text, Call and WhatsApp reply. Training inquiries have a filter chip,
+  and the **Referrals** tab totals requests and paid purchases per referring barbershop.
 - **Purchases** — package reservations: new → confirmed → paid → completed, with totals.
 - **Services** — edit names, descriptions, prices, duration options, visibility, or add services.
 - **Phone alerts** — web push. Install the app to the phone's home screen (iPhone: Safari → Share →
@@ -114,14 +123,14 @@ publishable and protected by row-level security.
 
 ## Analytics & admin dashboard
 
-Site visits and WhatsApp click-throughs are logged to a Supabase table (`smp_analytics_events`)
+Site visits and contact-button clicks are logged to a Supabase table (`smp_analytics_events`)
 in the agency's shared Supabase project, and `admin.html` shows the aggregated numbers.
 
 **How it works:**
 
 - `index.html` posts one `page_view` event on every page load, and one `whatsapp_click` event
   (tagged with a `source`, e.g. `hero`, `nav`, `consultation`, `scheduler`) whenever a visitor
-  clicks any of the 8 "Talk To Terrence Now" / WhatsApp buttons or submits the scheduler. This
+  clicks any "Talk To Terrence Now" / "Learn how to SMP" button or submits the scheduler. (The event keeps its original `whatsapp_click` name so history stays intact; `admin.html` labels it "Contact Button Clicks".) This
   uses a public "publishable" Supabase key that can only *insert* rows — it has no permission
   to read data back, so it's safe to leave in the page source.
 - `admin.html` is gated by a passcode prompt. On success, it calls a Supabase Edge Function

@@ -31,25 +31,34 @@ Deno.serve(async (req) => {
   if (req.headers.get("x-hook-secret") === cfg.hook_secret) {
     if (body.appointment_id) {
       const { data: a } = await sb.from("appointments")
-        .select("code,name,phone,goal,preferred_date,preferred_time,request_type,service_name,option_label,price")
+        .select("code,name,phone,goal,preferred_date,preferred_time,request_type,inquiry_type,service_name,option_label,price,referred_by")
         .eq("id", body.appointment_id).single();
       if (!a) return json({ error: "appointment not found" }, 404);
-      const when = [dayLabel(a.preferred_date), a.preferred_time].filter(Boolean).join(" \u00b7 ") || "no date picked";
+      const when = [dayLabel(a.preferred_date), a.preferred_time].filter(Boolean).join(" \u00b7 ");
       const svc = a.service_name ? a.service_name + (a.option_label ? " (" + a.option_label + ")" : "") : null;
-      const title = a.request_type === "booking"
-        ? `New booking \u00b7 ${svc}${a.price ? " \u00b7 " + money(a.price) : ""}`
-        : `New consultation request${svc ? " \u00b7 " + svc : ""}`;
+      const ref = a.referred_by ? ` \u00b7 Referred by ${a.referred_by}` : "";
+      let title: string, detail: string;
+      if (a.inquiry_type === "training") {
+        title = "New training inquiry \u00b7 Learn to SMP";
+        detail = a.goal || "";
+      } else if (a.request_type === "booking") {
+        title = `New booking \u00b7 ${svc}${a.price ? " \u00b7 " + money(a.price) : ""}`;
+        detail = when || "no date picked";
+      } else {
+        title = `New consultation request${svc ? " \u00b7 " + svc : ""}`;
+        detail = when || (!svc && a.goal ? a.goal : "");
+      }
       payload = {
         title,
-        body: `${a.name} \u00b7 ${a.phone} \u00b7 ${when}${!svc && a.goal ? " \u00b7 " + a.goal : ""}`,
+        body: [a.name, a.phone, detail].filter(Boolean).join(" \u00b7 ") + ref,
         tag: a.code, url: "/store.html#appointments",
       };
     } else if (body.order_id) {
-      const { data: o } = await sb.from("orders").select("code,name,phone,offer_name,qty,total").eq("id", body.order_id).single();
+      const { data: o } = await sb.from("orders").select("code,name,phone,offer_name,qty,total,referred_by").eq("id", body.order_id).single();
       if (!o) return json({ error: "order not found" }, 404);
       payload = {
-        title: `New purchase request · ${money(o.total)}`,
-        body: `${o.name} · ${o.phone} · ${o.qty > 1 ? o.qty + " × " : ""}${o.offer_name}`,
+        title: `New purchase request \u00b7 ${money(o.total)}`,
+        body: `${o.name} \u00b7 ${o.phone} \u00b7 ${o.qty > 1 ? o.qty + " \u00d7 " : ""}${o.offer_name}${o.referred_by ? " \u00b7 Referred by " + o.referred_by : ""}`,
         tag: o.code, url: "/store.html#purchases",
       };
     } else return json({ error: "bad request" }, 400);

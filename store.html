@@ -69,7 +69,7 @@ a{color:inherit}
 .stat.hot b{color:var(--gold-deep)}
 /* tabs */
 .tabs{display:flex;gap:4px;margin:10px 0 14px;border-bottom:1px solid var(--lgray);overflow-x:auto}
-.tabs button{padding:12px 16px;border:0;border-bottom:3px solid transparent;background:none;font-weight:600;font-size:.86rem;cursor:pointer;color:var(--gray);white-space:nowrap}
+.tabs button{padding:12px 11px;border:0;border-bottom:3px solid transparent;background:none;font-weight:600;font-size:.86rem;cursor:pointer;color:var(--gray);white-space:nowrap}
 .tabs button.on{border-color:var(--gold);color:var(--black)}
 .tabs i{font-style:normal;display:inline-block;min-width:20px;margin-left:6px;padding:1px 6px;background:var(--gold);color:var(--black);border-radius:10px;font-size:.7rem}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
@@ -135,12 +135,13 @@ function toast(msg,sub){const el=document.createElement('div');el.className='toa
 const dayLabel=d=>d?new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}):'';
 const ago=ts=>{const s=(Date.now()-new Date(ts))/1000;if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' hr ago';return new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric'})};
 const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const smsLink=(phone,msg)=>'sms:+1'+String(phone).replace(/\D/g,'').slice(-10)+'?&body='+encodeURIComponent(msg);
 const waLink=(phone,msg)=>'https://wa.me/1'+String(phone).replace(/\D/g,'').slice(-10)+'?text='+encodeURIComponent(msg);
 const first=n=>String(n||'').trim().split(/\s+/)[0]||'there';
 
 /* ---------- state ---------- */
 let user=null,A={appts:[],orders:[],offers:[]},tab=(location.hash.replace('#','')||'appointments'),fAppt='new',fOrd='new',channel=null,swReg=null,fresh=new Set();
-if(!['appointments','purchases','services'].includes(tab))tab='appointments';
+if(!['appointments','purchases','referrals','services'].includes(tab))tab='appointments';
 
 /* ---------- service worker + push ---------- */
 if('serviceWorker' in navigator){
@@ -249,8 +250,8 @@ const newCount=()=>A.appts.filter(x=>x.status==='new').length+A.orders.filter(x=
 function subscribe(){
   if(channel)sb.removeChannel(channel);
   channel=sb.channel('owner-live')
-   .on('postgres_changes',{event:'INSERT',schema:'public',table:'appointments'},p=>{fresh.add(p.new.id);const r=p.new;toast(r.request_type==='booking'?'New booking':'New consultation request',`${r.name}${r.service_name?' · '+r.service_name:''}`);reloadData()})
-   .on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},p=>{fresh.add(p.new.id);toast('New purchase request',`${p.new.name} · ${money(p.new.total)}`);reloadData()})
+   .on('postgres_changes',{event:'INSERT',schema:'public',table:'appointments'},p=>{fresh.add(p.new.id);const r=p.new;toast(r.inquiry_type==='training'?'New training inquiry':r.request_type==='booking'?'New booking':'New consultation request',`${r.name}${r.service_name?' · '+r.service_name:''}${r.referred_by?' · from '+r.referred_by:''}`);reloadData()})
+   .on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},p=>{fresh.add(p.new.id);toast('New purchase request',`${p.new.name} · ${money(p.new.total)}${p.new.referred_by?' · from '+p.new.referred_by:''}`);reloadData()})
    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'appointments'},()=>reloadData())
    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'orders'},()=>reloadData())
    .subscribe();
@@ -277,7 +278,9 @@ function stats(){
 function apptCard(a){
   const when=[dayLabel(a.preferred_date),a.preferred_time].filter(Boolean).join(' · ')||'No date picked';
   const svc=a.service_name?`<div class="svc">${esc(a.service_name)}${a.option_label?' · '+esc(a.option_label):''}${a.price?` · <em>${money(a.price)}</em>`:''}</div>`:'';
-  const msg=a.request_type==='booking'
+  const msg=a.inquiry_type==='training'
+    ?`Hi ${first(a.name)}, it's Terrence at Swurl Kurl Studios. Thanks for your interest in learning SMP. When's a good time to talk about training?`
+    :a.request_type==='booking'
     ?`Hi ${first(a.name)}, it's Terrence at Swurl Kurl Studios. I got your booking request for ${a.service_name}${a.preferred_date?' on '+dayLabel(a.preferred_date):''}${a.preferred_time?' ('+a.preferred_time.toLowerCase()+')':''}. Let me confirm the exact time with you.`
     :`Hi ${first(a.name)}, it's Terrence at Swurl Kurl Studios. Thanks for reaching out${a.service_name?' about '+a.service_name:''}${a.preferred_date?' — I see you were hoping for '+dayLabel(a.preferred_date):''}. When's a good time to talk?`;
   const acts=[];
@@ -287,11 +290,11 @@ function apptCard(a){
   if(['cancelled','no_show','completed'].includes(a.status))acts.push(['new','Reopen','ghost']);
   return`<div class="card ${fresh.has(a.id)?'fresh':''}" data-id="${a.id}" data-t="appointments">
    <div class="hd"><div><h3>${esc(a.name)}</h3><div class="meta">${esc(a.code)} · ${ago(a.created_at)}</div></div>
-    <div><span class="badge type">${a.request_type==='booking'?'Booking':'Consultation'}</span> <span class="badge ${a.status}">${a.status.replace('_',' ')}</span></div></div>
+    <div><span class="badge type">${a.inquiry_type==='training'?'Training':a.request_type==='booking'?'Booking':'Consultation'}</span> <span class="badge ${a.status}">${a.status.replace('_',' ')}</span></div></div>
    ${svc}
-   <div class="kv"><span>When</span><b>${esc(when)}</b><span>Phone</span><b>${esc(a.phone)}</b>${a.email?`<span>Email</span><b>${esc(a.email)}</b>`:''}${a.goal?`<span>Goal</span><b>${esc(a.goal)}</b>`:''}${a.contact_pref?`<span>Prefers</span><b>${esc(a.contact_pref)}${a.best_time?' · '+esc(a.best_time):''}</b>`:''}${a.lead_source?`<span>Heard via</span><b>${esc(a.lead_source)}</b>`:''}${a.notes?`<span>Notes</span><b>${esc(a.notes)}</b>`:''}</div>
+   <div class="kv"><span>When</span><b>${esc(when)}</b><span>Phone</span><b>${esc(a.phone)}</b>${a.email?`<span>Email</span><b>${esc(a.email)}</b>`:''}${a.goal?`<span>Goal</span><b>${esc(a.goal)}</b>`:''}${a.contact_pref?`<span>Prefers</span><b>${esc(a.contact_pref)}${a.best_time?' · '+esc(a.best_time):''}</b>`:''}${a.lead_source?`<span>Heard via</span><b>${esc(a.lead_source)}</b>`:''}${a.referred_by?`<span>Referred by</span><b>${esc(a.referred_by)}</b>`:''}${a.notes?`<span>Notes</span><b>${esc(a.notes)}</b>`:''}</div>
    <textarea class="field" data-note placeholder="Private notes (only you can see these)">${esc(a.admin_notes||'')}</textarea>
-   <div class="acts"><a class="btn wa sm" href="${waLink(a.phone,msg)}" target="_blank" rel="noopener">WhatsApp</a><a class="btn ghost sm" href="tel:${a.phone.replace(/\D/g,'')}">Call</a>
+   <div class="acts"><a class="btn sm" href="${smsLink(a.phone,msg)}">Text</a><a class="btn ghost sm" href="tel:${a.phone.replace(/\D/g,'')}">Call</a><a class="btn wa sm" href="${waLink(a.phone,msg)}" target="_blank" rel="noopener">WhatsApp</a>
     ${acts.map(([s,l,c])=>`<button class="btn ${c} sm" data-status="${s}">${l}</button>`).join('')}
     ${a.status==='cancelled'?'<button class="btn danger sm" data-del>Delete</button>':''}</div></div>`;
 }
@@ -306,11 +309,23 @@ function orderCard(o){
   return`<div class="card ${fresh.has(o.id)?'fresh':''}" data-id="${o.id}" data-t="orders">
    <div class="hd"><div><h3>${esc(o.name)}</h3><div class="meta">${esc(o.code)} · ${ago(o.created_at)}</div></div><div><span class="badge ${o.status}">${o.status}</span></div></div>
    <div class="svc">${o.qty>1?o.qty+' × ':''}${esc(o.offer_name)} · <em>${money(o.total)}</em></div>
-   <div class="kv"><span>Phone</span><b>${esc(o.phone)}</b>${o.email?`<span>Email</span><b>${esc(o.email)}</b>`:''}${o.preferred_date?`<span>Start</span><b>${esc(dayLabel(o.preferred_date))}</b>`:''}${o.notes?`<span>Notes</span><b>${esc(o.notes)}</b>`:''}${o.paid_at?`<span>Paid</span><b>${esc(new Date(o.paid_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}))}</b>`:''}</div>
+   <div class="kv"><span>Phone</span><b>${esc(o.phone)}</b>${o.email?`<span>Email</span><b>${esc(o.email)}</b>`:''}${o.preferred_date?`<span>Start</span><b>${esc(dayLabel(o.preferred_date))}</b>`:''}${o.referred_by?`<span>Referred by</span><b>${esc(o.referred_by)}</b>`:''}${o.notes?`<span>Notes</span><b>${esc(o.notes)}</b>`:''}${o.paid_at?`<span>Paid</span><b>${esc(new Date(o.paid_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}))}</b>`:''}</div>
    <textarea class="field" data-note placeholder="Private notes (payment method, etc.)">${esc(o.admin_notes||'')}</textarea>
-   <div class="acts"><a class="btn wa sm" href="${waLink(o.phone,msg)}" target="_blank" rel="noopener">WhatsApp</a><a class="btn ghost sm" href="tel:${o.phone.replace(/\D/g,'')}">Call</a>
+   <div class="acts"><a class="btn sm" href="${smsLink(o.phone,msg)}">Text</a><a class="btn ghost sm" href="tel:${o.phone.replace(/\D/g,'')}">Call</a><a class="btn wa sm" href="${waLink(o.phone,msg)}" target="_blank" rel="noopener">WhatsApp</a>
     ${acts.map(([s,l,c])=>`<button class="btn ${c} sm" data-status="${s}">${l}</button>`).join('')}
     ${o.status==='cancelled'?'<button class="btn danger sm" data-del>Delete</button>':''}</div></div>`;
+}
+function referralsView(){
+  const g=new Map();
+  const add=(name,k)=>{const raw=String(name||'').trim();if(!raw)return null;const key=raw.toLowerCase().replace(/\s+/g,' ');if(!g.has(key))g.set(key,{name:raw,req:0,won:0,rev:0,last:null});return g.get(key)};
+  const bump=(r,created)=>{r.last=!r.last||created>r.last?created:r.last};
+  A.appts.filter(a=>a.referred_by&&a.status!=='cancelled').forEach(a=>{const r=add(a.referred_by);r.req++;bump(r,a.created_at);if(['confirmed','completed'].includes(a.status))r.won++});
+  A.orders.filter(o=>o.referred_by&&o.status!=='cancelled').forEach(o=>{const r=add(o.referred_by);r.req++;bump(r,o.created_at);if(['paid','completed'].includes(o.status)){r.won++;r.rev+=Number(o.total)}});
+  const rows=[...g.values()].sort((x,y)=>y.won-x.won||y.req-x.req||String(y.last).localeCompare(String(x.last)));
+  const intro='<p class="note" style="margin-top:0">Every request or reservation where the customer named a barbershop. Cancelled requests are left out. "Booked / paid" counts confirmed or completed consultations plus paid or completed purchases.</p>';
+  if(!rows.length)return intro+'<div class="empty">No barbershop referrals yet. When a customer fills in "Which barbershop referred you?", it shows up here.</div>';
+  return intro+rows.map(r=>`<div class="card"><div class="hd"><div><h3>${esc(r.name)}</h3><div class="meta">Last referral ${ago(r.last)}</div></div><div><span class="badge type">${r.req} referred</span></div></div>
+   <div class="kv"><span>Booked / paid</span><b>${r.won}</b><span>Purchases paid</span><b>${money(r.rev)}</b></div></div>`).join('');
 }
 function svcCard(s){
   const opts=(s.options||[]).map(o=>`${o.label} | ${o.price}`).join('\n');
@@ -332,19 +347,21 @@ function render(){
   const nA=A.appts.filter(a=>a.status==='new').length,nO=A.orders.filter(o=>o.status==='new').length;
   let body='';
   if(tab==='appointments'){
-    const fs=[['new','New'],['confirmed','Confirmed'],['completed','Completed'],['cancelled','Cancelled / no-show'],['all','All']];
-    const list=A.appts.filter(a=>fAppt==='all'||(fAppt==='cancelled'?['cancelled','no_show'].includes(a.status):a.status===fAppt));
+    const fs=[['new','New'],['confirmed','Confirmed'],['completed','Completed'],['training','Training'],['cancelled','Cancelled / no-show'],['all','All']];
+    const list=A.appts.filter(a=>fAppt==='all'||(fAppt==='training'?a.inquiry_type==='training':fAppt==='cancelled'?['cancelled','no_show'].includes(a.status):a.status===fAppt));
     body=`<div class="chips">${fs.map(([k,l])=>`<button data-fa="${k}" class="${fAppt===k?'on':''}">${l}</button>`).join('')}</div>${list.length?list.map(apptCard).join(''):'<div class="empty">Nothing here yet. New requests show up instantly and buzz your phone.</div>'}`;
   }else if(tab==='purchases'){
     const fs=[['new','New'],['confirmed','Awaiting payment'],['paid','Paid'],['completed','Completed'],['cancelled','Cancelled'],['all','All']];
     const list=A.orders.filter(o=>fOrd==='all'||o.status===fOrd);
     body=`<div class="chips">${fs.map(([k,l])=>`<button data-fo="${k}" class="${fOrd===k?'on':''}">${l}</button>`).join('')}</div>${list.length?list.map(orderCard).join(''):'<div class="empty">No purchase requests in this view.</div>'}`;
+  }else if(tab==='referrals'){
+    body=referralsView();
   }else{
     body=`<p class="note" style="margin-top:0">Changes here update the website's Services section right away. To add a new service, use the button at the bottom.</p>${A.offers.map(svcCard).join('')}<div class="acts"><button class="btn ghost" id="addsvc">+ Add a service</button></div>`;
   }
   const active=document.activeElement;const keep=active&&active.matches&&active.matches('textarea,input')?null:null;
   V().innerHTML=`<div class="wrap">${bar}${stats()}
-   <div class="tabs"><button data-tab="appointments" class="${tab==='appointments'?'on':''}">Appointments${nA?`<i>${nA}</i>`:''}</button><button data-tab="purchases" class="${tab==='purchases'?'on':''}">Purchases${nO?`<i>${nO}</i>`:''}</button><button data-tab="services" class="${tab==='services'?'on':''}">Services</button></div>
+   <div class="tabs"><button data-tab="appointments" class="${tab==='appointments'?'on':''}">Appointments${nA?`<i>${nA}</i>`:''}</button><button data-tab="purchases" class="${tab==='purchases'?'on':''}">Purchases${nO?`<i>${nO}</i>`:''}</button><button data-tab="referrals" class="${tab==='referrals'?'on':''}">Referrals</button><button data-tab="services" class="${tab==='services'?'on':''}">Services</button></div>
    ${body}<p class="note" style="text-align:center;margin:26px 0 40px"><a href="admin.html">Site analytics</a> · <a href="index.html" target="_blank" rel="noopener">View site</a></p></div>`;
 }
 
@@ -415,7 +432,7 @@ async function boot(){
   try{await reloadData();subscribe()}catch(e){V().innerHTML=`<div class="wrap loading">Couldn't load the store. ${esc(errMsg(e))}</div>`}
 }
 sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){user=null;vAuth('newpw')}else if(ev==='SIGNED_IN'&&!user)boot()});
-window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(['appointments','purchases','services'].includes(h)&&h!==tab){tab=h;render()}});
+window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(['appointments','purchases','referrals','services'].includes(h)&&h!==tab){tab=h;render()}});
 setInterval(()=>{if(user&&document.visibilityState==='visible'&&!document.activeElement?.matches?.('textarea,input,select'))render()},60000);
 boot();
 </script>

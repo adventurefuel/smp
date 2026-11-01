@@ -7,7 +7,7 @@
   <title>The Comeback | SMP Consultation | Swurl Kurl Studios</title>
   <meta
     name="description"
-    content="Request an SMP consultation with Swurl Kurl Studios. The Comeback 21-day offer: two scalp micropigmentation sessions for $1,500."
+    content="Request an SMP consultation with Swurl Kurl Studios. The Comeback 21-day offer: two scalp micropigmentation sessions for $2,000 (limited time, regularly $2,500)."
   />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -769,6 +769,36 @@
       background: var(--warm-white);
     }
 
+    /* buttons that replaced the old WhatsApp links */
+    button.inline-link {
+      background: none;
+      border: 0;
+      padding: 0;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .scheduler-btn {
+      margin-top: 6px;
+      width: 100%;
+    }
+
+    .learn {
+      background: var(--white);
+      text-align: center;
+      border-top: 1px solid var(--light-gray);
+    }
+
+    .learn-inner {
+      max-width: 760px;
+    }
+
+    .learn-inner p {
+      margin: 18px auto 30px;
+      color: var(--gray);
+    }
+
     .inline-link {
       color: var(--gold-deep);
       font-weight: 600;
@@ -1173,13 +1203,8 @@
         <a href="#services">The Offer</a>
         <a href="#process">Process</a>
         <a href="#faq">FAQ</a>
-        <a
-          href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20SMP%20at%20Swurl%20Kurl%20Studios."
-          class="btn"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-wa-source="nav"
-        >Talk To Terrence Now</a>
+        <a href="#learn">Learn SMP</a>
+        <button type="button" class="btn" data-open-contact="nav">Talk To Terrence Now</button>
       </nav>
 
     </div>
@@ -1218,22 +1243,14 @@
             </div>
 
             <div class="offer-price">
-              2 SMP Sessions — <span class="gold">$1,500</span>
+              2 SMP Sessions — <span class="gold">$2,000</span>
             </div>
 
             <div class="offer-regular">
-              Regularly $2,000
+              Limited-time offer · Regularly $2,500
             </div>
 
-            <a
-              href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20SMP%20at%20Swurl%20Kurl%20Studios."
-              class="btn"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-wa-source="hero"
-            >
-              Talk To Terrence Now
-            </a>
+            <button type="button" class="btn" data-open-contact="hero">Talk To Terrence Now</button>
 
             <p class="offer-note">
               Start with a conversation. We'll help you understand the
@@ -1351,15 +1368,7 @@
         </div>
 
         <div class="results-cta">
-          <a
-            href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20SMP%20at%20Swurl%20Kurl%20Studios."
-            class="btn btn-dark"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-wa-source="results"
-          >
-            Talk To Terrence Now
-          </a>
+          <button type="button" class="btn btn-dark" data-open-contact="results">Talk To Terrence Now</button>
         </div>
 
       </div>
@@ -1402,15 +1411,7 @@
             That's where experience matters.
           </p>
 
-          <a
-            href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20SMP%20at%20Swurl%20Kurl%20Studios."
-            class="btn btn-dark"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-wa-source="objection"
-          >
-            Talk To Terrence Now
-          </a>
+          <button type="button" class="btn btn-dark" data-open-contact="objection">Talk To Terrence Now</button>
 
         </div>
 
@@ -1430,7 +1431,7 @@
           <span class="eyebrow">Experience Matters</span>
 
           <h2>
-            25 Years Behind
+            30 Years Behind
             <span class="gold">The Chair Matters.</span>
           </h2>
 
@@ -1439,7 +1440,7 @@
           </p>
 
           <p>
-            Terrence brings 25 years of barbering experience
+            Terrence brings 30 years of barbering experience
             and a career centered around grooming, education, and helping
             people look and feel their best.
           </p>
@@ -1456,15 +1457,7 @@
           </div>
 
           <div style="margin-top:30px;">
-            <a
-              href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20SMP%20at%20Swurl%20Kurl%20Studios."
-              class="btn"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-wa-source="authority"
-            >
-              Talk To Terrence Now
-            </a>
+            <button type="button" class="btn" data-open-contact="authority">Talk To Terrence Now</button>
           </div>
 
         </div>
@@ -1531,15 +1524,7 @@
         </div>
 
         <div class="results-cta">
-          <a
-            href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20SMP%20at%20Swurl%20Kurl%20Studios."
-            class="btn"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-wa-source="process"
-          >
-            Talk To Terrence Now
-          </a>
+          <button type="button" class="btn" data-open-contact="process">Talk To Terrence Now</button>
         </div>
 
       </div>
@@ -1560,15 +1545,8 @@
           <span class="eyebrow">The Offer</span>
           <h2>Reserve Your Comeback.</h2>
           <p>
-            Reserve your spot, or have questions first? Message Terrence
-            directly on WhatsApp.
-            <a
-              href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20The%20Comeback."
-              target="_blank"
-              rel="noopener noreferrer"
-              data-wa-source="services"
-              class="inline-link"
-            >Talk to Terrence now.</a>
+            Reserve your spot online, or have questions first?
+            <button type="button" class="inline-link" data-open-contact="services">Request a call from Terrence.</button>
           </p>
         </div>
 
@@ -1596,22 +1574,14 @@
 
         <h2>Ready To Make Your Move?</h2>
 
-        <div class="price">$1,500</div>
+        <div class="price">$2,000</div>
 
         <p>
           Two SMP sessions during the 21-day campaign.<br />
-          Regularly $2,000.
+          Limited-time offer. Regularly $2,500.
         </p>
 
-        <a
-          href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20SMP%20at%20Swurl%20Kurl%20Studios."
-          class="btn btn-dark"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-wa-source="offer_band"
-        >
-          Talk To Terrence Now
-        </a>
+        <button type="button" class="btn btn-dark" data-open-contact="offer_band">Talk To Terrence Now</button>
 
         <button type="button" class="btn btn-outline-dark" data-open-service="comeback">
           Reserve The Comeback
@@ -1708,6 +1678,25 @@
 
 
     <!-- ==================================
+         LEARN HOW TO SMP
+    =================================== -->
+    <section class="learn" id="learn">
+      <div class="container learn-inner">
+        <span class="eyebrow">For Barbers &amp; Artists</span>
+        <h2>Want To Learn <span class="gold">How To SMP?</span></h2>
+        <p>
+          Terrence's career has been built on grooming and education. If you
+          want to add scalp micropigmentation to your skills, tell us a little
+          about yourself and he'll reach out personally about training.
+        </p>
+        <button type="button" class="btn btn-dark" data-open-training="learn">
+          I Want To Learn How To SMP
+        </button>
+      </div>
+    </section>
+
+
+    <!-- ==================================
          CONSULTATION FORM
     =================================== -->
     <section class="consultation" id="consultation">
@@ -1731,20 +1720,6 @@
           <p>
             This conversation is designed to help you understand
             the process, ask questions, and determine your next step.
-          </p>
-
-          <a
-            href="https://wa.me/15865535504?text=Hi%20Terrence%21%20I%27d%20like%20to%20talk%20about%20SMP%20at%20Swurl%20Kurl%20Studios."
-            class="btn whatsapp-btn"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-wa-source="consultation"
-          >
-            Talk To Terrence Now
-          </a>
-
-          <p class="whatsapp-note">
-            Fastest way to reach us — opens a WhatsApp chat directly with Terrence.
           </p>
 
           <div class="scheduler-card">
@@ -1780,15 +1755,19 @@
                 </select>
               </div>
 
+              <div class="form-group full">
+                <label for="schedulerReferral">Which barbershop referred you? (optional)</label>
+                <input type="text" id="schedulerReferral" name="scheduler_referral" maxlength="80" autocomplete="off" />
+              </div>
+
             </div>
 
-            <button type="button" id="schedulerSubmit" class="btn whatsapp-btn">
+            <button type="button" id="schedulerSubmit" class="btn scheduler-btn">
               Send Request To Terrence
             </button>
 
             <p class="whatsapp-note" id="schedulerNote">
-              Sends your request to Terrence and opens WhatsApp with your
-              preferred date and time already filled in — he'll confirm
+              Goes straight to Terrence's phone — he'll confirm
               availability with you directly.
             </p>
 
@@ -1939,6 +1918,21 @@
               </div>
 
               <div class="form-group full">
+                <label for="referredBy">
+                  Which Barbershop Referred You?
+                </label>
+
+                <input
+                  type="text"
+                  id="referredBy"
+                  name="referred_by"
+                  maxlength="80"
+                  autocomplete="off"
+                  placeholder="Optional — leave blank if none"
+                />
+              </div>
+
+              <div class="form-group full">
                 <label for="notes">
                   Anything You'd Like Us To Know?
                 </label>
@@ -2068,6 +2062,11 @@
             <input type="email" id="bookEmail" autocomplete="email" />
           </div>
 
+          <div class="form-group" id="bookReferralWrap">
+            <label for="bookReferral">Which barbershop referred you? (optional)</label>
+            <input type="text" id="bookReferral" maxlength="80" autocomplete="off" />
+          </div>
+
           <div class="form-group">
             <label for="bookNotes">Anything we should know? (optional)</label>
             <textarea id="bookNotes" style="min-height:70px"></textarea>
@@ -2077,8 +2076,7 @@
 
           <button type="submit" class="btn" id="bookSubmit">Request Booking</button>
           <p class="book-fine" id="bookFine">
-            Sends your request to Terrence and opens WhatsApp so you can
-            confirm. No payment is taken online.
+            Sends your request straight to Terrence's phone. No payment is taken online.
           </p>
           <div class="form-status" id="bookStatus" role="alert"></div>
         </form>
@@ -2088,10 +2086,87 @@
         <span class="eyebrow">Request Sent</span>
         <h3>You're on Terrence's list.</h3>
         <p id="bookDoneText"></p>
-        <a class="btn whatsapp-btn" id="bookDoneWa" href="#" target="_blank" rel="noopener noreferrer" data-wa-source="booking_done">
-          Open WhatsApp
-        </a>
         <button type="button" class="btn btn-ghost-dark" id="bookDoneClose">Close</button>
+      </div>
+
+    </div>
+  </dialog>
+
+
+  <!-- ==================================
+       REQUEST DIALOG — "Talk to Terrence" call-backs and "Learn how to SMP"
+       training inquiries. Both go straight to Terrence's phone.
+  =================================== -->
+  <dialog id="reqDialog" class="book-dialog" aria-labelledby="reqTitle">
+    <div class="book-inner">
+
+      <button type="button" class="book-close" id="reqClose" aria-label="Close">×</button>
+
+      <div id="reqFormView">
+        <span class="eyebrow" id="reqEyebrow">Talk To Terrence</span>
+        <h3 id="reqTitle">Request A Call</h3>
+        <p class="book-sub" id="reqSub"></p>
+
+        <form id="reqForm" novalidate>
+
+          <div class="book-row">
+            <div class="form-group">
+              <label for="reqName">Your Name *</label>
+              <input type="text" id="reqName" autocomplete="name" required />
+            </div>
+            <div class="form-group">
+              <label for="reqPhone">Mobile Number *</label>
+              <input type="tel" id="reqPhone" autocomplete="tel" inputmode="tel" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reqEmail">Email (optional)</label>
+            <input type="email" id="reqEmail" autocomplete="email" />
+          </div>
+
+          <div class="form-group" id="reqTimeWrap">
+            <label for="reqTime">Best time to reach you</label>
+            <select id="reqTime">
+              <option value="">Anytime</option>
+              <option value="Morning">Morning</option>
+              <option value="Afternoon">Afternoon</option>
+              <option value="Evening">Evening</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="reqLevelWrap" hidden>
+            <label for="reqLevel">Which best describes you?</label>
+            <select id="reqLevel">
+              <option value="">Select one</option>
+              <option value="Licensed barber / cosmetologist">Licensed barber / cosmetologist</option>
+              <option value="Tattoo / PMU artist">Tattoo / PMU artist</option>
+              <option value="New to the industry">New to the industry</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="reqReferralWrap">
+            <label for="reqReferral">Which barbershop referred you? (optional)</label>
+            <input type="text" id="reqReferral" maxlength="80" autocomplete="off" />
+          </div>
+
+          <div class="form-group">
+            <label for="reqNotes" id="reqNotesLabel">Anything you'd like Terrence to know? (optional)</label>
+            <textarea id="reqNotes" style="min-height:70px"></textarea>
+          </div>
+
+          <button type="submit" class="btn" id="reqSubmit">Request A Call</button>
+          <p class="book-fine">Goes straight to Terrence's phone. He'll reach out personally.</p>
+          <div class="form-status" id="reqStatus" role="alert"></div>
+        </form>
+      </div>
+
+      <div id="reqDoneView" hidden>
+        <span class="eyebrow">Request Sent</span>
+        <h3>You're on Terrence's list.</h3>
+        <p id="reqDoneText"></p>
+        <button type="button" class="btn btn-ghost-dark" id="reqDoneClose">Close</button>
       </div>
 
     </div>
@@ -2107,7 +2182,7 @@
     /*
       LIGHTWEIGHT ANALYTICS.
 
-      Logs page views and WhatsApp click-throughs to a Supabase table
+      Logs page views and contact-button clicks to a Supabase table
       (smp_analytics_events) so the /admin.html page can show simple
       traffic + conversion numbers. The table only accepts inserts from
       this public key (no read access), and every call fails silently
@@ -2141,13 +2216,17 @@
     // One page_view per load.
     logEvent("page_view", window.location.pathname);
 
-    // Every "Talk To Terrence Now" / WhatsApp button on the page carries
-    // a data-wa-source attribute identifying where it lives (nav, hero,
-    // results, objection, authority, process, offer_band, consultation).
-    document.querySelectorAll('a[href^="https://wa.me/"]').forEach(function (link) {
-      link.addEventListener("click", function () {
-        logEvent("whatsapp_click", link.dataset.waSource || "unlabeled");
-      });
+    // Every "Talk To Terrence Now" button on the page carries a
+    // data-open-contact attribute identifying where it lives (nav, hero,
+    // results, objection, authority, process, offer_band, services).
+    // Logged under the original "whatsapp_click" event name so the
+    // analytics history and /admin.html keep working; the admin page now
+    // labels it "Contact Button Clicks".
+    document.addEventListener("click", function (event) {
+      const t = event.target.closest("[data-open-contact]");
+      if (t) logEvent("whatsapp_click", t.getAttribute("data-open-contact") || "unlabeled");
+      const l = event.target.closest("[data-open-training]");
+      if (l) logEvent("whatsapp_click", "training_" + (l.getAttribute("data-open-training") || "learn"));
     });
 
 
@@ -2162,7 +2241,6 @@
     */
     const STORE_URL = "https://eyzhywxehxoqtrjzooab.supabase.co";
     const STORE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5emh5d3hlaHhvcXRyanpvb2FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjc1MTksImV4cCI6MjEwNjcwMzUxOX0.bhlbwLEPFIkfhnGbYY5y8jffRHDZz6DQpclWLFiGNoU";
-    const WA_NUMBER = "15865535504";
 
     async function storeRpc(fn, args) {
       const res = await fetch(STORE_URL + "/rest/v1/rpc/" + fn, {
@@ -2199,9 +2277,6 @@
       return "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 });
     };
     const phoneDigits = function (s) { return String(s || "").replace(/\D/g, ""); };
-    const waUrl = function (msg) {
-      return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
-    };
     const prettyDate = function (iso) {
       return new Date(iso + "T12:00:00").toLocaleDateString("en-US", {
         weekday: "long", month: "long", day: "numeric", year: "numeric",
@@ -2221,7 +2296,7 @@
       is only a snapshot used if the database can't be reached.
     */
     const FALLBACK_SERVICES = [
-      { id: "comeback", name: "The Comeback — 2 SMP Sessions", description: "Two scalp micropigmentation sessions during the 21-day campaign.", price: 1500, regular_price: 2000, kind: "package", options: [] },
+      { id: "comeback", name: "The Comeback — 2 SMP Sessions", description: "Two scalp micropigmentation sessions during the 21-day campaign.", price: 2000, regular_price: 2500, kind: "package", options: [] },
     ];
     let SERVICES = FALLBACK_SERVICES;
 
@@ -2281,9 +2356,8 @@
       BOOKING / CONSULTATION / RESERVE DIALOG.
 
       One dialog for every service card and the Comeback "Reserve" buttons.
-      On submit it (1) opens WhatsApp with the details pre-filled — WhatsApp
-      stays the primary channel — and (2) saves the request to the store
-      database, which buzzes Terrence's phone. No payment is taken online.
+      On submit it saves the request to the store database, which buzzes
+      Terrence's phone. No payment is taken online.
     */
     const dlg = document.getElementById("bookDialog");
     const bookForm = document.getElementById("bookForm");
@@ -2340,6 +2414,8 @@
       document.getElementById("bookTitle").textContent = s.name;
       timeWrap.hidden = false;
       optWrap.hidden = true;
+      // The barbershop-referral question is only collected on package reservations.
+      document.getElementById("bookReferralWrap").hidden = s.kind !== "package";
 
       if (s.kind === "package") {
         document.getElementById("bookEyebrow").textContent = "Reserve";
@@ -2348,7 +2424,7 @@
         timeWrap.hidden = true;
         submit.textContent = "Reserve This Offer";
         document.getElementById("bookFine").textContent =
-          "Sends your reservation to Terrence and opens WhatsApp. No payment is taken online.";
+          "Sends your reservation straight to Terrence's phone. No payment is taken online.";
       } else if (s.kind === "book") {
         document.getElementById("bookEyebrow").textContent = "Book";
         document.getElementById("bookSub").textContent = s.description || "";
@@ -2356,7 +2432,7 @@
         document.getElementById("bookTimeLabel").textContent = "Preferred Time *";
         submit.textContent = "Request Booking";
         document.getElementById("bookFine").textContent =
-          "Sends your request to Terrence and opens WhatsApp so you can confirm. No payment is taken online.";
+          "Sends your request straight to Terrence's phone. No payment is taken online.";
         if (s.options && s.options.length) {
           optWrap.hidden = false;
           bookOption.innerHTML = (s.options.length > 1 ? '<option value="">Select one</option>' : "") +
@@ -2372,7 +2448,7 @@
         document.getElementById("bookTimeLabel").textContent = "Preferred Time (optional)";
         submit.textContent = "Request Consultation";
         document.getElementById("bookFine").textContent =
-          "Sends your request to Terrence and opens WhatsApp so you can chat.";
+          "Sends your request straight to Terrence's phone.";
       }
 
       submit.disabled = false;
@@ -2381,7 +2457,7 @@
       if (typeof dlg.showModal === "function") {
         dlg.showModal();
       } else {
-        window.open(waUrl("Hi Terrence! I'm interested in " + s.name + "."), "_blank", "noopener,noreferrer");
+        dlg.setAttribute("open", "");
       }
     }
 
@@ -2402,9 +2478,6 @@
       if (event.target === dlg) closeDialog(); // click on the dark backdrop
     });
     bookOption.addEventListener("change", updateBookTotal);
-    document.getElementById("bookDoneWa").addEventListener("click", function () {
-      logEvent("whatsapp_click", "booking_done");
-    });
 
     bookForm.addEventListener("submit", async function (event) {
       event.preventDefault();
@@ -2415,6 +2488,7 @@
       const phone = document.getElementById("bookPhone").value.trim();
       const email = document.getElementById("bookEmail").value.trim();
       const notes = document.getElementById("bookNotes").value.trim();
+      const referral = document.getElementById("bookReferral").value.trim();
       const date = bookDate.value || null;
       const time = bookTime.value || null;
       const opt = selectedOption();
@@ -2427,25 +2501,6 @@
         if (!date || !time) return setBookStatus("Please pick a date and a time for your booking.", "error");
       }
 
-      // Build the WhatsApp message first and open it right away (inside the
-      // click gesture, so browsers don't block it).
-      let msg;
-      const when = (date ? " on " + prettyDate(date) : "") + (time ? " (" + time.toLowerCase() + ")" : "");
-      if (s.kind === "book") {
-        msg = "Hi Terrence! I'd like to book " + s.name + (opt ? " (" + opt.label + ")" : "") +
-          " — " + money(opt ? opt.price : s.price) + when + ". My name is " + name + ".";
-      } else if (s.kind === "package") {
-        msg = "Hi Terrence! I'd like to reserve " + s.name + " (" + money(s.price) + ")" +
-          (date ? ". I'd like to start around " + prettyDate(date) : "") + ". My name is " + name + ".";
-      } else {
-        msg = "Hi Terrence! I'd like to schedule a consultation about " + s.name +
-          (date ? ". Preferred date: " + prettyDate(date) : "") + (time ? ". Preferred time: " + time : "") +
-          ". My name is " + name + ".";
-      }
-      const link = waUrl(msg);
-      window.open(link, "_blank", "noopener,noreferrer");
-      logEvent("whatsapp_click", s.kind === "package" ? "reserve" : "booking");
-
       const submit = document.getElementById("bookSubmit");
       submit.disabled = true;
       submit.textContent = "Sending…";
@@ -2453,9 +2508,10 @@
 
       try {
         const result = s.kind === "package"
-          ? await storeRpc("reserve_offer", {
+          ? await storeRpc("reserve_offer_ref", {
               p_offer: s.id, p_qty: 1, p_name: name, p_phone: phone,
               p_email: email || null, p_date: date, p_notes: notes || null,
+              p_referred_by: referral || null,
             })
           : await storeRpc("book_service", {
               p_service: s.id, p_option: opt ? opt.label : null, p_name: name, p_phone: phone,
@@ -2463,18 +2519,116 @@
             });
 
         document.getElementById("bookDoneText").textContent =
-          "Your request (" + result.code + ") was sent to Terrence. WhatsApp should have opened with your " +
-          "details — send that message to confirm. If it didn't open, tap the button below.";
-        document.getElementById("bookDoneWa").setAttribute("href", link);
+          "Your request (" + result.code + ") was sent straight to Terrence's phone. " +
+          "He'll reach out personally to confirm the details.";
         document.getElementById("bookFormView").hidden = true;
         document.getElementById("bookDoneView").hidden = false;
       } catch (err) {
         submit.disabled = false;
         submit.textContent = "Try Again";
-        setBookStatus(
-          err.message + " WhatsApp has your details ready — send that message and Terrence will take it from there.",
-          "error"
-        );
+        setBookStatus(err.message, "error");
+      }
+    });
+
+
+    /*
+      REQUEST DIALOG — "Talk To Terrence Now" call-backs and the
+      "Learn how to SMP" training inquiry. Saves to the store database,
+      which buzzes Terrence's phone.
+    */
+    const reqDlg = document.getElementById("reqDialog");
+    const reqForm = document.getElementById("reqForm");
+    const reqStatus = document.getElementById("reqStatus");
+    let reqMode = "contact";
+
+    function setReqStatus(text, kind) {
+      reqStatus.textContent = text || "";
+      reqStatus.className = "form-status" + (text ? " visible " + (kind || "") : "");
+    }
+
+    function openRequest(mode) {
+      reqMode = mode;
+      reqForm.reset();
+      setReqStatus("");
+      document.getElementById("reqFormView").hidden = false;
+      document.getElementById("reqDoneView").hidden = true;
+
+      const training = mode === "training";
+      document.getElementById("reqEyebrow").textContent = training ? "Learn SMP" : "Talk To Terrence";
+      document.getElementById("reqTitle").textContent = training ? "Learn How To SMP" : "Request A Call";
+      document.getElementById("reqSub").textContent = training
+        ? "Tell us a little about you and Terrence will reach out personally about training."
+        : "Leave your number and Terrence will call or text you personally.";
+      document.getElementById("reqTimeWrap").hidden = training;
+      document.getElementById("reqReferralWrap").hidden = training;
+      document.getElementById("reqLevelWrap").hidden = !training;
+      document.getElementById("reqNotesLabel").textContent = training
+        ? "Tell us about your experience and what you'd like to learn (optional)"
+        : "Anything you'd like Terrence to know? (optional)";
+      const submit = document.getElementById("reqSubmit");
+      submit.textContent = training ? "Send My Training Inquiry" : "Request A Call";
+      submit.disabled = false;
+
+      if (typeof reqDlg.showModal === "function") {
+        reqDlg.showModal();
+      } else {
+        reqDlg.setAttribute("open", "");
+      }
+    }
+
+    function closeRequest() {
+      if (reqDlg.open) reqDlg.close();
+    }
+
+    document.addEventListener("click", function (event) {
+      const c = event.target.closest("[data-open-contact]");
+      if (c) { event.preventDefault(); openRequest("contact"); return; }
+      const t = event.target.closest("[data-open-training]");
+      if (t) { event.preventDefault(); openRequest("training"); }
+    });
+    document.getElementById("reqClose").addEventListener("click", closeRequest);
+    document.getElementById("reqDoneClose").addEventListener("click", closeRequest);
+    reqDlg.addEventListener("click", function (event) {
+      if (event.target === reqDlg) closeRequest();
+    });
+
+    reqForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const training = reqMode === "training";
+      const name = document.getElementById("reqName").value.trim();
+      const phone = document.getElementById("reqPhone").value.trim();
+      const email = document.getElementById("reqEmail").value.trim();
+      const notes = document.getElementById("reqNotes").value.trim();
+
+      if (name.length < 2) return setReqStatus("Please add your name.", "error");
+      if (phoneDigits(phone).length < 10) return setReqStatus("Please enter a 10-digit mobile number.", "error");
+      if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return setReqStatus("That email address looks off.", "error");
+
+      const submit = document.getElementById("reqSubmit");
+      submit.disabled = true;
+      submit.textContent = "Sending…";
+      setReqStatus("");
+
+      try {
+        const result = await storeRpc("submit_request", {
+          p_name: name, p_phone: phone, p_email: email || null, p_source: "form",
+          p_goal: training ? (document.getElementById("reqLevel").value || "Training inquiry") : "Call request",
+          p_contact_pref: null,
+          p_best_time: training ? null : (document.getElementById("reqTime").value || null),
+          p_lead_source: null, p_date: null, p_time: null,
+          p_notes: notes || null,
+          p_referred_by: training ? null : (document.getElementById("reqReferral").value.trim() || null),
+          p_inquiry: training ? "training" : "client",
+        });
+        document.getElementById("reqDoneText").textContent =
+          "Your request (" + result.code + ") was sent straight to Terrence's phone. " +
+          (training ? "He'll reach out personally about training." : "He'll call or text you personally.");
+        document.getElementById("reqFormView").hidden = true;
+        document.getElementById("reqDoneView").hidden = false;
+      } catch (err) {
+        submit.disabled = false;
+        submit.textContent = training ? "Send My Training Inquiry" : "Request A Call";
+        setReqStatus(err.message, "error");
       }
     });
 
@@ -2482,14 +2636,14 @@
     /*
       SCHEDULER (consultation card).
 
-      Name + mobile + optional date/time. Sends the request to the store
-      database (buzzing Terrence's phone) and opens WhatsApp with the
-      details pre-filled.
+      Name + mobile + optional date/time/referral. Saves the request to the
+      store database, which buzzes Terrence's phone.
     */
     const schedulerNameInput = document.getElementById("schedulerName");
     const schedulerPhoneInput = document.getElementById("schedulerPhone");
     const schedulerDateInput = document.getElementById("schedulerDate");
     const schedulerTimeInput = document.getElementById("schedulerTime");
+    const schedulerReferralInput = document.getElementById("schedulerReferral");
     const schedulerSubmit = document.getElementById("schedulerSubmit");
     const schedulerNote = document.getElementById("schedulerNote");
 
@@ -2515,26 +2669,19 @@
           return;
         }
 
-        let message = "Hi Terrence! I'd like to schedule an SMP consultation at Swurl Kurl Studios.";
-        if (dateVal) message += " Preferred date: " + prettyDate(dateVal) + ".";
-        if (timeVal) message += " Preferred time: " + timeVal + ".";
-        if (!dateVal && !timeVal) message += " I'd like to find a time that works.";
-        message += " My name is " + name + ".";
-
         logEvent("whatsapp_click", "scheduler");
-        window.open(waUrl(message), "_blank", "noopener,noreferrer");
-
         schedulerSubmit.disabled = true;
         setSchedulerNote("Sending your request…");
 
-        storeRpc("request_appointment", {
+        storeRpc("submit_request", {
           p_name: name, p_phone: phone, p_email: null, p_source: "scheduler", p_goal: "SMP consultation",
           p_contact_pref: null, p_best_time: null, p_lead_source: null,
           p_date: dateVal || null, p_time: timeVal || null, p_notes: null,
+          p_referred_by: (schedulerReferralInput.value.trim() || null), p_inquiry: "client",
         }).then(function () {
-          setSchedulerNote("Request sent — Terrence has been notified. WhatsApp opened so you can confirm.", "#7ee2a0");
+          setSchedulerNote("Request sent — it went straight to Terrence's phone. He'll confirm with you directly.", "#7ee2a0");
         }).catch(function (err) {
-          setSchedulerNote(err.message + " Your WhatsApp message is ready — send it and Terrence will take it from there.", "#ff8a80");
+          setSchedulerNote(err.message, "#ff8a80");
         }).finally(function () {
           schedulerSubmit.disabled = false;
         });
@@ -2565,7 +2712,7 @@
       setConsultStatus("Sending your request…");
 
       try {
-        await storeRpc("request_appointment", {
+        await storeRpc("submit_request", {
           p_name: (String(fd.get("first_name") || "") + " " + String(fd.get("last_name") || "")).trim(),
           p_phone: String(fd.get("phone") || ""),
           p_email: String(fd.get("email") || "") || null,
@@ -2576,11 +2723,13 @@
           p_lead_source: String(fd.get("lead_source") || "") || null,
           p_date: null, p_time: null,
           p_notes: String(fd.get("notes") || "") || null,
+          p_referred_by: String(fd.get("referred_by") || "").trim() || null,
+          p_inquiry: "client",
         });
         consultForm.reset();
         setConsultStatus("Thanks — your request is in. Terrence has been notified and will reach out personally.", "success");
       } catch (err) {
-        setConsultStatus(err.message + " You can also message Terrence directly on WhatsApp using the button above.", "error");
+        setConsultStatus(err.message, "error");
       } finally {
         button.disabled = false;
       }
