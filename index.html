@@ -212,6 +212,89 @@
       letter-spacing: .06em;
     }
 
+
+    /* ---------------------------
+       MOBILE MENU (hamburger) + sticky call bar
+    --------------------------- */
+    html { scroll-padding-top: 76px; }
+    html.menu-open { overflow: hidden; }
+    .nav-links a[aria-current="true"]:not(.btn) { color: var(--gold); }
+
+    .nav-toggle {
+      display: none;
+      width: 46px; height: 46px;
+      margin-right: -6px;
+      padding: 0;
+      border: 0; background: transparent;
+      cursor: pointer;
+      align-items: center; justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
+    .nav-toggle .bars { position: relative; width: 24px; height: 18px; display: block; }
+    .nav-toggle .bars i {
+      position: absolute; left: 0; width: 100%; height: 2px; border-radius: 2px;
+      background: var(--gold);
+      transition: transform .25s ease, opacity .2s ease, top .25s ease;
+    }
+    .nav-toggle .bars i:nth-child(1) { top: 0; }
+    .nav-toggle .bars i:nth-child(2) { top: 8px; }
+    .nav-toggle .bars i:nth-child(3) { top: 16px; }
+    .nav-toggle[aria-expanded="true"] .bars i:nth-child(1) { top: 8px; transform: rotate(45deg); }
+    .nav-toggle[aria-expanded="true"] .bars i:nth-child(2) { opacity: 0; }
+    .nav-toggle[aria-expanded="true"] .bars i:nth-child(3) { top: 8px; transform: rotate(-45deg); }
+
+    .mmenu {
+      position: fixed; inset: 0; z-index: 99;
+      display: flex; flex-direction: column;
+      padding: 92px 24px calc(24px + env(safe-area-inset-bottom));
+      background: radial-gradient(700px 360px at 50% -60px, rgba(232,179,81,.18), transparent 70%), #080808;
+      overflow-y: auto; overscroll-behavior: contain;
+      opacity: 0; visibility: hidden; transform: translateY(-10px);
+      transition: opacity .22s ease, transform .22s ease, visibility 0s linear .22s;
+    }
+    .mmenu.open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+    .mmenu-label {
+      margin: 0 0 6px; color: var(--gold); font-size: .72rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase;
+    }
+    .mmenu a.ml {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 17px 2px; min-height: 58px;
+      color: var(--white); text-decoration: none;
+      font-size: 1.28rem; font-weight: 600; letter-spacing: .01em;
+      border-bottom: 1px solid rgba(232,179,81,.22);
+    }
+    .mmenu a.ml::after { content: "\203A"; color: rgba(232,179,81,.7); font-size: 1.5rem; line-height: 1; }
+    .mmenu a.ml[aria-current="true"] { color: var(--gold); }
+    .mmenu a.ml[aria-current="true"]::after { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--gold); }
+    .mmenu a.ml small { display: block; margin-top: 2px; font-size: .8rem; font-weight: 500; color: #9d988b; letter-spacing: 0; }
+    .mmenu a.ml:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+    .mmenu-cta { margin-top: auto; padding-top: 26px; }
+    .mmenu-cta .btn { width: 100%; min-height: 58px; font-size: .92rem; }
+    .mmenu-cta p { margin: 12px 0 0; text-align: center; color: #8e8a7e; font-size: .8rem; }
+
+    .mbar { display: none; }
+
+    @media (max-width: 900px) {
+      .nav-toggle { display: inline-flex; }
+      .nav-links { gap: 10px; }
+      footer { padding-bottom: calc(42px + 78px + env(safe-area-inset-bottom)); }
+      .mbar {
+        display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
+        padding: 18px 14px calc(10px + env(safe-area-inset-bottom));
+        background: linear-gradient(180deg, rgba(11,11,11,0), rgba(11,11,11,.94) 42%);
+        transform: translateY(115%); transition: transform .28s ease; pointer-events: none;
+      }
+      .mbar.show { transform: none; pointer-events: auto; }
+      .mbar .btn { width: 100%; min-height: 54px; box-shadow: 0 8px 22px rgba(0,0,0,.45); }
+    }
+    @media (min-width: 901px) { .mmenu, .mbar { display: none !important; } }
+    @media (prefers-reduced-motion: reduce) {
+      .mmenu, .mbar, .nav-toggle .bars i { transition: none; }
+      html { scroll-behavior: auto; }
+    }
+
     /* ---------------------------
        HERO
     --------------------------- */
@@ -1205,11 +1288,36 @@
         <a href="#faq">FAQ</a>
         <a href="#learn">Learn SMP</a>
         <button type="button" class="btn" data-open-contact="nav">Talk To Terrence Now</button>
+        <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+          <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+        </button>
       </nav>
 
     </div>
   </header>
 
+
+  <!-- ==================================
+       MOBILE MENU + STICKY CALL BAR (phones/tablets only)
+    =================================== -->
+  <div class="mmenu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Site menu">
+    <p class="mmenu-label">Menu</p>
+    <a class="ml" href="#results">Results</a>
+    <a class="ml" href="#about">About Terrence</a>
+    <a class="ml" href="#services">The Offer</a>
+    <a class="ml" href="#process">How It Works</a>
+    <a class="ml" href="#faq">FAQ</a>
+    <a class="ml" href="#learn">Learn SMP</a>
+    <a class="ml" href="learn.html"><span>Student Application<small>For barbers and beauty pros</small></span></a>
+    <div class="mmenu-cta">
+      <button type="button" class="btn" data-open-contact="menu">Talk To Terrence Now</button>
+      <p>He calls or texts you back personally.</p>
+    </div>
+  </div>
+
+  <div class="mbar" id="mobileBar">
+    <button type="button" class="btn" data-open-contact="sticky_bar">Request A Call</button>
+  </div>
 
   <main>
 
@@ -2737,6 +2845,94 @@
         button.disabled = false;
       }
     });
+  </script>
+
+  <script>
+    /* Mobile menu, sticky call bar, and "you are here" highlighting. */
+    (function () {
+      var toggle = document.getElementById("navToggle");
+      var menu = document.getElementById("mobileMenu");
+      var bar = document.getElementById("mobileBar");
+      if (!toggle || !menu) return;
+      var root = document.documentElement;
+      var isOpen = false;
+
+      function setMenu(open, restoreFocus) {
+        isOpen = open;
+        menu.classList.toggle("open", open);
+        root.classList.toggle("menu-open", open);
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+        if (open) {
+          var first = menu.querySelector("a.ml");
+          if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 60);
+        } else if (restoreFocus) {
+          toggle.focus({ preventScroll: true });
+        }
+        updateBar();
+      }
+      toggle.addEventListener("click", function () { setMenu(!isOpen, isOpen); });
+
+      menu.addEventListener("click", function (e) {
+        var a = e.target.closest("a.ml");
+        if (a) {
+          var href = a.getAttribute("href") || "";
+          if (href.charAt(0) === "#") {
+            e.preventDefault();
+            var target = document.getElementById(href.slice(1));
+            setMenu(false, false);
+            if (target) {
+              requestAnimationFrame(function () {
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
+                if (history.pushState) history.pushState(null, "", href);
+              });
+            }
+          }
+          return;
+        }
+        if (e.target.closest("[data-open-contact]")) setMenu(false, false);
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (!isOpen) return;
+        if (e.key === "Escape") { setMenu(false, true); return; }
+        if (e.key === "Tab") { // keep focus inside the open menu
+          var f = [toggle].concat([].slice.call(menu.querySelectorAll("a[href], button")));
+          var i = f.indexOf(document.activeElement);
+          if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+          else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+        }
+      });
+      window.addEventListener("resize", function () { if (isOpen && window.innerWidth > 900) setMenu(false, false); });
+
+      /* "You are here": light up the link for the section being read. */
+      var ids = ["results", "about", "services", "process", "faq", "learn", "consultation"];
+      var links = [].slice.call(document.querySelectorAll('.nav-links a[href^="#"], .mmenu a.ml[href^="#"]'));
+      function mark(id) {
+        links.forEach(function (a) {
+          if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "true");
+          else a.removeAttribute("aria-current");
+        });
+      }
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) { if (en.isIntersecting) mark(en.target.id); });
+        }, { rootMargin: "-45% 0px -50% 0px" });
+        ids.forEach(function (id) { var el = document.getElementById(id); if (el) io.observe(el); });
+        var hero = document.querySelector(".hero");
+        if (hero) new IntersectionObserver(function (en) { if (en[0].isIntersecting) mark(""); }, { rootMargin: "-45% 0px -50% 0px" }).observe(hero);
+      }
+
+      /* Sticky "Request A Call": after the first screen, never over the form or the menu. */
+      var pastHero = false, onForm = false;
+      function updateBar() { if (bar) bar.classList.toggle("show", pastHero && !onForm && !isOpen); }
+      if ("IntersectionObserver" in window && bar) {
+        var hero2 = document.querySelector(".hero");
+        if (hero2) new IntersectionObserver(function (en) { pastHero = !en[0].isIntersecting && en[0].boundingClientRect.bottom < 0; updateBar(); }).observe(hero2);
+        var form = document.getElementById("consultation");
+        if (form) new IntersectionObserver(function (en) { onForm = en[0].isIntersecting; updateBar(); }, { threshold: 0.12 }).observe(form);
+      }
+    })();
   </script>
 
 </body>
