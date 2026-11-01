@@ -176,7 +176,13 @@ async function syncPush(){
   try{
     if(!user||!('Notification' in window)||Notification.permission!=='granted')return null;
     const reg=await getReg();if(!reg)return null;
-    const sub=await reg.pushManager.getSubscription();if(!sub)return null;
+    let sub=await reg.pushManager.getSubscription();if(!sub)return null;
+    // A subscription made with a different server key can never receive our alerts: replace it.
+    try{const k=sub.options&&sub.options.applicationServerKey;
+      if(k&&!u8eq(new Uint8Array(k),b64ToU8(CFG.VAPID_PUBLIC))){
+        await sb.from('push_subscriptions').delete().eq('endpoint',sub.endpoint);await sub.unsubscribe();
+        sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(CFG.VAPID_PUBLIC)});
+      }}catch(_){}
     return await saveSub(sub);
   }catch(e){return e}
 }
@@ -191,6 +197,34 @@ async function enablePush(){
     if(error)throw error;
     toast('Phone alerts are on','Sending a test alert now…');await refreshPush();setTimeout(testPush,600);
   }catch(e){toast('Could not turn on alerts',errMsg(e));refreshPush()}
+}
+let diagText='';
+const u8eq=(a,b)=>a&&b&&a.length===b.length&&a.every((x,i)=>x===b[i]);
+/* Explains exactly where a push is getting lost on THIS phone. */
+async function diagnosePush(){
+  const out=[];
+  try{
+    out.push('Permission: '+Notification.permission);
+    const reg=await getReg();
+    if(!reg){out.push('Service worker: NOT running');diagText=out.join('\n');return render()}
+    out.push('Service worker: '+(reg.active?'running':'not active yet')+(navigator.serviceWorker.controller?'':' (page not controlled yet)'));
+    const sub=await reg.pushManager.getSubscription();
+    if(!sub)out.push('Browser subscription: none');
+    else{
+      let match='unknown';
+      try{const k=sub.options&&sub.options.applicationServerKey;if(k)match=u8eq(new Uint8Array(k),b64ToU8(CFG.VAPID_PUBLIC))?'matches':'DOES NOT MATCH';}catch(_){}
+      out.push('Browser subscription: yes ('+new URL(sub.endpoint).host+'), server key '+match);
+    }
+    // show a notification locally, no network involved: proves the phone can display one
+    try{await reg.showNotification('Swurl Kurl local check',{body:'If you can see this, your phone can show alerts.',icon:'/img/icon-192.png',tag:'local-check'});out.push('Local notification: sent to the phone (did it appear?)')}
+    catch(e){out.push('Local notification FAILED: '+errMsg(e))}
+    try{
+      const r=await (await caches.open('sk-diag')).match('/__lastpush');
+      if(!r)out.push('Last push from server: none received yet on this phone');
+      else{const j=await r.json();out.push('Last push from server: '+ago(j.t)+' — '+(j.stage==='shown'?'received and shown':j.stage==='error'?'received but could not be shown: '+j.error:'received'))}
+    }catch(_){out.push('Last push from server: unknown')}
+  }catch(e){out.push('Check failed: '+errMsg(e))}
+  diagText=out.join('\n');render();
 }
 async function disablePush(){
   const reg=await getReg();const sub=reg?await reg.pushManager.getSubscription():null;
@@ -279,7 +313,7 @@ function subscribe(){
 /* ---------- views ---------- */
 function alertsBar(){
   if(ps===null)return'';
-  if(ps==='on')return`<div class="alerts on"><span>🔔 Phone alerts are on for this device.</span><span><button class="linkbtn" id="testpush">Send test alert</button> <button class="linkbtn" id="offpush">Turn off here</button></span></div>`;
+  if(ps==='on')return`<div class="alerts on"><span>🔔 Phone alerts are on for this device.</span><span><button class="linkbtn" id="testpush">Send test alert</button> <button class="linkbtn" id="diagpush">Check this phone</button> <button class="linkbtn" id="offpush">Turn off here</button></span></div>${diagText?`<div class="note" style="white-space:pre-line;margin:6px 0 12px">${esc(diagText)}</div>`:''}`;
   if(ps==='ios-install')return`<div class="alerts"><span><b>Get a buzz on your iPhone for every new request.</b><br><span class="note">Tap the Share button in Safari, choose <b>Add to Home Screen</b>, then open Swurl Kurl from your home screen and turn on alerts.</span></span></div>`;
   if(ps==='denied')return`<div class="warnbox">Notifications are blocked for this app. Turn them on in your phone or browser settings for this site, then reload.</div>`;
   if(ps==='unsupported')return`<div class="warnbox">This browser can't receive push alerts. Use Chrome on Android, Safari on iPhone (added to the home screen), or Chrome/Edge/Safari on a computer.</div>`;
@@ -391,6 +425,7 @@ document.addEventListener('click',async e=>{
   if(t.id==='onpush'){enablePush();return}
   if(t.id==='offpush'){disablePush();return}
   if(t.id==='testpush'){testPush();return}
+  if(t.id==='diagpush'){diagnosePush();return}
   if(t.dataset.tab){tab=t.dataset.tab;history.replaceState(null,'','#'+tab);render();return}
   if(t.dataset.fa){fAppt=t.dataset.fa;render();return}
   if(t.dataset.fo){fOrd=t.dataset.fo;render();return}

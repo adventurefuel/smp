@@ -2,11 +2,17 @@
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
 
+/* Diagnostics: remember the last push this phone received (read by the store app's "Check this phone"). */
+async function logPush(info) {
+  try { const c = await caches.open('sk-diag'); await c.put('/__lastpush', new Response(JSON.stringify(Object.assign({ t: Date.now() }, info)))); } catch (_) {}
+}
+
 self.addEventListener('push', (e) => {
   let d = {};
   try { d = e.data ? e.data.json() : {}; } catch (_) { d = { title: 'Swurl Kurl', body: e.data && e.data.text() }; }
   e.waitUntil((async () => {
-    await self.registration.showNotification(d.title || 'Swurl Kurl', {
+    await logPush({ stage: 'received', title: d.title || '' });
+    try { await self.registration.showNotification(d.title || 'Swurl Kurl', {
       body: d.body || 'New activity',
       tag: d.tag || undefined,
       renotify: true,
@@ -15,7 +21,7 @@ self.addEventListener('push', (e) => {
       badge: '/img/badge-96.png',
       vibrate: [250, 120, 250, 120, 500],
       data: { url: d.url || '/store.html#appointments' }
-    });
+    }); await logPush({ stage: 'shown', title: d.title || '' }); } catch (err) { await logPush({ stage: 'error', error: String(err && err.message || err) }); }
     const wins = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     wins.forEach((c) => c.postMessage({ type: 'push', payload: d }));
   })());
