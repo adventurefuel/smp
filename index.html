@@ -350,7 +350,7 @@
 
     .hero {
       background: var(--warm-white);
-      overflow: clip; /* clip (not hidden) so the photo can stay in view while the offer scrolls */
+      overflow: hidden;
       padding: 0;
     }
 
@@ -385,15 +385,8 @@
 
     /* The customer, cut out, standing flush on the page (no panel). */
     .hero-image {
-      min-height: 560px;
-      position: sticky;
-      top: 76px;
-      align-self: start;
-      height: min(calc(100vh - 76px), 840px);
-      /* warm natural-light portrait; fades into the page on its left edge */
-      background: url("assets/hero-warm.webp") 90% 0 / cover no-repeat;
-      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 22%);
-      mask-image: linear-gradient(to right, transparent 0, #000 22%);
+      min-height: 650px;
+      background: url("assets/hero-customer.webp") 50% 100% / contain no-repeat;
     }
 
     .offer-card {
@@ -1217,16 +1210,14 @@
 
       /* man + before/after composite, sized so the headline starts in the first screen */
       .hero-image {
-        position: static;
-        align-self: stretch;
         min-height: 0;
         height: min(104vw, 440px);
         order: -1;
-        background-image: url("assets/hero-warm.webp");
-        background-position: 88% 0;
-        background-size: cover;
-        -webkit-mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
-        mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
+        background-image: url("assets/hero-customer-ba.webp");
+        background-position: 50% 100%;
+        background-size: contain;
+        -webkit-mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
       }
 
       .result-grid {
@@ -1453,7 +1444,7 @@
         <div
           class="hero-image"
           role="img"
-          aria-label="A confident man with a clean, defined hairline, smiling toward the camera"
+          aria-label="A Swurl Kurl Studios SMP client with a sharp, defined hairline"
         ></div>
 
       </div>
