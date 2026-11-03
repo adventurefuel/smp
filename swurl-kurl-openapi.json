@@ -1,0 +1,661 @@
+{
+ "openapi": "3.0.3",
+ "info": {
+  "title": "Swurl Kurl CRM Bot API",
+  "version": "1.0.0",
+  "description": "Read-only access to clients, requests and appointments, plus adding notes. No payments or private notes."
+ },
+ "servers": [
+  {
+   "url": "https://eyzhywxehxoqtrjzooab.supabase.co/functions/v1/agent-api"
+  }
+ ],
+ "security": [
+  {
+   "bearer": []
+  }
+ ],
+ "paths": {
+  "/health": {
+   "get": {
+    "operationId": "health",
+    "summary": "Check the key works",
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/summary": {
+   "get": {
+    "operationId": "summary",
+    "summary": "Counts by stage, new requests, follow-ups due, upcoming appointments",
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/clients": {
+   "get": {
+    "operationId": "listClients",
+    "summary": "List clients",
+    "parameters": [
+     {
+      "name": "stage",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "lead",
+        "contacted",
+        "consult_booked",
+        "session_1",
+        "session_2",
+        "complete",
+        "not_a_fit"
+       ]
+      },
+      "description": ""
+     },
+     {
+      "name": "q",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      },
+      "description": "Search name, phone or email"
+     },
+     {
+      "name": "updated_since",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "description": ""
+     },
+     {
+      "name": "follow_up_due",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "default": 50
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "schema": {
+       "type": "integer",
+       "default": 0
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "clients": {
+           "type": "array",
+           "items": {
+            "$ref": "#/components/schemas/Client"
+           }
+          },
+          "page": {
+           "type": "object"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/clients/{id}": {
+   "get": {
+    "operationId": "getClient",
+    "summary": "One client with appointments, requests, purchase requests and bot notes",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/clients/{id}/notes": {
+   "post": {
+    "operationId": "addNote",
+    "summary": "Add a note to a client",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "body"
+        ],
+        "properties": {
+         "body": {
+          "type": "string",
+          "maxLength": 2000
+         },
+         "category": {
+          "type": "string",
+          "enum": [
+           "note",
+           "hesitation",
+           "objection",
+           "follow_up",
+           "outcome"
+          ],
+          "default": "note"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Created"
+     }
+    }
+   }
+  },
+  "/requests": {
+   "get": {
+    "operationId": "listRequests",
+    "summary": "Website consultation and booking requests",
+    "parameters": [
+     {
+      "name": "status",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      },
+      "description": ""
+     },
+     {
+      "name": "type",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "consultation",
+        "booking"
+       ]
+      },
+      "description": ""
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "description": ""
+     },
+     {
+      "name": "include_training",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "default": 50
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "schema": {
+       "type": "integer",
+       "default": 0
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "requests": {
+           "type": "array",
+           "items": {
+            "$ref": "#/components/schemas/Request"
+           }
+          },
+          "page": {
+           "type": "object"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/purchase-requests": {
+   "get": {
+    "operationId": "listPurchaseRequests",
+    "summary": "Purchase requests (no amounts)",
+    "parameters": [
+     {
+      "name": "status",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      },
+      "description": ""
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "description": ""
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "default": 50
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "schema": {
+       "type": "integer",
+       "default": 0
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "purchase_requests": {
+           "type": "array",
+           "items": {
+            "$ref": "#/components/schemas/PurchaseRequest"
+           }
+          },
+          "page": {
+           "type": "object"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/visits": {
+   "get": {
+    "operationId": "listVisits",
+    "summary": "Appointments",
+    "parameters": [
+     {
+      "name": "status",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      },
+      "description": ""
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "description": ""
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "description": ""
+     },
+     {
+      "name": "client_id",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "format": "uuid"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "default": 50
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "schema": {
+       "type": "integer",
+       "default": 0
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "visits": {
+           "type": "array",
+           "items": {
+            "$ref": "#/components/schemas/Visit"
+           }
+          },
+          "page": {
+           "type": "object"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "securitySchemes": {
+   "bearer": {
+    "type": "http",
+    "scheme": "bearer",
+    "description": "Key starting skb_ from Store > Bot access"
+   }
+  },
+  "schemas": {
+   "Client": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updated_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "name": {
+      "type": "string"
+     },
+     "phone": {
+      "type": "string"
+     },
+     "email": {
+      "type": "string"
+     },
+     "referred_by": {
+      "type": "string"
+     },
+     "lead_source": {
+      "type": "string"
+     },
+     "stage": {
+      "type": "string"
+     },
+     "package_name": {
+      "type": "string"
+     },
+     "follow_up_on": {
+      "type": "string",
+      "format": "date"
+     }
+    }
+   },
+   "Request": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid"
+     },
+     "code": {
+      "type": "string"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "source": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "phone": {
+      "type": "string"
+     },
+     "email": {
+      "type": "string"
+     },
+     "goal": {
+      "type": "string"
+     },
+     "contact_pref": {
+      "type": "string"
+     },
+     "best_time": {
+      "type": "string"
+     },
+     "lead_source": {
+      "type": "string"
+     },
+     "preferred_date": {
+      "type": "string"
+     },
+     "preferred_time": {
+      "type": "string"
+     },
+     "notes": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string"
+     },
+     "service_name": {
+      "type": "string"
+     },
+     "option_label": {
+      "type": "string"
+     },
+     "price": {
+      "type": "number"
+     },
+     "request_type": {
+      "type": "string"
+     },
+     "inquiry_type": {
+      "type": "string"
+     },
+     "referred_by": {
+      "type": "string"
+     },
+     "client_id": {
+      "type": "string",
+      "format": "uuid"
+     }
+    }
+   },
+   "PurchaseRequest": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid"
+     },
+     "code": {
+      "type": "string"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "offer_name": {
+      "type": "string"
+     },
+     "qty": {
+      "type": "integer"
+     },
+     "name": {
+      "type": "string"
+     },
+     "phone": {
+      "type": "string"
+     },
+     "email": {
+      "type": "string"
+     },
+     "preferred_date": {
+      "type": "string"
+     },
+     "notes": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string"
+     },
+     "referred_by": {
+      "type": "string"
+     },
+     "client_id": {
+      "type": "string",
+      "format": "uuid"
+     }
+    }
+   },
+   "Visit": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "client_id": {
+      "type": "string",
+      "format": "uuid"
+     },
+     "kind": {
+      "type": "string"
+     },
+     "starts_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "duration_min": {
+      "type": "integer"
+     },
+     "status": {
+      "type": "string"
+     }
+    }
+   }
+  }
+ }
+}

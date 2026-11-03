@@ -60,6 +60,9 @@ a{color:inherit}
 .alerts .note{color:#aaa}
 .alerts.on{background:#fff;color:var(--black);border-color:var(--lgray)}
 .alerts.on .linkbtn{color:var(--gray)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem;word-break:break-all;background:#f4f1ea;border:1px solid var(--lgray);padding:8px 10px;margin-top:6px;user-select:all}
+.tl.bot div{border-left:3px solid var(--gold);padding-left:8px}
+.keyrow.off{opacity:.5}
 .warnbox{margin:18px 0 6px;padding:12px 14px;background:#fff6e0;border:1px solid #ecd28c;font-size:.84rem}
 /* stats */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
@@ -179,8 +182,8 @@ const waLink=(phone,msg)=>'https://wa.me/1'+String(phone).replace(/\D/g,'').slic
 const first=n=>String(n||'').trim().split(/\s+/)[0]||'there';
 
 /* ---------- state ---------- */
-let user=null,A={appts:[],orders:[],offers:[],subs:[],subsErr:null,clients:[],visits:[],payments:[],crmErr:null},tab=(location.hash.replace('#','')||'appointments'),fAppt='new',fOrd='new',channel=null,swReg=null,fresh=new Set();
-if(!['appointments','schedule','clients','purchases','referrals','subscribers','services'].includes(tab))tab='appointments';
+let user=null,A={appts:[],orders:[],offers:[],subs:[],subsErr:null,clients:[],visits:[],payments:[],crmErr:null,agentKeys:[],agentHook:null,agentErr:null},tab=(location.hash.replace('#','')||'appointments'),fAppt='new',fOrd='new',channel=null,swReg=null,fresh=new Set();
+if(!['appointments','schedule','clients','purchases','referrals','subscribers','bot','services'].includes(tab))tab='appointments';
 
 /* ---------- service worker + push ---------- */
 if('serviceWorker' in navigator){
@@ -345,6 +348,11 @@ async function reloadData(){
   }catch(e){A.clients=[];A.visits=[];A.payments=[];A.crmErr='unavailable'}
   try{const b=await sb.from('blog_subscribers').select('*').order('created_at',{ascending:false}).limit(2000);
     if(b.error){A.subs=[];A.subsErr=b.error.message||'unavailable'}else{A.subs=b.data;A.subsErr=null}}catch(e){A.subs=[];A.subsErr='unavailable'}
+  try{
+    const [k,h]=await Promise.all([sb.from('agent_keys').select('*').order('created_at',{ascending:false}).limit(50),sb.from('agent_webhook').select('*').eq('id',1).maybeSingle()]);
+    const e=k.error||h.error;
+    if(e){A.agentKeys=[];A.agentHook=null;A.agentErr=e.message||'unavailable'}else{A.agentKeys=k.data;A.agentHook=h.data;A.agentErr=null}
+  }catch(e){A.agentKeys=[];A.agentHook=null;A.agentErr='unavailable'}
   document.title=(newCount()?`(${newCount()}) `:'')+'Swurl Kurl Store';
   render();
 }
@@ -470,6 +478,8 @@ function render(){
     body=referralsView();
   }else if(tab==='subscribers'){
     body=subscribersView();
+  }else if(tab==='bot'){
+    body=botView();
   }else if(tab==='clients'){
     body=clientsView();
   }else if(tab==='schedule'){
@@ -479,7 +489,7 @@ function render(){
   }
   const active=document.activeElement;const keep=active&&active.matches&&active.matches('textarea,input')?null:null;
   V().innerHTML=`<div class="wrap">${bar}${stats()}
-   <div class="tabs"><button data-tab="appointments" class="${tab==='appointments'?'on':''}">Requests${nA?`<i>${nA}</i>`:''}</button><button data-tab="schedule" class="${tab==='schedule'?'on':''}">Schedule${nSch?`<i>${nSch}</i>`:''}</button><button data-tab="clients" class="${tab==='clients'?'on':''}">Clients${nFu?`<i>${nFu}</i>`:''}</button><button data-tab="purchases" class="${tab==='purchases'?'on':''}">Purchases${nO?`<i>${nO}</i>`:''}</button><button data-tab="referrals" class="${tab==='referrals'?'on':''}">Referrals</button><button data-tab="subscribers" class="${tab==='subscribers'?'on':''}">Subscribers${(A.subs||[]).filter(x=>!x.unsubscribed_at).length?`<i style="background:#555">${(A.subs||[]).filter(x=>!x.unsubscribed_at).length}</i>`:''}</button><button data-tab="services" class="${tab==='services'?'on':''}">Services</button></div>
+   <div class="tabs"><button data-tab="appointments" class="${tab==='appointments'?'on':''}">Requests${nA?`<i>${nA}</i>`:''}</button><button data-tab="schedule" class="${tab==='schedule'?'on':''}">Schedule${nSch?`<i>${nSch}</i>`:''}</button><button data-tab="clients" class="${tab==='clients'?'on':''}">Clients${nFu?`<i>${nFu}</i>`:''}</button><button data-tab="purchases" class="${tab==='purchases'?'on':''}">Purchases${nO?`<i>${nO}</i>`:''}</button><button data-tab="referrals" class="${tab==='referrals'?'on':''}">Referrals</button><button data-tab="subscribers" class="${tab==='subscribers'?'on':''}">Subscribers${(A.subs||[]).filter(x=>!x.unsubscribed_at).length?`<i style="background:#555">${(A.subs||[]).filter(x=>!x.unsubscribed_at).length}</i>`:''}</button><button data-tab="bot" class="${tab==='bot'?'on':''}">Bot access</button><button data-tab="services" class="${tab==='services'?'on':''}">Services</button></div>
    ${body}<p class="note" style="text-align:center;margin:26px 0 40px"><a href="admin.html">Site analytics</a> · <a href="index.html" target="_blank" rel="noopener">View site</a></p></div>`;
 }
 
@@ -660,11 +670,16 @@ function profileView(id){
   <div class="card"><b>Notes and timeline</b>
    <textarea class="field" id="newNote" placeholder="Add a private note (only you can see these)" style="margin-top:8px"></textarea>
    <div class="acts"><button class="btn sm" id="addnote">Add note</button></div>
-   <div style="margin-top:10px">${notes===undefined?'<div class="note">Loading…</div>':notes.length?notes.map(n=>`<div class="tl ${n.kind}"><span>${esc(new Date(n.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}))} · ${esc(tFmt(n.created_at))}</span><div>${esc(n.body)}</div></div>`).join(''):'<div class="note">No notes yet.</div>'}</div></div>`;
+   <div style="margin-top:10px">${notes===undefined?'<div class="note">Loading…</div>':notes.length?notes.map(n=>`<div class="tl ${n.kind}"><span>${esc(new Date(n.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}))} · ${esc(tFmt(n.created_at))}${n.kind==='bot'?' · Bot note'+(n.category&&n.category!=='note'?' ('+esc(n.category.replace('_',' '))+')':'')+(n.agent_label?' · '+esc(n.agent_label):''):''}</span><div>${esc(n.body)}</div></div>`).join(''):'<div class="note">No notes yet.</div>'}</div></div>`;
 }
 async function loadNotes(id){
-  const {data,error}=await sb.from('client_notes').select('*').eq('client_id',id).order('created_at',{ascending:false}).limit(200);
-  notesCache[id]=error?[]:data;
+  const [n,b]=await Promise.all([
+    sb.from('client_notes').select('*').eq('client_id',id).order('created_at',{ascending:false}).limit(200),
+    sb.from('agent_notes').select('*').eq('client_id',id).order('created_at',{ascending:false}).limit(200)]);
+  let all=n.error?[]:n.data;
+  if(!b.error&&b.data)all=all.concat(b.data.map(x=>({...x,kind:'bot'})));
+  all.sort((x,y)=>new Date(y.created_at)-new Date(x.created_at));
+  notesCache[id]=all;
   if(tab==='clients'&&cl.id===id)render();
 }
 function openClient(id){
@@ -885,6 +900,7 @@ async function crmClick(t,e){
 document.addEventListener('click',async e=>{
   const t=e.target.closest('button,a,[data-open-client]');if(!t)return;
   if(await crmClick(t,e))return;
+  if(await botClick(t,e))return;
   if(t.id==='signout'){await sb.auth.signOut();location.reload();return}
   if(t.id==='onpush'){enablePush();return}
   if(t.id==='offpush'){disablePush();return}
@@ -940,6 +956,103 @@ async function addService(){
   toast('Service added','It is hidden until you tick "Show on the website" and save.');reloadData();
 }
 
+
+/* ---------- Bot access (read-only API + notes + webhook) ---------- */
+const AGENT_API=CFG.URL+'/functions/v1/agent-api';
+const HOOK_EVENTS=[['request.created','New consultation request'],['booking.created','New service booking request'],['visit.scheduled','Appointment scheduled by you'],['purchase.created','New purchase request']];
+let freshKey=null,hookBusy=false;
+const toHex=buf=>[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+const sha256hex=async s=>toHex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)));
+const randHex=n=>toHex(crypto.getRandomValues(new Uint8Array(n)).buffer);
+const copyText=async(txt,what)=>{try{await navigator.clipboard.writeText(txt);toast('Copied',what||null)}catch(_){prompt('Copy this:',txt)}};
+function botGuideText(){
+  return`SWURL KURL CRM - BOT ACCESS
+Base URL: ${AGENT_API}
+Auth header on every request:  Authorization: Bearer <your skb_ key>
+Permissions: read clients, requests, appointments, purchase requests; add notes. No payments, no private notes. 120 requests/minute.
+
+GET  /health
+GET  /summary                      counts by stage, new requests, follow-ups due, upcoming appointments
+GET  /clients                      ?stage= &q= &updated_since= &follow_up_due=true &limit= &offset=
+GET  /clients/{id}                 client + appointments + requests + purchase requests + bot notes
+GET  /requests                     ?status= &type=consultation|booking &since= &limit= &offset=
+GET  /purchase-requests            ?status= &since=
+GET  /visits                       ?from= &to= &status= &client_id=
+POST /clients/{id}/notes           {"body":"...","category":"note|hesitation|objection|follow_up|outcome"}
+
+Stages: lead, contacted, consult_booked, session_1, session_2, complete, not_a_fit.
+Webhook (if enabled): POST to your URL with headers X-SwurlKurl-Event, X-SwurlKurl-Timestamp, X-SwurlKurl-Signature = "sha256=" + HMAC_SHA256(secret, timestamp + "." + rawBody). Reject if the timestamp is older than 5 minutes.`;
+}
+function botView(){
+  if(A.agentErr)return`<div class="warnbox">Bot access isn't set up yet, so nothing can be shown here. (${esc(A.agentErr)})</div>`;
+  const w=A.agentHook||{},evs=w.events||['request.created','booking.created','visit.scheduled'];
+  const active=A.agentKeys.filter(k=>!k.revoked_at);
+  const keyRows=A.agentKeys.length?A.agentKeys.map(k=>`<div class="row keyrow ${k.revoked_at?'off':''}"><span class="when">${esc(k.label)}</span><span><span class="note">${esc(k.key_prefix)}&hellip; &middot; made ${esc(ago(k.created_at))} &middot; ${k.revoked_at?'revoked':k.last_used_at?'last used '+esc(ago(k.last_used_at)):'not used yet'}</span></span>${k.revoked_at?'':`<button class="linkbtn" data-revokekey="${k.id}">Revoke</button>`}</div>`).join(''):'<div class="note" style="margin-top:8px">No keys yet.</div>';
+  return`<p class="note" style="margin-top:0">Let an outside bot (like your Grok closer) work with your client list. It can <b>read</b> clients, requests and appointments, and <b>add notes</b>. It can never see payments or your private notes, and it can't change or delete anything.</p>
+  <div class="card"><b>1. Connect with an API key</b>
+   <div class="note" style="margin-top:6px">Address the bot calls:</div><div class="mono">${esc(AGENT_API)}</div>
+   <div class="acts"><button class="btn ghost sm" id="copyapi">Copy address</button> <button class="btn ghost sm" id="copyguide">Copy setup instructions for the bot</button></div>
+   ${freshKey?`<div class="okbox"><b>Your new key &mdash; copy it now.</b> For safety it is shown only once; after you leave this screen it can't be shown again.<div class="mono">${esc(freshKey)}</div><div class="acts"><button class="btn sm" id="copykey">Copy key</button> <button class="btn ghost sm" id="donekey">I've saved it</button></div></div>`:''}
+   <div style="margin-top:14px"><label>Name this key (who is it for?)</label><input class="field" id="keyLabel" type="text" maxlength="40" value="Grok CLOSER"></div>
+   <div class="acts"><button class="btn sm" id="mkkey">Create key</button></div>
+   <div style="margin-top:10px">${keyRows}</div>
+   ${active.length>1?'<div class="note" style="margin-top:8px">Tip: one key per bot makes it easy to cut off just one.</div>':''}</div>
+
+  <div class="card"><b>2. Get pinged when something new comes in (webhook)</b>
+   <div class="note" style="margin-top:6px">When one of the events below happens, we send the details to the web address your bot gives you. Each message is signed so the bot can tell it really came from your studio.</div>
+   <div style="margin-top:10px"><label>Webhook address from the bot (https only)</label><input class="field" id="hookUrl" type="url" placeholder="https://..." value="${esc(w.url||'')}"></div>
+   <div style="margin-top:10px">${HOOK_EVENTS.map(([k,l])=>`<label style="display:block;margin:4px 0"><input type="checkbox" data-hev="${k}" ${evs.includes(k)?'checked':''}> ${l}</label>`).join('')}</div>
+   <label style="display:block;margin:10px 0 0"><input type="checkbox" id="hookOn" ${w.enabled?'checked':''}> Send these to the bot</label>
+   ${w.secret?`<div class="note" style="margin-top:10px">Signing secret (paste into the bot so it can check messages):</div><div class="mono" id="hookSecretBox">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div><div class="acts"><button class="btn ghost sm" id="copysecret">Copy secret</button> <button class="btn ghost sm" id="newsecret">Make a new secret</button></div>`:'<div class="note" style="margin-top:10px">A signing secret is made when you save.</div>'}
+   <div class="acts"><button class="btn sm" id="savehook">Save webhook</button> <button class="btn ghost sm" id="testhook" ${w.url&&w.secret?'':'disabled'}>Send a test</button></div>
+   ${w.last_at?`<div class="note" style="margin-top:8px">Last send: ${esc(ago(w.last_at))} &middot; ${w.last_error?`<b style="color:#8a2a1f">${esc(w.last_error)}</b>`:'delivered'}</div>`:''}</div>`;
+}
+async function botClick(t,e){
+  if(t.id==='copyapi'){copyText(AGENT_API,'Address copied');return true}
+  if(t.id==='copyguide'){copyText(botGuideText(),'Instructions copied');return true}
+  if(t.id==='copykey'){copyText(freshKey,'Key copied');return true}
+  if(t.id==='donekey'){freshKey=null;render();return true}
+  if(t.id==='mkkey'){
+    const label=($('#keyLabel').value||'').trim();if(!label){toast('Name the key','e.g. Grok CLOSER');return true}
+    t.disabled=true;
+    const key='skb_'+randHex(32);
+    const {error}=await sb.from('agent_keys').insert({label,key_prefix:key.slice(0,10),key_hash:await sha256hex(key)});
+    if(error){t.disabled=false;toast('Key not created',errMsg(error));return true}
+    freshKey=key;await reloadData();window.scrollTo(0,0);return true}
+  if(t.dataset.revokekey){
+    if(!confirm('Revoke this key? The bot loses access immediately and can\'t get it back.'))return true;
+    const {error}=await sb.from('agent_keys').update({revoked_at:new Date().toISOString()}).eq('id',t.dataset.revokekey);
+    if(error){toast('Not revoked',errMsg(error));return true}
+    toast('Key revoked','That bot can no longer connect.');reloadData();return true}
+  if(t.id==='copysecret'){copyText((A.agentHook||{}).secret||'','Secret copied');return true}
+  if(t.id==='newsecret'){
+    if(!confirm('Make a new signing secret? Update it in the bot too, or it will reject our messages.'))return true;
+    const {error}=await sb.from('agent_webhook').update({secret:randHex(32)}).eq('id',1);
+    if(error)toast('Not changed',errMsg(error));else{toast('New secret made','Copy it into the bot.');reloadData()}return true}
+  if(t.id==='savehook'){
+    const url=($('#hookUrl').value||'').trim();
+    if(url){let ok=false;try{const u=new URL(url);ok=u.protocol==='https:'}catch(_){}
+      if(!ok){toast('Check the address','It must start with https://');return true}}
+    const events=[...document.querySelectorAll('[data-hev]')].filter(x=>x.checked).map(x=>x.dataset.hev);
+    const on=$('#hookOn').checked&&!!url;
+    if($('#hookOn').checked&&!url)toast('Add the bot\'s address first','Sending stays off until there is one.');
+    const w=A.agentHook||{};
+    const {error}=await sb.from('agent_webhook').update({url:url||null,events,enabled:on,secret:w.secret||(url?randHex(32):null)}).eq('id',1);
+    if(error){toast('Not saved',errMsg(error));return true}
+    toast('Webhook saved',on?'New events will be sent to the bot.':'Sending is off.');reloadData();return true}
+  if(t.id==='testhook'){
+    if(hookBusy)return true;hookBusy=true;t.disabled=true;t.textContent='Sending…';
+    try{
+      const {data:{session}}=await sb.auth.getSession();
+      const r=await fetch(AGENT_API+'/webhook-test',{method:'POST',headers:{'Content-Type':'application/json','apikey':CFG.KEY,'Authorization':'Bearer '+session.access_token},body:'{}'});
+      const j=await r.json().catch(()=>({}));
+      if(j.ok)toast('Test delivered','The bot answered with status '+j.status+'.');
+      else toast('Test failed',j.error||('Status '+(j.status||r.status)));
+    }catch(_){toast('Test failed','Check your connection and try again.')}
+    hookBusy=false;reloadData();return true}
+  return false;
+}
+
 /* ---------- boot ---------- */
 async function boot(){
   const {data:{session}}=await sb.auth.getSession();
@@ -952,7 +1065,7 @@ async function boot(){
   try{await reloadData();subscribe()}catch(e){V().innerHTML=`<div class="wrap loading">Couldn't load the store. ${esc(errMsg(e))}</div>`}
 }
 sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){user=null;vAuth('newpw')}else if(ev==='SIGNED_IN'&&!user)boot()});
-window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(['appointments','schedule','clients','purchases','referrals','subscribers','services'].includes(h)&&h!==tab){tab=h;if(h!=='clients')cl.id=null;render()}});
+window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(['appointments','schedule','clients','purchases','referrals','subscribers','bot','services'].includes(h)&&h!==tab){tab=h;if(h!=='clients')cl.id=null;render()}});
 setInterval(()=>{if(user&&document.visibilityState==='visible'&&!document.activeElement?.matches?.('textarea,input,select'))render()},60000);
 boot();
 </script>
