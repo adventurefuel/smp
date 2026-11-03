@@ -1001,6 +1001,7 @@ function botView(){
   <div class="card"><b>2. Get pinged when something new comes in (webhook)</b>
    <div class="note" style="margin-top:6px">When one of the events below happens, we send the details to the web address your bot gives you. Each message is signed so the bot can tell it really came from your studio.</div>
    <div style="margin-top:10px"><label>Webhook address from the bot (https only)</label><input class="field" id="hookUrl" type="url" placeholder="https://..." value="${esc(w.url||'')}"></div>
+   <div style="margin-top:10px"><label>Sender key (only if the bot gave you one)</label><input class="field" id="hookKey" type="password" autocomplete="off" placeholder="${w.sender_key?'Saved — type here to replace it':'Paste it here'}" value="">${w.sender_key?'<div class="acts"><button class="linkbtn" id="clearsender">Remove saved sender key</button></div>':''}<div class="note" style="margin-top:4px">We send it with every message as <b>Authorization: Bearer &hellip;</b> so the bot knows the message is from you.</div></div>
    <div style="margin-top:10px">${HOOK_EVENTS.map(([k,l])=>`<label style="display:block;margin:4px 0"><input type="checkbox" data-hev="${k}" ${evs.includes(k)?'checked':''}> ${l}</label>`).join('')}</div>
    <label style="display:block;margin:10px 0 0"><input type="checkbox" id="hookOn" ${w.enabled?'checked':''}> Send these to the bot</label>
    ${w.secret?`<div class="note" style="margin-top:10px">Signing secret (paste into the bot so it can check messages):</div><div class="mono" id="hookSecretBox">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div><div class="acts"><button class="btn ghost sm" id="copysecret">Copy secret</button> <button class="btn ghost sm" id="newsecret">Make a new secret</button></div>`:'<div class="note" style="margin-top:10px">A signing secret is made when you save.</div>'}
@@ -1037,9 +1038,14 @@ async function botClick(t,e){
     const on=$('#hookOn').checked&&!!url;
     if($('#hookOn').checked&&!url)toast('Add the bot\'s address first','Sending stays off until there is one.');
     const w=A.agentHook||{};
-    const {error}=await sb.from('agent_webhook').update({url:url||null,events,enabled:on,secret:w.secret||(url?randHex(32):null)}).eq('id',1);
+    const upd={url:url||null,events,enabled:on,secret:w.secret||(url?randHex(32):null)};
+    const sk=($('#hookKey').value||'').trim();if(sk)upd.sender_key=sk;
+    const {error}=await sb.from('agent_webhook').update(upd).eq('id',1);
     if(error){toast('Not saved',errMsg(error));return true}
     toast('Webhook saved',on?'New events will be sent to the bot.':'Sending is off.');reloadData();return true}
+  if(t.id==='clearsender'){
+    const {error}=await sb.from('agent_webhook').update({sender_key:null}).eq('id',1);
+    if(error)toast('Not removed',errMsg(error));else{toast('Sender key removed',null);reloadData()}return true}
   if(t.id==='testhook'){
     if(hookBusy)return true;hookBusy=true;t.disabled=true;t.textContent='Sending…';
     try{

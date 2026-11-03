@@ -61,6 +61,8 @@ Each delivery is a `POST` with JSON `{ "id", "event", "created_at", "data": {...
 - `X-SwurlKurl-Timestamp` — Unix seconds
 - `X-SwurlKurl-Signature` — `sha256=` + hex HMAC-SHA256 of `timestamp + "." + rawBody` using the signing secret
 
+If the bot gives you a **sender key** (Grok Routines does), paste it into the "Sender key" box in the Bot access tab. It is sent on every message as `Authorization: Bearer <sender key>` (and `X-Api-Key`). The signature headers still go along too, so the bot can verify them if it wants to.
+
 Answer with any `2xx` quickly. One automatic retry follows a timeout or 5xx. The store app shows the last delivery result.
 
 Verify it (Node):

@@ -107,6 +107,8 @@ async function deliver(event: string, data: unknown, opts: { force?: boolean } =
           "X-SwurlKurl-Event": event,
           "X-SwurlKurl-Timestamp": ts,
           "X-SwurlKurl-Signature": "sha256=" + sig,
+          // optional "sender key" the receiving bot asked for (sent both common ways)
+          ...(w.sender_key ? { "Authorization": "Bearer " + w.sender_key, "X-Api-Key": w.sender_key } : {}),
         },
         body,
       });
