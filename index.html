@@ -526,14 +526,16 @@
       align-items: center;
     }
 
-    /* Blueprint diagram (stands in for the video until one is ready) */
+    /* "A hairline that fits you" graphic (tap/click to enlarge) */
     .smp-diagram {
       margin: 0;
       position: relative;
-      aspect-ratio: 16 / 10;
-      background: #06111f;
+      width: 100%;
+      max-width: 520px;
+      justify-self: center;
+      aspect-ratio: 1122 / 1402;
+      background: var(--warm-white);
       box-shadow: var(--shadow);
-      border: 1px solid rgba(232,179,81,.55);
     }
     .smp-diagram button {
       display: block; width: 100%; height: 100%;
@@ -549,21 +551,16 @@
     @media (min-width: 901px) { .smp-diagram .zoom-hint { display: none; } }
     @media (max-width: 900px) { .smp-diagram { margin-bottom: 30px; } }
     .diagram-dialog {
-      width: min(96vw, 1400px); max-width: none; max-height: 96vh;
-      padding: 0; border: 1px solid var(--gold); background: #06111f; color: #fff;
+      width: auto; max-width: 96vw; max-height: 96vh;
+      padding: 0; border: 1px solid var(--gold); background: #111; color: #fff;
     }
     .diagram-dialog::backdrop { background: rgba(0,0,0,.85); }
-    .diagram-dialog img { display: block; width: 100%; height: auto; }
+    .diagram-dialog img { display: block; width: auto; max-width: 96vw; height: auto; max-height: 94vh; }
     .diagram-dialog .dd-close {
       position: absolute; top: 8px; right: 8px; z-index: 2;
       width: 44px; height: 44px; border-radius: 50%;
-      border: 1px solid var(--gold); background: rgba(6,17,31,.92);
+      border: 1px solid var(--gold); background: rgba(17,17,17,.92);
       color: var(--gold); font-size: 1.6rem; line-height: 1; cursor: pointer;
-    }
-    /* On phones the image is shown larger than the screen so the labels stay readable: scroll sideways inside the dialog */
-    @media (max-width: 700px) {
-      .diagram-dialog { width: 100vw; max-height: 100vh; height: 100vh; overflow: auto; }
-      .diagram-dialog img { width: auto; height: 78vh; max-width: none; margin-top: 11vh; }
     }
 
     .copy-block p {
@@ -1557,20 +1554,20 @@
       <div class="container two-col">
 
         <figure class="smp-diagram">
-          <button type="button" id="diagramOpen" aria-haspopup="dialog" aria-label="Enlarge the SMP blueprint diagram">
+          <button type="button" id="diagramOpen" aria-haspopup="dialog" aria-label="Enlarge the hairline graphic">
             <img
-              src="assets/smp-blueprint-top.webp"
-              width="2400" height="1500"
+              src="assets/hairline-fits-you.webp"
+              width="1122" height="1402"
               loading="lazy" decoding="async"
-              alt="Black and gold blueprint diagram of scalp micropigmentation. A head seen from above shows the mapped frontal hairline, temples, treated zone and natural crown whorl, with a magnified cross-section showing pigment placed in the upper dermis above the hair follicles. Benefits listed: natural look, custom hairline, non-surgical, low maintenance. Process: consult, design, session 1, session 2."
+              alt="Graphic titled "A hairline that fits you." Three men with different hairlines are labeled Shape, Height and Temples. Caption: SMP isn’t one hairline fits all. Hairline shape, height, and temple placement can be planned around your facial features and the look you want."
             />
           </button>
           <span class="zoom-hint" aria-hidden="true">Tap to enlarge</span>
         </figure>
 
-        <dialog class="diagram-dialog" id="diagramDialog" aria-label="SMP blueprint diagram, enlarged">
+        <dialog class="diagram-dialog" id="diagramDialog" aria-label="Hairline graphic, enlarged">
           <button type="button" class="dd-close" id="diagramClose" aria-label="Close">&times;</button>
-          <img src="assets/smp-blueprint-top.webp" width="2400" height="1500" alt="Enlarged black and gold blueprint diagram of the SMP process, top view of the head" />
+          <img src="assets/hairline-fits-you.webp" width="1122" height="1402" alt="Graphic titled "A hairline that fits you." Three men with different hairlines are labeled Shape, Height and Temples. Caption: SMP isn’t one hairline fits all. Hairline shape, height, and temple placement can be planned around your facial features and the look you want." />
         </dialog>
 
         <div class="copy-block">
