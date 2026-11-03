@@ -768,6 +768,44 @@
       border-color: rgba(255,255,255,.2);
     }
 
+    .next-steps {
+      margin: 32px 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: ns;
+      display: grid;
+      gap: 20px;
+    }
+
+    .next-steps li {
+      counter-increment: ns;
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 16px;
+      align-items: start;
+      color: #d0d0d0;
+      font-size: .95rem;
+      line-height: 1.5;
+    }
+
+    .next-steps li::before {
+      content: counter(ns);
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .next-steps b {
+      display: block;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
     .form-alt-heading {
       margin-bottom: 20px;
       padding-bottom: 20px;
@@ -1941,56 +1979,11 @@
             the process, ask questions, and determine your next step.
           </p>
 
-          <div class="scheduler-card">
-
-            <div class="scheduler-heading">
-              Have A Date In Mind? Request It Directly.
-            </div>
-
-            <div class="scheduler-fields">
-
-              <div class="form-group">
-                <label for="schedulerName">Your Name</label>
-                <input type="text" id="schedulerName" name="scheduler_name" autocomplete="name" />
-              </div>
-
-              <div class="form-group">
-                <label for="schedulerPhone">Mobile Number</label>
-                <input type="tel" id="schedulerPhone" name="scheduler_phone" autocomplete="tel" inputmode="tel" />
-              </div>
-
-              <div class="form-group">
-                <label for="schedulerDate">Preferred Date</label>
-                <input type="date" id="schedulerDate" name="preferred_date" />
-              </div>
-
-              <div class="form-group">
-                <label for="schedulerTime">Preferred Time</label>
-                <select id="schedulerTime" name="preferred_time">
-                  <option value="">Select one</option>
-                  <option value="Morning">Morning</option>
-                  <option value="Afternoon">Afternoon</option>
-                  <option value="Evening">Evening</option>
-                </select>
-              </div>
-
-              <div class="form-group full">
-                <label for="schedulerReferral">Which barbershop referred you? (optional)</label>
-                <input type="text" id="schedulerReferral" name="scheduler_referral" maxlength="80" autocomplete="off" />
-              </div>
-
-            </div>
-
-            <button type="button" id="schedulerSubmit" class="btn scheduler-btn">
-              Send My Request
-            </button>
-
-            <p class="whatsapp-note" id="schedulerNote">
-              Goes straight to Terrence's phone — he'll confirm
-              availability with you directly.
-            </p>
-
-          </div>
+          <ol class="next-steps">
+            <li><span><b>Send your request</b>Tell us the basics. It takes about a minute.</span></li>
+            <li><span><b>The studio reaches out</b>Terrence or someone from the studio will talk through your goals with you.</span></li>
+            <li><span><b>Pick a time</b>Choose a consultation time that works for you.</span></li>
+          </ol>
 
         </div>
 
@@ -1998,19 +1991,9 @@
         <div class="form-card">
 
           <div class="form-alt-heading">
-            Prefer to write it out instead? Fill out the form below.
+            Request your consultation
           </div>
 
-          <!--
-            REPLACE action="" WITH YOUR REAL CRM / FORM ENDPOINT
-            Examples:
-            HubSpot
-            HighLevel
-            Formspree
-            Zapier webhook
-            Make webhook
-            custom backend
-          -->
           <form
             id="consultationForm"
             action=""
@@ -2151,6 +2134,25 @@
                 />
               </div>
 
+              <div class="form-group">
+                <label for="preferredDate">
+                  Preferred Appointment Date (optional)
+                </label>
+                <input type="date" id="preferredDate" name="preferred_date" />
+              </div>
+
+              <div class="form-group">
+                <label for="preferredTime">
+                  Preferred Appointment Time (optional)
+                </label>
+                <select id="preferredTime" name="preferred_time">
+                  <option value="">Select one</option>
+                  <option value="Morning">Morning</option>
+                  <option value="Afternoon">Afternoon</option>
+                  <option value="Evening">Evening</option>
+                </select>
+              </div>
+
               <div class="form-group full">
                 <label for="notes">
                   Anything You'd Like Us To Know?
@@ -2165,11 +2167,12 @@
 
             </div>
 
+            <!-- TODO: stand-in consent wording. Terrence (or his counsel) to approve before launch. -->
             <p class="consent">
               By submitting this form, you agree that Swurl Kurl Studios
-              may contact you regarding your consultation request.
-              Replace this language with your final approved privacy,
-              email, and SMS consent language before launch.
+              may contact you about your consultation request by phone,
+              text message, or email, using the details you provide.
+              Message and data rates may apply.
             </p>
 
             <button type="submit" class="btn">
@@ -2855,67 +2858,13 @@
 
 
     /*
-      SCHEDULER (consultation card).
-
-      Name + mobile + optional date/time/referral. Saves the request to the
-      store database, which buzzes Terrence's phone.
-    */
-    const schedulerNameInput = document.getElementById("schedulerName");
-    const schedulerPhoneInput = document.getElementById("schedulerPhone");
-    const schedulerDateInput = document.getElementById("schedulerDate");
-    const schedulerTimeInput = document.getElementById("schedulerTime");
-    const schedulerReferralInput = document.getElementById("schedulerReferral");
-    const schedulerSubmit = document.getElementById("schedulerSubmit");
-    const schedulerNote = document.getElementById("schedulerNote");
-
-    if (schedulerDateInput) {
-      schedulerDateInput.setAttribute("min", todayIso());
-    }
-
-    function setSchedulerNote(text, color) {
-      schedulerNote.textContent = text;
-      schedulerNote.style.setProperty("color", color || "#999", "important");
-    }
-
-    if (schedulerSubmit) {
-      schedulerSubmit.addEventListener("click", function () {
-        const name = schedulerNameInput.value.trim();
-        const phone = schedulerPhoneInput.value.trim();
-        const dateVal = schedulerDateInput.value;
-        const timeVal = schedulerTimeInput.value;
-
-        if (name.length < 2 || phoneDigits(phone).length < 10) {
-          setSchedulerNote("Add your name and a 10-digit mobile number so Terrence can reach you.", "#ff8a80");
-          (name.length < 2 ? schedulerNameInput : schedulerPhoneInput).focus();
-          return;
-        }
-
-        logEvent("whatsapp_click", "scheduler");
-        schedulerSubmit.disabled = true;
-        setSchedulerNote("Sending your request…");
-
-        storeRpc("submit_request", {
-          p_name: name, p_phone: phone, p_email: null, p_source: "scheduler", p_goal: "SMP consultation",
-          p_contact_pref: null, p_best_time: null, p_lead_source: null,
-          p_date: dateVal || null, p_time: timeVal || null, p_notes: null,
-          p_referred_by: (schedulerReferralInput.value.trim() || null), p_inquiry: "client",
-        }).then(function () {
-          setSchedulerNote("Thanks! Your request has been received. The studio will reach out to arrange your consultation.", "#7ee2a0");
-        }).catch(function (err) {
-          setSchedulerNote(err.message, "#ff8a80");
-        }).finally(function () {
-          schedulerSubmit.disabled = false;
-        });
-      });
-    }
-
-
-    /*
       CONSULTATION FORM.
 
       Saves the request to the store database (buzzing Terrence's phone).
     */
     const consultForm = document.getElementById("consultationForm");
+    const consultDate = document.getElementById("preferredDate");
+    if (consultDate) consultDate.setAttribute("min", todayIso());
     const consultStatus = document.getElementById("formStatus");
 
     function setConsultStatus(text, kind) {
@@ -2942,7 +2891,8 @@
           p_contact_pref: String(fd.get("contact_preference") || "") || null,
           p_best_time: String(fd.get("best_contact_time") || "") || null,
           p_lead_source: String(fd.get("lead_source") || "") || null,
-          p_date: null, p_time: null,
+          p_date: String(fd.get("preferred_date") || "") || null,
+          p_time: String(fd.get("preferred_time") || "") || null,
           p_notes: String(fd.get("notes") || "") || null,
           p_referred_by: String(fd.get("referred_by") || "").trim() || null,
           p_inquiry: "client",
