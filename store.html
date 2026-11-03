@@ -68,8 +68,8 @@ a{color:inherit}
 .stat b{display:block;font-size:1.55rem;font-weight:800;letter-spacing:-.02em;margin-top:2px}
 .stat.hot b{color:var(--gold-deep)}
 /* tabs */
-.tabs{display:flex;gap:4px;margin:10px 0 14px;border-bottom:1px solid var(--lgray);overflow-x:auto}
-.tabs button{padding:12px 11px;border:0;border-bottom:3px solid transparent;background:none;font-weight:600;font-size:.86rem;cursor:pointer;color:var(--gray);white-space:nowrap}
+.tabs{display:flex;gap:2px;margin:10px 0 14px;border-bottom:1px solid var(--lgray);overflow-x:auto;scrollbar-width:none}
+.tabs button{padding:12px 9px;border:0;border-bottom:3px solid transparent;background:none;font-weight:600;font-size:.82rem;cursor:pointer;color:var(--gray);white-space:nowrap}
 .tabs button.on{border-color:var(--gold);color:var(--black)}
 .tabs i{font-style:normal;display:inline-block;min-width:20px;margin-left:6px;padding:1px 6px;background:var(--gold);color:var(--black);border-radius:10px;font-size:.7rem}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
@@ -140,8 +140,8 @@ const waLink=(phone,msg)=>'https://wa.me/1'+String(phone).replace(/\D/g,'').slic
 const first=n=>String(n||'').trim().split(/\s+/)[0]||'there';
 
 /* ---------- state ---------- */
-let user=null,A={appts:[],orders:[],offers:[]},tab=(location.hash.replace('#','')||'appointments'),fAppt='new',fOrd='new',channel=null,swReg=null,fresh=new Set();
-if(!['appointments','purchases','referrals','services'].includes(tab))tab='appointments';
+let user=null,A={appts:[],orders:[],offers:[],subs:[],subsErr:null},tab=(location.hash.replace('#','')||'appointments'),fAppt='new',fOrd='new',channel=null,swReg=null,fresh=new Set();
+if(!['appointments','purchases','referrals','subscribers','services'].includes(tab))tab='appointments';
 
 /* ---------- service worker + push ---------- */
 if('serviceWorker' in navigator){
@@ -296,6 +296,8 @@ async function reloadData(){
     sb.from('offers').select('*').order('sort')]);
   if(a.error)throw a.error;if(o.error)throw o.error;if(s.error)throw s.error;
   A.appts=a.data;A.orders=o.data;A.offers=s.data;
+  try{const b=await sb.from('blog_subscribers').select('*').order('created_at',{ascending:false}).limit(2000);
+    if(b.error){A.subs=[];A.subsErr=b.error.message||'unavailable'}else{A.subs=b.data;A.subsErr=null}}catch(e){A.subs=[];A.subsErr='unavailable'}
   document.title=(newCount()?`(${newCount()}) `:'')+'Swurl Kurl Store';
   render();
 }
@@ -394,6 +396,13 @@ function svcCard(s){
    <div class="full"><label><input type="checkbox" data-f="active" ${s.active?'checked':''}> Show on the website</label></div>
   </div><div class="acts"><button class="btn sm" data-savesvc>Save changes</button></div></div>`;
 }
+function subscribersView(){
+  if(A.subsErr)return`<div class="warnbox">The blog subscriber list isn't set up yet, so nothing can be shown here. (${esc(A.subsErr)})</div>`;
+  const live=(A.subs||[]).filter(x=>!x.unsubscribed_at);
+  if(!live.length)return'<div class="empty">No blog subscribers yet. People who sign up on The Heart Of The Matter will appear here.</div>';
+  const rows=live.map(x=>`<div class="card" style="padding:12px 14px"><b>${esc(x.email)}</b>${x.first_name?` &middot; ${esc(x.first_name)}`:''}<br><span class="note">${esc(x.source||'site')} &middot; ${new Date(x.created_at).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})}</span></div>`).join('');
+  return`<p class="note" style="margin-top:0">${live.length} subscriber${live.length===1?'':'s'} to The Heart Of The Matter.</p><div class="acts" style="margin-bottom:12px"><button class="btn sm" id="copysubs">Copy all emails</button> <button class="btn ghost sm" id="csvsubs">Download list (CSV)</button></div>${rows}`;
+}
 function render(){
   if(!user)return;
   const bar=alertsBar();
@@ -409,12 +418,14 @@ function render(){
     body=`<div class="chips">${fs.map(([k,l])=>`<button data-fo="${k}" class="${fOrd===k?'on':''}">${l}</button>`).join('')}</div>${list.length?list.map(orderCard).join(''):'<div class="empty">No purchase requests in this view.</div>'}`;
   }else if(tab==='referrals'){
     body=referralsView();
+  }else if(tab==='subscribers'){
+    body=subscribersView();
   }else{
     body=`<p class="note" style="margin-top:0">Changes here update the website's Services section right away. To add a new service, use the button at the bottom.</p>${A.offers.map(svcCard).join('')}<div class="acts"><button class="btn ghost" id="addsvc">+ Add a service</button></div>`;
   }
   const active=document.activeElement;const keep=active&&active.matches&&active.matches('textarea,input')?null:null;
   V().innerHTML=`<div class="wrap">${bar}${stats()}
-   <div class="tabs"><button data-tab="appointments" class="${tab==='appointments'?'on':''}">Appointments${nA?`<i>${nA}</i>`:''}</button><button data-tab="purchases" class="${tab==='purchases'?'on':''}">Purchases${nO?`<i>${nO}</i>`:''}</button><button data-tab="referrals" class="${tab==='referrals'?'on':''}">Referrals</button><button data-tab="services" class="${tab==='services'?'on':''}">Services</button></div>
+   <div class="tabs"><button data-tab="appointments" class="${tab==='appointments'?'on':''}">Appointments${nA?`<i>${nA}</i>`:''}</button><button data-tab="purchases" class="${tab==='purchases'?'on':''}">Purchases${nO?`<i>${nO}</i>`:''}</button><button data-tab="referrals" class="${tab==='referrals'?'on':''}">Referrals</button><button data-tab="subscribers" class="${tab==='subscribers'?'on':''}">Subscribers${(A.subs||[]).filter(x=>!x.unsubscribed_at).length?`<i style="background:#555">${(A.subs||[]).filter(x=>!x.unsubscribed_at).length}</i>`:''}</button><button data-tab="services" class="${tab==='services'?'on':''}">Services</button></div>
    ${body}<p class="note" style="text-align:center;margin:26px 0 40px"><a href="admin.html">Site analytics</a> · <a href="index.html" target="_blank" rel="noopener">View site</a></p></div>`;
 }
 
@@ -426,6 +437,8 @@ document.addEventListener('click',async e=>{
   if(t.id==='offpush'){disablePush();return}
   if(t.id==='testpush'){testPush();return}
   if(t.id==='diagpush'){diagnosePush();return}
+  if(t.id==='copysubs'){const txt=(A.subs||[]).filter(x=>!x.unsubscribed_at).map(x=>x.email).join(', ');try{await navigator.clipboard.writeText(txt);toast('Copied',txt.split(', ').length+' emails')}catch(_){prompt('Copy these emails:',txt)}return}
+  if(t.id==='csvsubs'){const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';const csv='email,first_name,source,signed_up\n'+(A.subs||[]).filter(x=>!x.unsubscribed_at).map(x=>[x.email,x.first_name,x.source,x.created_at].map(q).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='heart-of-the-matter-subscribers.csv';document.body.appendChild(a);a.click();a.remove();return}
   if(t.dataset.tab){tab=t.dataset.tab;history.replaceState(null,'','#'+tab);render();return}
   if(t.dataset.fa){fAppt=t.dataset.fa;render();return}
   if(t.dataset.fo){fOrd=t.dataset.fo;render();return}
@@ -486,7 +499,7 @@ async function boot(){
   try{await reloadData();subscribe()}catch(e){V().innerHTML=`<div class="wrap loading">Couldn't load the store. ${esc(errMsg(e))}</div>`}
 }
 sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){user=null;vAuth('newpw')}else if(ev==='SIGNED_IN'&&!user)boot()});
-window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(['appointments','purchases','referrals','services'].includes(h)&&h!==tab){tab=h;render()}});
+window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(['appointments','purchases','referrals','subscribers','services'].includes(h)&&h!==tab){tab=h;render()}});
 setInterval(()=>{if(user&&document.visibilityState==='visible'&&!document.activeElement?.matches?.('textarea,input,select'))render()},60000);
 boot();
 </script>

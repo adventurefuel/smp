@@ -214,6 +214,55 @@
 
 
     /* ---------------------------
+       BLOG BANNER: The Heart of the Matter
+    --------------------------- */
+    .blog-banner {
+      background:
+        radial-gradient(900px 380px at 0% 0%, rgba(232,179,81,.22), transparent 70%),
+        linear-gradient(135deg, #f3e8d4, #ead9bb);
+      border-top: 1px solid rgba(166,115,15,.35);
+      border-bottom: 1px solid rgba(166,115,15,.35);
+      padding: 0;
+      overflow: hidden;
+    }
+    .blog-banner-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      align-items: stretch;
+    }
+    .blog-banner-img {
+      position: relative; min-height: 380px;
+      background: #d9c6a4 url("assets/blog-banner.webp") 50% 28% / cover no-repeat;
+    }
+    .blog-banner-img::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,0) 70%, rgba(234,217,187,.9));
+    }
+    .blog-banner-copy { padding: 54px 0 54px 56px; padding-right: max(24px, calc((100vw - var(--max-width)) / 2)); display: flex; flex-direction: column; justify-content: center; }
+    .blog-banner .eyebrow { color: var(--gold-deep); }
+    .blog-banner h2 { margin: 10px 0 12px; font-size: clamp(2rem, 4.4vw, 3.3rem); line-height: 1.02; text-transform: uppercase; }
+    .blog-banner h2 span { color: var(--gold-deep); }
+    .blog-banner .teaser { margin: 0 0 22px; max-width: 520px; font-size: 1.08rem; color: #3b2f20; }
+    .blog-banner .by { margin: 0 0 22px; font-size: .84rem; font-weight: 600; color: #6a5436; letter-spacing: .03em; }
+    .blog-banner .sub-line { margin-top: 20px; padding-top: 18px; border-top: 1px solid rgba(106,84,54,.3); max-width: 520px; }
+    .blog-banner .sub-line label { display: block; margin-bottom: 8px; font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #6a5436; }
+    .bb-form { display: flex; gap: 8px; }
+    .bb-form input[type=email] { flex: 1; min-width: 0; min-height: 50px; padding: 10px 13px; font: inherit; font-size: 1rem; background: #fff; border: 1px solid #b9a67f; border-radius: 0; color: var(--black); }
+    .bb-form input[type=email]:focus { outline: 2px solid var(--gold); outline-offset: 1px; border-color: var(--gold-deep); }
+    .bb-form .btn { min-height: 50px; padding: 10px 20px; }
+    .bb-form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .bb-msg { min-height: 1.3em; margin: 8px 0 0; font-size: .92rem; font-weight: 600; }
+    .bb-msg.err { color: #b3392a; }
+    .bb-msg.ok { color: #2c6b3a; }
+    @media (max-width: 860px) {
+      .blog-banner-grid { grid-template-columns: 1fr; }
+      .blog-banner-img { min-height: 0; height: 280px; background-position: 50% 24%; }
+      .blog-banner-img::after { background: linear-gradient(180deg, rgba(0,0,0,0) 70%, rgba(234,217,187,.95)); }
+      .blog-banner-copy { padding: 8px var(--edge-inset, 20px) 44px; }
+    }
+    @media (max-width: 480px) { .bb-form { flex-direction: column; } .bb-form .btn { width: 100%; } }
+
+    /* ---------------------------
        MOBILE MENU (hamburger) + sticky call bar
     --------------------------- */
     html { scroll-padding-top: 76px; }
@@ -1302,6 +1351,7 @@
         <a href="#process">Process</a>
         <a href="#faq">FAQ</a>
         <a href="#learn">Learn SMP</a>
+        <a href="heart-of-the-matter.html">Blog</a>
         <button type="button" class="btn" data-open-contact="nav">Talk To Terrence Now</button>
         <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
           <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -1323,6 +1373,7 @@
     <a class="ml" href="#process">How It Works</a>
     <a class="ml" href="#faq">FAQ</a>
     <a class="ml" href="#learn">Learn SMP</a>
+    <a class="ml" href="heart-of-the-matter.html"><span>The Heart Of The Matter<small>Stories from Terrence</small></span></a>
     <a class="ml" href="learn.html"><span>Student Application<small>For barbers and beauty pros</small></span></a>
     <div class="mmenu-cta">
       <button type="button" class="btn" data-open-contact="menu">Talk To Terrence Now</button>
@@ -1604,6 +1655,38 @@
           aria-label="Terrence Hopson of Swurl Kurl Studios"
         ></div>
 
+      </div>
+    </section>
+
+
+    <!-- ==================================
+         BLOG BANNER: THE HEART OF THE MATTER
+    =================================== -->
+    <section class="blog-banner" id="blog" aria-labelledby="blogBannerH">
+      <div class="blog-banner-grid">
+        <div class="blog-banner-img" role="img" aria-label="A man looks at his own reflection in a mirror, quiet and thoughtful."></div>
+        <div class="blog-banner-copy">
+          <span class="eyebrow">The Heart Of The Matter &middot; Blog No. 01</span>
+          <h2 id="blogBannerH">The Man <span>In The Mirror</span></h2>
+          <p class="teaser">
+            After years of putting everyone first, it's time to put yourself
+            first again. When was the last time you really saw yourself?
+          </p>
+          <p class="by">By Terrence Hopson, CEO &amp; Founder</p>
+          <div>
+            <a class="btn btn-dark" href="the-man-in-the-mirror.html">Read The Story</a>
+            <a href="heart-of-the-matter.html" style="display:inline-block;margin:10px 0 0 18px;white-space:nowrap;color:var(--black);font-weight:600;font-size:.88rem;letter-spacing:.04em;text-transform:uppercase">More stories &rarr;</a>
+          </div>
+          <div class="sub-line">
+            <form class="bb-form" id="bbForm" novalidate>
+              <label for="bbEmail" style="position:absolute;left:-9999px">Email address</label>
+              <input id="bbEmail" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120" placeholder="Get the next story by email" required />
+              <div class="hp" aria-hidden="true"><input name="website" tabindex="-1" autocomplete="off" /></div>
+              <button class="btn" type="submit">Subscribe</button>
+            </form>
+            <p class="bb-msg" id="bbMsg" role="status" aria-live="polite"></p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -2130,6 +2213,8 @@
       </div>
 
       <div class="footer-small">
+        <a href="heart-of-the-matter.html" style="color:inherit;text-decoration:underline">The Heart Of The Matter</a> &middot;
+        <a href="learn.html" style="color:inherit;text-decoration:underline">Student Application</a><br>
         © <span id="year"></span> Swurl Kurl Studios.
         All rights reserved.
       </div>
@@ -2973,6 +3058,26 @@
       });
       close.addEventListener("click", function () { dlg.close(); });
       dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+    })();
+  </script>
+
+  <script>
+    /* Blog banner: subscribe to The Heart of the Matter (saved in the store database; owner sees them in the store app). */
+    (function () {
+      var f = document.getElementById("bbForm"), msg = document.getElementById("bbMsg");
+      if (!f || typeof storeRpc !== "function") return;
+      f.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        msg.textContent = ""; msg.className = "bb-msg";
+        var email = f.elements.email.value.trim(), btn = f.querySelector("button");
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { msg.textContent = "Please enter a valid email address."; msg.className = "bb-msg err"; f.elements.email.focus(); return; }
+        var label = btn.textContent; btn.disabled = true; btn.textContent = "Joining…";
+        try {
+          if (!f.elements.website.value) await storeRpc("subscribe_blog", { p_email: email, p_name: null, p_source: "home-banner" });
+          msg.textContent = "You're in. Watch your inbox for the next story."; msg.className = "bb-msg ok"; f.reset();
+        } catch (err) { msg.textContent = err.message; msg.className = "bb-msg err"; }
+        finally { btn.disabled = false; btn.textContent = label; }
+      });
     })();
   </script>
 
