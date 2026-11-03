@@ -103,6 +103,45 @@ textarea.field{min-height:56px;resize:vertical}
 .toasts{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;z-index:200;pointer-events:none;align-items:center}
 .toast{pointer-events:auto;max-width:460px;width:100%;background:var(--black);color:#fff;padding:12px 15px;border-left:4px solid var(--gold);font-size:.88rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.3)}
 .toast small{display:block;font-weight:400;color:#ccc;margin-top:2px}
+/* CRM */
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 12px}
+.bar input.field{flex:1;min-width:180px}
+.card.click{cursor:pointer}
+.card.click:hover{border-color:var(--gold)}
+.row{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-top:1px solid var(--lgray);font-size:.88rem;cursor:default}
+.row[data-open-client]{cursor:pointer}
+.row .when{flex:0 0 auto;min-width:72px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-deep)}
+.row .when.late,.late{color:var(--red);font-weight:700}
+.row .linkbtn{margin-left:auto}
+.dayhd{margin:18px 0 8px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray)}
+.vrow h3{font-size:1rem}
+.vrow h3 .meta{font-weight:400}
+.badge.st-lead{background:var(--gold);color:var(--black)}
+.badge.st-contacted{background:#dbe9f7;color:#1d4d82}
+.badge.st-consult_booked{background:#e6dcf5;color:#4b2d7f}
+.badge.st-session_1,.badge.st-session_2{background:#fde3c4;color:#8a4a0a}
+.badge.st-complete{background:#dcf1e3;color:#1d5a33}
+.badge.st-not_a_fit{background:#eee;color:#777}
+.badge.v-scheduled{background:#dbe9f7;color:#1d4d82}
+.badge.v-completed{background:#dcf1e3;color:#1d5a33}
+.badge.v-cancelled,.badge.v-no_show{background:#f6dcd8;color:#8a2a1f}
+.cal{background:#fff;border:1px solid var(--lgray);padding:10px 12px 12px;margin-bottom:14px;max-width:420px}
+.calhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.calhd .linkbtn{font-size:1.4rem;text-decoration:none;padding:2px 10px}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}
+.calgrid span{font-size:.64rem;font-weight:700;color:var(--gray);padding:2px 0}
+.calgrid button{position:relative;min-height:40px;border:1px solid transparent;background:none;border-radius:4px;font-size:.84rem;cursor:pointer}
+.calgrid button.today{border-color:var(--gold)}
+.calgrid button.sel{background:var(--black);color:#fff}
+.calgrid button u{position:absolute;right:3px;top:2px;text-decoration:none;font-size:.58rem;font-weight:800;background:var(--gold);color:var(--black);border-radius:8px;padding:0 5px}
+.tl{padding:8px 0;border-top:1px solid var(--lgray);font-size:.88rem}
+.tl span{display:block;font-size:.7rem;color:var(--gray)}
+.tl.event div{color:var(--gray);font-size:.82rem}
+dialog.modal{border:1px solid var(--gold);padding:22px 20px 18px;width:min(560px,94vw);max-height:92vh;overflow:auto;background:#fff;color:var(--black)}
+dialog.modal::backdrop{background:rgba(0,0,0,.6)}
+dialog.modal h3{margin:0 0 4px;font-size:1.2rem}
+.mclose{position:absolute;top:6px;right:8px;width:40px;height:40px;border:0;background:none;font-size:1.6rem;cursor:pointer;color:var(--gray)}
+.errline{min-height:1.2em;margin-top:10px;font-size:.84rem;color:var(--red);font-weight:600}
 @media(max-width:640px){.stats{grid-template-columns:1fr 1fr}.svc-ed{grid-template-columns:1fr}.nav a.hide-sm{display:none}}
 </style>
 </head>
@@ -140,8 +179,8 @@ const waLink=(phone,msg)=>'https://wa.me/1'+String(phone).replace(/\D/g,'').slic
 const first=n=>String(n||'').trim().split(/\s+/)[0]||'there';
 
 /* ---------- state ---------- */
-let user=null,A={appts:[],orders:[],offers:[],subs:[],subsErr:null},tab=(location.hash.replace('#','')||'appointments'),fAppt='new',fOrd='new',channel=null,swReg=null,fresh=new Set();
-if(!['appointments','purchases','referrals','subscribers','services'].includes(tab))tab='appointments';
+let user=null,A={appts:[],orders:[],offers:[],subs:[],subsErr:null,clients:[],visits:[],payments:[],crmErr:null},tab=(location.hash.replace('#','')||'appointments'),fAppt='new',fOrd='new',channel=null,swReg=null,fresh=new Set();
+if(!['appointments','schedule','clients','purchases','referrals','subscribers','services'].includes(tab))tab='appointments';
 
 /* ---------- service worker + push ---------- */
 if('serviceWorker' in navigator){
@@ -296,6 +335,14 @@ async function reloadData(){
     sb.from('offers').select('*').order('sort')]);
   if(a.error)throw a.error;if(o.error)throw o.error;if(s.error)throw s.error;
   A.appts=a.data;A.orders=o.data;A.offers=s.data;
+  try{
+    const [c,v,p]=await Promise.all([
+      sb.from('clients').select('*').order('updated_at',{ascending:false}).limit(2000),
+      sb.from('visits').select('*').order('starts_at',{ascending:true}).limit(3000),
+      sb.from('payments').select('*').order('paid_on',{ascending:false}).limit(5000)]);
+    const e=c.error||v.error||p.error;
+    if(e){A.clients=[];A.visits=[];A.payments=[];A.crmErr=e.message||'unavailable'}else{A.clients=c.data;A.visits=v.data;A.payments=p.data;A.crmErr=null}
+  }catch(e){A.clients=[];A.visits=[];A.payments=[];A.crmErr='unavailable'}
   try{const b=await sb.from('blog_subscribers').select('*').order('created_at',{ascending:false}).limit(2000);
     if(b.error){A.subs=[];A.subsErr=b.error.message||'unavailable'}else{A.subs=b.data;A.subsErr=null}}catch(e){A.subs=[];A.subsErr='unavailable'}
   document.title=(newCount()?`(${newCount()}) `:'')+'Swurl Kurl Store';
@@ -350,6 +397,7 @@ function apptCard(a){
    <div class="kv"><span>When</span><b>${esc(when)}</b><span>Phone</span><b>${esc(a.phone)}</b>${a.email?`<span>Email</span><b>${esc(a.email)}</b>`:''}${a.goal?`<span>Goal</span><b>${esc(a.goal)}</b>`:''}${a.contact_pref?`<span>Prefers</span><b>${esc(a.contact_pref)}${a.best_time?' · '+esc(a.best_time):''}</b>`:''}${a.lead_source?`<span>Heard via</span><b>${esc(a.lead_source)}</b>`:''}${a.referred_by?`<span>Referred by</span><b>${esc(a.referred_by)}</b>`:''}${a.notes?`<span>Notes</span><b>${esc(a.notes)}</b>`:''}</div>
    <textarea class="field" data-note placeholder="Private notes (only you can see these)">${esc(a.admin_notes||'')}</textarea>
    <div class="acts"><a class="btn sm" href="${smsLink(a.phone,msg)}">Text</a><a class="btn ghost sm" href="tel:${a.phone.replace(/\D/g,'')}">Call</a><a class="btn wa sm" href="${waLink(a.phone,msg)}" target="_blank" rel="noopener">WhatsApp</a>
+    ${a.inquiry_type==='training'?'':a.client_id?`<button class="btn ghost sm" data-open-client="${a.client_id}">Open client</button>${['new','confirmed'].includes(a.status)?`<button class="btn ok sm" data-req-sched="${a.id}">Schedule</button>`:''}`:`<button class="btn ghost sm" data-req-client="${a.id}" data-req-table="appointments">Add to clients</button>`}
     ${acts.map(([s,l,c])=>`<button class="btn ${c} sm" data-status="${s}">${l}</button>`).join('')}
     ${a.status==='cancelled'?'<button class="btn danger sm" data-del>Delete</button>':''}</div></div>`;
 }
@@ -367,6 +415,7 @@ function orderCard(o){
    <div class="kv"><span>Phone</span><b>${esc(o.phone)}</b>${o.email?`<span>Email</span><b>${esc(o.email)}</b>`:''}${o.preferred_date?`<span>Start</span><b>${esc(dayLabel(o.preferred_date))}</b>`:''}${o.referred_by?`<span>Referred by</span><b>${esc(o.referred_by)}</b>`:''}${o.notes?`<span>Notes</span><b>${esc(o.notes)}</b>`:''}${o.paid_at?`<span>Paid</span><b>${esc(new Date(o.paid_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}))}</b>`:''}</div>
    <textarea class="field" data-note placeholder="Private notes (payment method, etc.)">${esc(o.admin_notes||'')}</textarea>
    <div class="acts"><a class="btn sm" href="${smsLink(o.phone,msg)}">Text</a><a class="btn ghost sm" href="tel:${o.phone.replace(/\D/g,'')}">Call</a><a class="btn wa sm" href="${waLink(o.phone,msg)}" target="_blank" rel="noopener">WhatsApp</a>
+    ${o.client_id?`<button class="btn ghost sm" data-open-client="${o.client_id}">Open client</button>`:`<button class="btn ghost sm" data-req-client="${o.id}" data-req-table="orders">Add to clients</button>`}
     ${acts.map(([s,l,c])=>`<button class="btn ${c} sm" data-status="${s}">${l}</button>`).join('')}
     ${o.status==='cancelled'?'<button class="btn danger sm" data-del>Delete</button>':''}</div></div>`;
 }
@@ -407,6 +456,7 @@ function render(){
   if(!user)return;
   const bar=alertsBar();
   const nA=A.appts.filter(a=>a.status==='new').length,nO=A.orders.filter(o=>o.status==='new').length;
+  const nSch=A.visits.filter(v=>v.status==='scheduled'&&dkey(new Date(v.starts_at))===todayStr()).length,nFu=A.clients.filter(followDue).length;
   let body='';
   if(tab==='appointments'){
     const fs=[['new','New'],['confirmed','Confirmed'],['completed','Completed'],['training','Training'],['cancelled','Cancelled / no-show'],['all','All']];
@@ -420,18 +470,421 @@ function render(){
     body=referralsView();
   }else if(tab==='subscribers'){
     body=subscribersView();
+  }else if(tab==='clients'){
+    body=clientsView();
+  }else if(tab==='schedule'){
+    body=scheduleView();
   }else{
     body=`<p class="note" style="margin-top:0">Changes here update the website's Services section right away. To add a new service, use the button at the bottom.</p>${A.offers.map(svcCard).join('')}<div class="acts"><button class="btn ghost" id="addsvc">+ Add a service</button></div>`;
   }
   const active=document.activeElement;const keep=active&&active.matches&&active.matches('textarea,input')?null:null;
   V().innerHTML=`<div class="wrap">${bar}${stats()}
-   <div class="tabs"><button data-tab="appointments" class="${tab==='appointments'?'on':''}">Appointments${nA?`<i>${nA}</i>`:''}</button><button data-tab="purchases" class="${tab==='purchases'?'on':''}">Purchases${nO?`<i>${nO}</i>`:''}</button><button data-tab="referrals" class="${tab==='referrals'?'on':''}">Referrals</button><button data-tab="subscribers" class="${tab==='subscribers'?'on':''}">Subscribers${(A.subs||[]).filter(x=>!x.unsubscribed_at).length?`<i style="background:#555">${(A.subs||[]).filter(x=>!x.unsubscribed_at).length}</i>`:''}</button><button data-tab="services" class="${tab==='services'?'on':''}">Services</button></div>
+   <div class="tabs"><button data-tab="appointments" class="${tab==='appointments'?'on':''}">Requests${nA?`<i>${nA}</i>`:''}</button><button data-tab="schedule" class="${tab==='schedule'?'on':''}">Schedule${nSch?`<i>${nSch}</i>`:''}</button><button data-tab="clients" class="${tab==='clients'?'on':''}">Clients${nFu?`<i>${nFu}</i>`:''}</button><button data-tab="purchases" class="${tab==='purchases'?'on':''}">Purchases${nO?`<i>${nO}</i>`:''}</button><button data-tab="referrals" class="${tab==='referrals'?'on':''}">Referrals</button><button data-tab="subscribers" class="${tab==='subscribers'?'on':''}">Subscribers${(A.subs||[]).filter(x=>!x.unsubscribed_at).length?`<i style="background:#555">${(A.subs||[]).filter(x=>!x.unsubscribed_at).length}</i>`:''}</button><button data-tab="services" class="${tab==='services'?'on':''}">Services</button></div>
    ${body}<p class="note" style="text-align:center;margin:26px 0 40px"><a href="admin.html">Site analytics</a> · <a href="index.html" target="_blank" rel="noopener">View site</a></p></div>`;
+}
+
+/* ---------- CRM: clients, schedule, payments ---------- */
+const STAGES=[['lead','New lead'],['contacted','Contacted'],['consult_booked','Consult booked'],['session_1','Session 1'],['session_2','Session 2'],['complete','Complete'],['not_a_fit','Not a fit']];
+const STAGE_NAME=Object.fromEntries(STAGES);
+const STAGE_IDX=Object.fromEntries(STAGES.map(([k],i)=>[k,i]));
+const KINDS=[['consultation','Consultation'],['session_1','Session 1'],['session_2','Session 2'],['touch_up','Touch-up'],['other','Other']];
+const KIND_NAME=Object.fromEntries(KINDS);
+const VSTAT={scheduled:'Scheduled',completed:'Completed',cancelled:'Cancelled',no_show:'No-show'};
+const METHODS=['Cash','Card','Zelle','Cash App','Venmo','Check','Other'];
+const DURATIONS=[[30,'30 min'],[45,'45 min'],[60,'1 hour'],[90,'1.5 hours'],[120,'2 hours'],[150,'2.5 hours'],[180,'3 hours'],[240,'4 hours']];
+const KIND_DUR={consultation:30,session_1:120,session_2:120,touch_up:60,other:60};
+let cl={id:null,q:'',stage:'all'},sch={day:null,month:null,past:false},notesCache={};
+const pad=n=>String(n).padStart(2,'0');
+const dkey=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const tFmt=ts=>new Date(ts).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+const dFmt=ts=>new Date(ts).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+const dtFmt=ts=>dFmt(ts)+' · '+tFmt(ts);
+const byStart=(a,b)=>new Date(a.starts_at)-new Date(b.starts_at);
+const digits=p=>String(p||'').replace(/\D/g,'').slice(-10);
+const prettyPhone=p=>{const d=digits(p);return d.length===10?`(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`:(p||'')};
+const cById=id=>A.clients.find(c=>c.id===id);
+const paidOf=id=>A.payments.filter(p=>p.client_id===id).reduce((s,p)=>s+(p.kind==='refund'?-1:1)*Number(p.amount),0);
+const dueOf=c=>c.package_price!=null&&c.package_price!==''?Math.max(0,Number(c.package_price)-paidOf(c.id)):0;
+const nextVisit=id=>A.visits.filter(v=>v.client_id===id&&v.status==='scheduled'&&new Date(v.starts_at)>=new Date(Date.now()-3600e3)).sort(byStart)[0];
+const followDue=c=>!!c.follow_up_on&&c.follow_up_on<=todayStr()&&!['complete','not_a_fit'].includes(c.stage);
+const timeFromPref=p=>({Morning:'10:00',Afternoon:'14:00',Evening:'17:30'}[p]||'10:00');
+const opt=(arr,sel)=>arr.map(([k,l])=>`<option value="${esc(k)}" ${k===sel?'selected':''}>${esc(l)}</option>`).join('');
+
+function crmWarn(){return A.crmErr?`<div class="warnbox">The client system isn't switched on yet (the database update is still pending). ${esc(A.crmErr)}</div>`:''}
+
+/* messages (tap-to-text; nothing is sent automatically) */
+function visitMsg(v,type){
+  const c=cById(v.client_id);const nm=first(c?.name);const kind=(KIND_NAME[v.kind]||'appointment').toLowerCase();
+  const when=`${dFmt(v.starts_at)} at ${tFmt(v.starts_at)}`;
+  if(type==='remind')return`Hi ${nm}, it's Terrence at Swurl Kurl Studios. Just a reminder about your ${kind} on ${when}. Reply here to confirm, or let me know if you need to change it.`;
+  return`Hi ${nm}, it's Terrence at Swurl Kurl Studios. You're confirmed for your ${kind} on ${when}. Reply here if anything changes. Looking forward to seeing you!`;
+}
+
+/* ---------- Today panel ---------- */
+function todayPanel(){
+  const t=todayStr();
+  const vs=A.visits.filter(v=>v.status==='scheduled'&&dkey(new Date(v.starts_at))===t).sort(byStart);
+  const fu=A.clients.filter(followDue).sort((a,b)=>a.follow_up_on<b.follow_up_on?-1:1);
+  if(!vs.length&&!fu.length)return`<div class="card"><b>Today</b><div class="note" style="margin-top:4px">Nothing scheduled and no follow-ups due.</div></div>`;
+  return`<div class="card"><b>Today</b>
+   ${vs.map(v=>{const c=cById(v.client_id);return`<div class="row" data-open-client="${v.client_id}"><span class="when">${esc(tFmt(v.starts_at))}</span><span><b>${esc(c?.name||'Client')}</b> · ${esc(KIND_NAME[v.kind]||v.kind)}</span></div>`}).join('')}
+   ${fu.map(c=>`<div class="row" data-open-client="${c.id}"><span class="when ${c.follow_up_on<t?'late':''}">${c.follow_up_on<t?'Overdue':'Follow up'}</span><span><b>${esc(c.name)}</b>${c.follow_up_note?' · '+esc(c.follow_up_note):''}</span></div>`).join('')}
+  </div>`;
+}
+
+/* ---------- Clients ---------- */
+function clientCard(c){
+  const nv=nextVisit(c.id),due=dueOf(c);
+  const bits=[];
+  if(nv)bits.push(`<span>Next</span><b>${esc(dtFmt(nv.starts_at))} · ${esc(KIND_NAME[nv.kind]||nv.kind)}</b>`);
+  if(c.follow_up_on)bits.push(`<span>Follow up</span><b class="${followDue(c)?'late':''}">${esc(dayLabel(c.follow_up_on))}${c.follow_up_note?' · '+esc(c.follow_up_note):''}</b>`);
+  if(c.package_price!=null&&c.package_price!=='')bits.push(`<span>Balance</span><b>${due>0?money(due)+' due of '+money(c.package_price):'Paid in full ('+money(c.package_price)+')'}</b>`);
+  if(c.referred_by)bits.push(`<span>Referred by</span><b>${esc(c.referred_by)}</b>`);
+  return`<div class="card click" data-open-client="${c.id}">
+   <div class="hd"><div><h3>${esc(c.name)}</h3><div class="meta">${esc(prettyPhone(c.phone))}${c.email?' · '+esc(c.email):''}</div></div><span class="badge st-${c.stage}">${esc(STAGE_NAME[c.stage]||c.stage)}</span></div>
+   ${bits.length?`<div class="kv">${bits.join('')}</div>`:''}</div>`;
+}
+function filteredClients(){
+  const q=cl.q.trim().toLowerCase(),qd=q.replace(/\D/g,'');
+  return A.clients.filter(c=>{
+    if(cl.stage==='due'&&!followDue(c))return false;
+    if(!['all','due'].includes(cl.stage)&&c.stage!==cl.stage)return false;
+    if(!q)return true;
+    return (c.name||'').toLowerCase().includes(q)||(c.email||'').toLowerCase().includes(q)||(c.referred_by||'').toLowerCase().includes(q)||(qd.length>=3&&digits(c.phone).includes(qd));
+  }).sort((a,b)=>(followDue(b)-followDue(a))||(new Date(b.updated_at)-new Date(a.updated_at)));
+}
+function clientListHtml(){
+  const list=filteredClients();
+  return list.length?list.map(clientCard).join(''):`<div class="empty">${A.clients.length?'No clients match this view.':'No clients yet. New website requests appear here automatically, or add one yourself.'}</div>`;
+}
+function clientsView(){
+  if(A.crmErr)return crmWarn();
+  if(cl.id)return profileView(cl.id);
+  const n=k=>k==='all'?A.clients.length:k==='due'?A.clients.filter(followDue).length:A.clients.filter(c=>c.stage===k).length;
+  const chips=[['all','All'],['due','Follow-up due'],...STAGES];
+  return`${todayPanel()}
+   <div class="bar"><input class="field" id="clientQ" type="search" placeholder="Search clients" value="${esc(cl.q)}" autocomplete="off"><button class="btn sm" id="addclient">+ Add client</button></div>
+   <div class="chips">${chips.map(([k,l])=>`<button data-cstage="${k}" class="${cl.stage===k?'on':''}">${esc(l)} ${n(k)}</button>`).join('')}</div>
+   <div id="clientList">${clientListHtml()}</div>`;
+}
+
+function visitRow(v,showClient){
+  const c=cById(v.client_id);const end=new Date(new Date(v.starts_at).getTime()+v.duration_min*60000);
+  const live=v.status==='scheduled';
+  return`<div class="card vrow" data-vid="${v.id}">
+   <div class="hd"><div><h3>${esc(dFmt(v.starts_at))} · ${esc(tFmt(v.starts_at))}<span class="meta"> – ${esc(tFmt(end))}</span></h3>
+     <div class="meta">${showClient&&c?`<a href="#" data-open-client="${c.id}"><b>${esc(c.name)}</b></a> · `:''}${esc(KIND_NAME[v.kind]||v.kind)}${v.notes?' · '+esc(v.notes):''}</div></div>
+    <span class="badge v-${v.status}">${esc(VSTAT[v.status])}</span></div>
+   <div class="acts">
+    ${c&&c.phone&&live?`<a class="btn sm" href="${smsLink(c.phone,visitMsg(v,'confirm'))}">Text confirmation</a><a class="btn ghost sm" href="${smsLink(c.phone,visitMsg(v,'remind'))}">Text reminder</a>`:''}
+    ${live?`<button class="btn ok sm" data-vstat="completed">Completed</button><button class="btn ghost sm" data-vstat="no_show">No-show</button><button class="btn ghost sm" data-vedit>Reschedule</button><button class="btn danger sm" data-vstat="cancelled">Cancel</button>`:`<button class="btn ghost sm" data-vstat="scheduled">Reopen</button>`}
+   </div></div>`;
+}
+function monthGrid(){
+  const m=sch.month||(sch.month=new Date(new Date().getFullYear(),new Date().getMonth(),1));
+  const first=new Date(m.getFullYear(),m.getMonth(),1),start=first.getDay(),days=new Date(m.getFullYear(),m.getMonth()+1,0).getDate();
+  const counts={};A.visits.filter(v=>v.status==='scheduled').forEach(v=>{const k=dkey(new Date(v.starts_at));counts[k]=(counts[k]||0)+1});
+  const t=todayStr();let cells='';
+  for(let i=0;i<start;i++)cells+='<i></i>';
+  for(let d=1;d<=days;d++){const k=m.getFullYear()+'-'+pad(m.getMonth()+1)+'-'+pad(d);
+    cells+=`<button data-day="${k}" class="${k===t?'today':''} ${sch.day===k?'sel':''}">${d}${counts[k]?`<u>${counts[k]}</u>`:''}</button>`}
+  return`<div class="cal"><div class="calhd"><button class="linkbtn" data-month="-1" aria-label="Previous month">&lsaquo;</button><b>${m.toLocaleDateString('en-US',{month:'long',year:'numeric'})}</b><button class="linkbtn" data-month="1" aria-label="Next month">&rsaquo;</button></div>
+   <div class="calgrid">${['S','M','T','W','T','F','S'].map(x=>`<span>${x}</span>`).join('')}${cells}</div></div>`;
+}
+function scheduleView(){
+  if(A.crmErr)return crmWarn();
+  let body='';
+  const now=Date.now();
+  if(sch.day){
+    const vs=A.visits.filter(v=>dkey(new Date(v.starts_at))===sch.day).sort(byStart);
+    body=`<p class="note" style="margin:0 0 10px"><b>${esc(dayLabel(sch.day))}</b> <button class="linkbtn" data-day="">Show upcoming</button></p>${vs.length?vs.map(v=>visitRow(v,true)).join(''):'<div class="empty">Nothing on this day.</div>'}`;
+  }else if(sch.past){
+    const vs=A.visits.filter(v=>new Date(v.starts_at)<now-3600e3||v.status!=='scheduled').sort((a,b)=>byStart(b,a)).slice(0,60);
+    body=vs.length?vs.map(v=>visitRow(v,true)).join(''):'<div class="empty">No past appointments yet.</div>';
+  }else{
+    const vs=A.visits.filter(v=>v.status==='scheduled'&&new Date(v.starts_at)>=now-3600e3).sort(byStart);
+    const overdue=A.visits.filter(v=>v.status==='scheduled'&&new Date(v.starts_at)<now-3600e3).sort(byStart);
+    let html='';
+    if(overdue.length)html+=`<div class="warnbox" style="margin-top:0">These ${overdue.length===1?'appointment is':'appointments are'} in the past but still marked scheduled. Mark them completed or no-show.</div>`+overdue.map(v=>visitRow(v,true)).join('');
+    let lastDay='';
+    vs.forEach(v=>{const k=dkey(new Date(v.starts_at));if(k!==lastDay){lastDay=k;html+=`<div class="dayhd">${k===todayStr()?'Today · ':''}${esc(dayLabel(k))}</div>`}html+=visitRow(v,true)});
+    body=html||'<div class="empty">No upcoming appointments. Tap "Schedule appointment" or confirm a request into a time slot.</div>';
+  }
+  return`<div class="bar"><button class="btn sm" id="addvisit">+ Schedule appointment</button>
+    <span class="chips" style="margin:0"><button data-sview="up" class="${!sch.past&&!sch.day?'on':''}">Upcoming</button><button data-sview="past" class="${sch.past&&!sch.day?'on':''}">Past</button></span></div>
+   ${monthGrid()}${body}`;
+}
+
+/* ---------- Client profile ---------- */
+function profileView(id){
+  const c=cById(id);
+  if(!c){cl.id=null;return clientsView()}
+  const vs=A.visits.filter(v=>v.client_id===id).sort((a,b)=>byStart(b,a));
+  const pays=A.payments.filter(p=>p.client_id===id).sort((a,b)=>a.paid_on<b.paid_on?1:-1);
+  const reqs=[...A.appts.filter(a=>a.client_id===id).map(a=>({t:'Request',code:a.code,at:a.created_at,txt:[a.service_name||a.goal,a.status].filter(Boolean).join(' · ')})),
+    ...A.orders.filter(o=>o.client_id===id).map(o=>({t:'Purchase',code:o.code,at:o.created_at,txt:`${o.offer_name} · ${money(o.total)} · ${o.status}`}))].sort((a,b)=>new Date(b.at)-new Date(a.at));
+  const notes=notesCache[id];
+  const paid=paidOf(id),due=dueOf(c);
+  const cm=A.offers.find(o=>o.id==='comeback');
+  const msg=`Hi ${first(c.name)}, it's Terrence at Swurl Kurl Studios.`;
+  return`<p style="margin:4px 0 12px"><button class="linkbtn" id="backclients">&larr; All clients</button></p>
+  <div class="card"><div class="hd"><div><h3 style="font-size:1.25rem">${esc(c.name)}</h3><div class="meta">Added ${esc(ago(c.created_at))}</div></div>
+    <select class="field" id="stageSel" style="width:auto">${opt(STAGES,c.stage)}</select></div>
+   <div class="acts">${c.phone?`<a class="btn sm" href="${smsLink(c.phone,msg)}">Text</a><a class="btn ghost sm" href="tel:${digits(c.phone)}">Call</a>`:''}${c.email?`<a class="btn ghost sm" href="mailto:${esc(c.email)}">Email</a>`:''}<button class="btn ghost sm" data-addvisit-for="${id}">Schedule appointment</button></div></div>
+
+  <div class="card"><b>Follow-up</b>
+   <div class="svc-ed"><div><label>Follow up on</label><input class="field" type="date" data-cf="follow_up_on" value="${esc(c.follow_up_on||'')}"></div>
+   <div><label>Reminder note</label><input class="field" type="text" data-cf="follow_up_note" maxlength="140" value="${esc(c.follow_up_note||'')}" placeholder="e.g. Ask about a date for session 1"></div></div>
+   <div class="acts"><button class="btn sm" data-savecl>Save follow-up and details</button>${c.follow_up_on?'<button class="btn ghost sm" data-clearfu>Clear follow-up</button>':''}</div></div>
+
+  <div class="card"><b>Details</b>
+   <div class="svc-ed">
+    <div><label>Name</label><input class="field" type="text" data-cf="name" value="${esc(c.name)}"></div>
+    <div><label>Mobile</label><input class="field" type="tel" data-cf="phone" value="${esc(c.phone||'')}"></div>
+    <div><label>Email</label><input class="field" type="email" data-cf="email" value="${esc(c.email||'')}"></div>
+    <div><label>Referred by (barbershop)</label><input class="field" type="text" data-cf="referred_by" value="${esc(c.referred_by||'')}"></div>
+    <div><label>Package</label><input class="field" type="text" data-cf="package_name" value="${esc(c.package_name||'')}" placeholder="e.g. The Comeback"></div>
+    <div><label>Package price ($)</label><input class="field" type="number" min="0" step="0.01" data-cf="package_price" value="${c.package_price==null?'':esc(c.package_price)}"></div>
+   </div>
+   <div class="acts"><button class="btn sm" data-savecl>Save details</button>${(!c.package_name&&cm)?`<button class="btn ghost sm" data-usecomeback>Use ${esc(cm.name)} (${money(cm.price)})</button>`:''}</div></div>
+
+  <div class="card"><div class="hd"><b>Appointments</b><button class="btn sm" data-addvisit-for="${id}">+ Schedule</button></div>
+   ${vs.length?vs.map(v=>visitRow(v,false)).join(''):'<div class="note" style="margin-top:8px">No appointments yet.</div>'}</div>
+
+  <div class="card"><div class="hd"><b>Payments</b><button class="btn sm" id="addpay">+ Add payment</button></div>
+   ${c.package_price!=null&&c.package_price!==''?`<div class="kv"><span>Package</span><b>${money(c.package_price)}</b><span>Paid</span><b>${money(paid)}</b><span>Balance</span><b>${due>0?money(due)+' due':'Paid in full'}</b></div>`:`<div class="note" style="margin-top:8px">Total paid so far: <b>${money(paid)}</b>. Set a package price above to track the balance.</div>`}
+   ${pays.map(p=>`<div class="row" data-pid="${p.id}"><span class="when">${esc(dayLabel(p.paid_on))}</span><span><b>${p.kind==='refund'?'&minus;':''}${money(p.amount)}</b> · ${esc(p.kind==='deposit'?'Deposit':p.kind==='refund'?'Refund':'Payment')}${p.method?' · '+esc(p.method):''}${p.note?' · '+esc(p.note):''}</span><button class="linkbtn" data-delpay>Remove</button></div>`).join('')}</div>
+
+  ${reqs.length?`<div class="card"><b>Requests and purchases</b>${reqs.map(r=>`<div class="row"><span class="when">${esc(r.t)}</span><span>${esc(r.code)} · ${esc(r.txt)} <span class="note">· ${esc(ago(r.at))}</span></span></div>`).join('')}</div>`:''}
+
+  <div class="card"><b>Notes and timeline</b>
+   <textarea class="field" id="newNote" placeholder="Add a private note (only you can see these)" style="margin-top:8px"></textarea>
+   <div class="acts"><button class="btn sm" id="addnote">Add note</button></div>
+   <div style="margin-top:10px">${notes===undefined?'<div class="note">Loading…</div>':notes.length?notes.map(n=>`<div class="tl ${n.kind}"><span>${esc(new Date(n.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}))} · ${esc(tFmt(n.created_at))}</span><div>${esc(n.body)}</div></div>`).join(''):'<div class="note">No notes yet.</div>'}</div></div>`;
+}
+async function loadNotes(id){
+  const {data,error}=await sb.from('client_notes').select('*').eq('client_id',id).order('created_at',{ascending:false}).limit(200);
+  notesCache[id]=error?[]:data;
+  if(tab==='clients'&&cl.id===id)render();
+}
+function openClient(id){
+  if(!id)return;tab='clients';cl.id=id;history.replaceState(null,'','#clients');
+  notesCache[id]=undefined;render();window.scrollTo(0,0);loadNotes(id);
+}
+async function logEvent(clientId,body,kind){
+  const {error}=await sb.from('client_notes').insert({client_id:clientId,kind:kind||'event',body});
+  if(!error&&notesCache[clientId]!==undefined)loadNotes(clientId);
+}
+async function setStage(c,stage,why){
+  if(c.stage===stage)return;
+  const old=c.stage;
+  const {error}=await sb.from('clients').update({stage}).eq('id',c.id);
+  if(error)return toast('Not saved',errMsg(error));
+  c.stage=stage;
+  await logEvent(c.id,`Stage changed: ${STAGE_NAME[old]} → ${STAGE_NAME[stage]}${why?' ('+why+')':''}.`);
+  await reloadData();
+}
+async function bumpStageFor(c,kind){
+  const target={consultation:'consult_booked',session_1:'session_1',session_2:'session_2'}[kind];
+  if(!target||['not_a_fit','complete'].includes(c.stage))return;
+  if(STAGE_IDX[target]>STAGE_IDX[c.stage])await setStage(c,target,'appointment scheduled');
+}
+
+/* ---------- Modal + forms ---------- */
+function modal(html){
+  let d=$('#modal');if(!d){d=document.createElement('dialog');d.id='modal';d.className='modal';document.body.appendChild(d);
+    d.addEventListener('click',e=>{if(e.target===d)d.close()})}
+  d.innerHTML=`<button type="button" class="mclose" data-mclose aria-label="Close">&times;</button>${html}`;
+  if(!d.open){typeof d.showModal==='function'?d.showModal():d.setAttribute('open','')}
+  return d;
+}
+const closeModal=()=>{const d=$('#modal');if(d&&d.open)d.close()};
+
+function openAddClient(){
+  modal(`<h3>Add a client</h3><form id="addClientForm" novalidate>
+   <div class="svc-ed"><div><label>Name *</label><input class="field" name="name" autocomplete="off"></div>
+   <div><label>Mobile *</label><input class="field" name="phone" type="tel" inputmode="tel" autocomplete="off"></div>
+   <div><label>Email</label><input class="field" name="email" type="email" autocomplete="off"></div>
+   <div><label>Referred by (barbershop)</label><input class="field" name="referred_by" autocomplete="off"></div>
+   <div><label>Stage</label><select class="field" name="stage">${opt(STAGES,'lead')}</select></div></div>
+   <div class="errline" id="mErr"></div>
+   <div class="acts"><button class="btn" type="submit">Save client</button><button class="btn ghost" type="button" data-mclose>Cancel</button></div></form>`);
+}
+function openSchedule(o){
+  o=o||{};const v=o.visit;
+  const cs=[...A.clients].sort((a,b)=>a.name.localeCompare(b.name));
+  const startD=v?new Date(v.starts_at):null;
+  const date=v?dkey(startD):(o.date||todayStr());
+  const time=v?pad(startD.getHours())+':'+pad(startD.getMinutes()):(o.time||'10:00');
+  const kind=v?v.kind:(o.kind||'consultation');
+  const dur=v?v.duration_min:(KIND_DUR[kind]||60);
+  const cid=v?v.client_id:(o.clientId||'');
+  modal(`<h3>${v?'Reschedule appointment':'Schedule appointment'}</h3><form id="schedForm" novalidate data-vid="${v?v.id:''}" data-req="${esc(o.requestId||'')}">
+   <div class="svc-ed">
+    <div class="full"><label>Client</label><select class="field" name="client" ${v?'disabled':''}>${v?'':'<option value="">Choose a client…</option>'}${cs.map(c=>`<option value="${c.id}" ${c.id===cid?'selected':''}>${esc(c.name)} · ${esc(prettyPhone(c.phone))}</option>`).join('')}${v?'':'<option value="__new">+ New client…</option>'}</select></div>
+    <div class="full newc" hidden><div class="svc-ed" style="margin:0"><div><label>New client name *</label><input class="field" name="newname" autocomplete="off"></div><div><label>Mobile *</label><input class="field" name="newphone" type="tel" inputmode="tel" autocomplete="off"></div></div></div>
+    <div><label>Type</label><select class="field" name="kind">${opt(KINDS,kind)}</select></div>
+    <div><label>Length</label><select class="field" name="dur">${opt(DURATIONS.map(([m,l])=>[String(m),l]),String(dur))}</select></div>
+    <div><label>Date</label><input class="field" type="date" name="date" value="${esc(date)}"></div>
+    <div><label>Time</label><input class="field" type="time" name="time" value="${esc(time)}" step="900"></div>
+    <div class="full"><label>Note (optional)</label><input class="field" name="notes" maxlength="200" value="${esc(v?.notes||'')}"></div>
+   </div>
+   <div class="errline" id="mErr"></div>
+   <div class="acts"><button class="btn" type="submit" id="schedGo">${v?'Save new time':'Schedule it'}</button><button class="btn ghost" type="button" data-mclose>Cancel</button></div></form>`);
+}
+function openPayment(clientId){
+  modal(`<h3>Add a payment</h3><form id="payForm" novalidate data-cid="${clientId}">
+   <div class="svc-ed"><div><label>Amount ($) *</label><input class="field" name="amount" type="number" min="0" step="0.01" inputmode="decimal"></div>
+   <div><label>Type</label><select class="field" name="kind"><option value="payment">Payment</option><option value="deposit">Deposit</option><option value="refund">Refund</option></select></div>
+   <div><label>Method</label><select class="field" name="method">${METHODS.map(m=>`<option>${m}</option>`).join('')}</select></div>
+   <div><label>Date</label><input class="field" type="date" name="paid_on" value="${todayStr()}"></div>
+   <div class="full"><label>Note (optional)</label><input class="field" name="note" maxlength="140"></div></div>
+   <div class="errline" id="mErr"></div>
+   <div class="acts"><button class="btn" type="submit">Save payment</button><button class="btn ghost" type="button" data-mclose>Cancel</button></div></form>`);
+}
+const mErr=t=>{const e=$('#mErr');if(e)e.textContent=t||''};
+
+document.addEventListener('submit',async e=>{
+  const f=e.target;if(!f.id)return;
+  if(f.id==='addClientForm'){
+    e.preventDefault();const fd=new FormData(f);const name=String(fd.get('name')||'').trim(),phone=String(fd.get('phone')||'').trim();
+    if(name.length<2)return mErr('Add a name.');
+    if(digits(phone).length!==10)return mErr('Enter a 10-digit mobile number.');
+    const dup=A.clients.find(c=>digits(c.phone)===digits(phone));
+    if(dup){closeModal();toast('Already a client',dup.name);return openClient(dup.id)}
+    const {data,error}=await sb.from('clients').insert({name,phone,email:String(fd.get('email')||'').trim()||null,referred_by:String(fd.get('referred_by')||'').trim()||null,stage:String(fd.get('stage')||'lead')}).select().single();
+    if(error)return mErr(errMsg(error));
+    await logEvent(data.id,'Client added manually.');closeModal();await reloadData();openClient(data.id);return;
+  }
+  if(f.id==='schedForm'){
+    e.preventDefault();const fd=new FormData(f);const vid=f.dataset.vid,req=f.dataset.req||null;
+    const date=fd.get('date'),time=fd.get('time');
+    if(!date||!time)return mErr('Pick a date and time.');
+    const when=new Date(date+'T'+time);if(isNaN(when))return mErr('That date or time looks off.');
+    const dur=parseInt(fd.get('dur'),10)||60,kind=String(fd.get('kind'));
+    let cid=vid?A.visits.find(v=>v.id===vid)?.client_id:String(fd.get('client')||'');
+    if(!cid)return mErr('Choose a client.');
+    const end=when.getTime()+dur*60000;
+    const clash=A.visits.find(v=>v.status==='scheduled'&&v.id!==vid&&new Date(v.starts_at).getTime()<end&&new Date(v.starts_at).getTime()+v.duration_min*60000>when.getTime());
+    if(clash&&f.dataset.warned!==String(when.getTime()+'_'+dur)){
+      f.dataset.warned=String(when.getTime()+'_'+dur);
+      mErr(`Heads up: this overlaps ${cById(clash.client_id)?.name||'another appointment'} at ${tFmt(clash.starts_at)}. Tap again to schedule anyway.`);
+      $('#schedGo').textContent='Schedule anyway';return;
+    }
+    const btn=$('#schedGo');btn.disabled=true;
+    if(cid==='__new'){
+      const name=String(fd.get('newname')||'').trim(),phone=String(fd.get('newphone')||'').trim();
+      if(name.length<2||digits(phone).length!==10){btn.disabled=false;return mErr('Add the new client’s name and 10-digit mobile.')}
+      const ex=A.clients.find(c=>digits(c.phone)===digits(phone));
+      if(ex)cid=ex.id;else{
+        const {data,error}=await sb.from('clients').insert({name,phone,stage:'lead'}).select().single();
+        if(error){btn.disabled=false;return mErr(errMsg(error))}
+        cid=data.id;await logEvent(cid,'Client added while scheduling.');}
+    }
+    const row={client_id:cid,kind,starts_at:when.toISOString(),duration_min:dur,notes:String(fd.get('notes')||'').trim()||null};
+    let error;
+    if(vid){({error}=await sb.from('visits').update({kind:row.kind,starts_at:row.starts_at,duration_min:row.duration_min,notes:row.notes}).eq('id',vid))}
+    else{({error}=await sb.from('visits').insert({...row,request_id:req||null}))}
+    if(error){btn.disabled=false;return mErr(errMsg(error))}
+    await logEvent(cid,`${vid?'Rescheduled':'Scheduled'}: ${KIND_NAME[kind]} on ${dtFmt(row.starts_at)}.`);
+    if(req){await sb.from('appointments').update({status:'confirmed'}).eq('id',req).eq('status','new')}
+    await reloadData();
+    const c=cById(cid);if(c&&!vid)await bumpStageFor(c,kind);
+    closeModal();toast(vid?'Rescheduled':'Scheduled',`${c?.name||''} · ${dtFmt(row.starts_at)}`);
+    return;
+  }
+  if(f.id==='payForm'){
+    e.preventDefault();const fd=new FormData(f);const amount=Number(fd.get('amount'));const cid=f.dataset.cid;
+    if(!(amount>0))return mErr('Enter an amount greater than zero.');
+    const row={client_id:cid,kind:String(fd.get('kind')),amount:Math.round(amount*100)/100,method:String(fd.get('method')||'')||null,paid_on:String(fd.get('paid_on')||todayStr()),note:String(fd.get('note')||'').trim()||null};
+    const {error}=await sb.from('payments').insert(row);
+    if(error)return mErr(errMsg(error));
+    await logEvent(cid,`${row.kind==='refund'?'Refund':row.kind==='deposit'?'Deposit':'Payment'} of ${money(row.amount)}${row.method?' ('+row.method+')':''} recorded.`);
+    closeModal();await reloadData();toast('Payment saved',money(row.amount));
+  }
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='stageSel'){const c=cById(cl.id);if(c)setStage(c,t.value);return}
+  if(t.form&&t.form.id==='schedForm'){
+    if(t.name==='client'){t.form.querySelector('.newc').hidden=t.value!=='__new'}
+    if(t.name==='kind'){t.form.elements.dur.value=String(KIND_DUR[t.value]||60)}
+  }
+});
+document.addEventListener('input',e=>{
+  if(e.target.id==='clientQ'){cl.q=e.target.value;const l=$('#clientList');if(l)l.innerHTML=clientListHtml()}
+});
+
+/* returns true when the click was a CRM action */
+async function crmClick(t,e){
+  if(t.hasAttribute('data-mclose')){closeModal();return true}
+  if(t.dataset.openClient!==undefined&&t.dataset.openClient!==''){e.preventDefault();openClient(t.dataset.openClient);return true}
+  if(t.id==='backclients'){cl.id=null;render();return true}
+  if(t.dataset.cstage){cl.stage=t.dataset.cstage;render();return true}
+  if(t.id==='addclient'){openAddClient();return true}
+  if(t.id==='addvisit'){openSchedule({date:sch.day||undefined});return true}
+  if(t.dataset.addvisitFor){openSchedule({clientId:t.dataset.addvisitFor});return true}
+  if(t.dataset.sview){sch.day=null;sch.past=t.dataset.sview==='past';render();return true}
+  if(t.dataset.day!==undefined){sch.day=t.dataset.day||null;sch.past=false;render();return true}
+  if(t.dataset.month){const m=sch.month||new Date();sch.month=new Date(m.getFullYear(),m.getMonth()+parseInt(t.dataset.month,10),1);render();return true}
+  if(t.id==='addpay'){openPayment(cl.id);return true}
+  if(t.id==='addnote'){
+    const box=$('#newNote'),body=box.value.trim();if(!body)return true;t.disabled=true;
+    const {error}=await sb.from('client_notes').insert({client_id:cl.id,kind:'note',body});
+    t.disabled=false;if(error)return toast('Note not saved',errMsg(error)),true;
+    box.value='';await loadNotes(cl.id);toast('Note saved');return true}
+  if(t.hasAttribute('data-delpay')){
+    const row=t.closest('[data-pid]');if(!row||!confirm('Remove this payment record?'))return true;
+    const {error}=await sb.from('payments').delete().eq('id',row.dataset.pid);
+    if(error)return toast('Not removed',errMsg(error)),true;
+    await logEvent(cl.id,'A payment record was removed.');await reloadData();return true}
+  if(t.hasAttribute('data-clearfu')){
+    const {error}=await sb.from('clients').update({follow_up_on:null,follow_up_note:null}).eq('id',cl.id);
+    if(error)return toast('Not saved',errMsg(error)),true;await reloadData();toast('Follow-up cleared');return true}
+  if(t.hasAttribute('data-usecomeback')){
+    const cm=A.offers.find(o=>o.id==='comeback');if(!cm)return true;
+    const {error}=await sb.from('clients').update({package_name:cm.name,package_price:cm.price}).eq('id',cl.id);
+    if(error)return toast('Not saved',errMsg(error)),true;await reloadData();return true}
+  if(t.hasAttribute('data-savecl')){
+    const c=cById(cl.id);if(!c)return true;const g=k=>document.querySelector(`[data-cf="${k}"]`).value.trim();
+    const name=g('name'),phone=g('phone');
+    if(name.length<2)return toast('Add a name'),true;
+    if(phone&&digits(phone).length!==10)return toast('Check the mobile number','It needs 10 digits.'),true;
+    const price=g('package_price');
+    const rec={name,phone:phone||null,email:g('email')||null,referred_by:g('referred_by')||null,package_name:g('package_name')||null,package_price:price===''?null:Number(price),follow_up_on:g('follow_up_on')||null,follow_up_note:g('follow_up_note')||null};
+    const {error}=await sb.from('clients').update(rec).eq('id',c.id);
+    if(error)return toast('Not saved',/duplicate|unique/i.test(errMsg(error))?'Another client already has that phone number.':errMsg(error)),true;
+    await reloadData();toast('Saved');return true}
+  if(t.hasAttribute('data-vedit')){const v=A.visits.find(x=>x.id===t.closest('[data-vid]')?.dataset.vid);if(v)openSchedule({visit:v});return true}
+  if(t.dataset.vstat){
+    const v=A.visits.find(x=>x.id===t.closest('[data-vid]')?.dataset.vid);if(!v)return true;
+    const s=t.dataset.vstat;
+    if(s==='cancelled'&&!confirm('Cancel this appointment?'))return true;
+    const {error}=await sb.from('visits').update({status:s}).eq('id',v.id);
+    if(error)return toast('Not saved',errMsg(error)),true;
+    const c=cById(v.client_id);
+    await logEvent(v.client_id,`${KIND_NAME[v.kind]} on ${dtFmt(v.starts_at)} marked ${VSTAT[s].toLowerCase()}.`);
+    await reloadData();
+    if(c&&s==='completed'&&v.kind==='session_2')await setStage(c,'complete','second session completed');
+    return true}
+  if(t.dataset.reqSched){
+    const a=A.appts.find(x=>x.id===t.dataset.reqSched);if(!a)return true;
+    openSchedule({clientId:a.client_id,requestId:a.id,date:a.preferred_date||undefined,time:timeFromPref(a.preferred_time),kind:a.request_type==='booking'?'session_1':'consultation'});return true}
+  if(t.dataset.reqClient){
+    const a=[...A.appts,...A.orders].find(x=>x.id===t.dataset.reqClient);if(!a)return true;t.disabled=true;
+    const dup=A.clients.find(c=>digits(c.phone)===digits(a.phone));
+    let cid=dup?.id;
+    if(!cid){const {data,error}=await sb.from('clients').insert({name:a.name,phone:a.phone,email:a.email||null,referred_by:a.referred_by||null,stage:'lead'}).select().single();
+      if(error){t.disabled=false;return toast('Not added',errMsg(error)),true}cid=data.id;await logEvent(cid,'Added from request '+a.code+'.')}
+    await sb.from(t.dataset.reqTable).update({client_id:cid}).eq('id',a.id);
+    await reloadData();openClient(cid);return true}
+  return false;
 }
 
 /* ---------- events ---------- */
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('button,a');if(!t)return;
+  const t=e.target.closest('button,a,[data-open-client]');if(!t)return;
+  if(await crmClick(t,e))return;
   if(t.id==='signout'){await sb.auth.signOut();location.reload();return}
   if(t.id==='onpush'){enablePush();return}
   if(t.id==='offpush'){disablePush();return}
@@ -439,7 +892,7 @@ document.addEventListener('click',async e=>{
   if(t.id==='diagpush'){diagnosePush();return}
   if(t.id==='copysubs'){const txt=(A.subs||[]).filter(x=>!x.unsubscribed_at).map(x=>x.email).join(', ');try{await navigator.clipboard.writeText(txt);toast('Copied',txt.split(', ').length+' emails')}catch(_){prompt('Copy these emails:',txt)}return}
   if(t.id==='csvsubs'){const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';const csv='email,first_name,source,signed_up\n'+(A.subs||[]).filter(x=>!x.unsubscribed_at).map(x=>[x.email,x.first_name,x.source,x.created_at].map(q).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='heart-of-the-matter-subscribers.csv';document.body.appendChild(a);a.click();a.remove();return}
-  if(t.dataset.tab){tab=t.dataset.tab;history.replaceState(null,'','#'+tab);render();return}
+  if(t.dataset.tab){tab=t.dataset.tab;if(tab!=='clients')cl.id=null;history.replaceState(null,'','#'+tab);render();return}
   if(t.dataset.fa){fAppt=t.dataset.fa;render();return}
   if(t.dataset.fo){fOrd=t.dataset.fo;render();return}
   const card=t.closest('.card');
@@ -499,7 +952,7 @@ async function boot(){
   try{await reloadData();subscribe()}catch(e){V().innerHTML=`<div class="wrap loading">Couldn't load the store. ${esc(errMsg(e))}</div>`}
 }
 sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){user=null;vAuth('newpw')}else if(ev==='SIGNED_IN'&&!user)boot()});
-window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(['appointments','purchases','referrals','subscribers','services'].includes(h)&&h!==tab){tab=h;render()}});
+window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(['appointments','schedule','clients','purchases','referrals','subscribers','services'].includes(h)&&h!==tab){tab=h;if(h!=='clients')cl.id=null;render()}});
 setInterval(()=>{if(user&&document.visibilityState==='visible'&&!document.activeElement?.matches?.('textarea,input,select'))render()},60000);
 boot();
 </script>
