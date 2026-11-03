@@ -350,7 +350,7 @@
 
     .hero {
       background: var(--warm-white);
-      overflow: hidden;
+      overflow: clip; /* clip (not hidden) so the photo can stay in view while the offer scrolls */
       padding: 0;
     }
 
@@ -385,8 +385,15 @@
 
     /* The customer, cut out, standing flush on the page (no panel). */
     .hero-image {
-      min-height: 650px;
-      background: url("assets/hero-customer.webp") 50% 100% / contain no-repeat;
+      min-height: 560px;
+      position: sticky;
+      top: 76px;
+      align-self: start;
+      height: min(calc(100vh - 76px), 840px);
+      /* warm natural-light portrait; fades into the page on its left edge */
+      background: url("assets/hero-warm.webp") 90% 0 / cover no-repeat;
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 22%);
+      mask-image: linear-gradient(to right, transparent 0, #000 22%);
     }
 
     .offer-card {
@@ -1210,14 +1217,16 @@
 
       /* man + before/after composite, sized so the headline starts in the first screen */
       .hero-image {
+        position: static;
+        align-self: stretch;
         min-height: 0;
         height: min(104vw, 440px);
         order: -1;
-        background-image: url("assets/hero-customer-ba.webp");
-        background-position: 50% 100%;
-        background-size: contain;
-        -webkit-mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
-        mask-image: linear-gradient(to bottom, #000 94%, transparent 100%);
+        background-image: url("assets/hero-warm.webp");
+        background-position: 88% 0;
+        background-size: cover;
+        -webkit-mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 90%, transparent 100%);
       }
 
       .result-grid {
@@ -1352,7 +1361,7 @@
         <a href="#faq">FAQ</a>
         <a href="#learn">Learn SMP</a>
         <a href="heart-of-the-matter.html">Blog</a>
-        <button type="button" class="btn" data-open-contact="nav">Talk To Terrence Now</button>
+        <button type="button" class="btn" data-open-contact="nav">Request a Consultation</button>
         <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
           <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
         </button>
@@ -1376,13 +1385,13 @@
     <a class="ml" href="heart-of-the-matter.html"><span>The Heart Of The Matter<small>Stories from Terrence</small></span></a>
     <a class="ml" href="learn.html"><span>Student Application<small>For barbers and beauty pros</small></span></a>
     <div class="mmenu-cta">
-      <button type="button" class="btn" data-open-contact="menu">Talk To Terrence Now</button>
+      <button type="button" class="btn" data-open-contact="menu">Request a Consultation</button>
       <p>He calls or texts you back personally.</p>
     </div>
   </div>
 
   <div class="mbar" id="mobileBar">
-    <button type="button" class="btn" data-open-contact="sticky_bar">Request A Call</button>
+    <button type="button" class="btn" data-open-contact="sticky_bar">Request a Consultation</button>
   </div>
 
   <main>
@@ -1424,7 +1433,7 @@
               Limited-time offer · Regularly $2,500
             </div>
 
-            <button type="button" class="btn" data-open-contact="hero">Talk To Terrence Now</button>
+            <button type="button" class="btn" data-open-contact="hero">Request a Consultation</button>
 
             <p class="offer-note">
               Start with a conversation. We'll help you understand the
@@ -1444,7 +1453,7 @@
         <div
           class="hero-image"
           role="img"
-          aria-label="A Swurl Kurl Studios SMP client with a sharp, defined hairline"
+          aria-label="A confident man with a clean, defined hairline, smiling toward the camera"
         ></div>
 
       </div>
@@ -1542,7 +1551,7 @@
         </div>
 
         <div class="results-cta">
-          <button type="button" class="btn btn-dark" data-open-contact="results">Talk To Terrence Now</button>
+          <button type="button" class="btn btn-dark" data-open-contact="results">Request a Consultation</button>
         </div>
 
       </div>
@@ -1598,7 +1607,7 @@
             That's where experience matters.
           </p>
 
-          <button type="button" class="btn btn-dark" data-open-contact="objection">Talk To Terrence Now</button>
+          <button type="button" class="btn btn-dark" data-open-contact="objection">Request a Consultation</button>
 
         </div>
 
@@ -1644,7 +1653,7 @@
           </div>
 
           <div style="margin-top:30px;">
-            <button type="button" class="btn" data-open-contact="authority">Talk To Terrence Now</button>
+            <button type="button" class="btn" data-open-contact="authority">Request a Consultation</button>
           </div>
 
         </div>
@@ -1743,7 +1752,7 @@
         </div>
 
         <div class="results-cta">
-          <button type="button" class="btn" data-open-contact="process">Talk To Terrence Now</button>
+          <button type="button" class="btn" data-open-contact="process">Request a Consultation</button>
         </div>
 
       </div>
@@ -1765,7 +1774,7 @@
           <h2>Reserve Your Comeback.</h2>
           <p>
             Reserve your spot online, or have questions first?
-            <button type="button" class="inline-link" data-open-contact="services">Request a call from Terrence.</button>
+            <button type="button" class="inline-link" data-open-contact="services">Request a consultation.</button>
           </p>
         </div>
 
@@ -1800,7 +1809,7 @@
           Limited-time offer. Regularly $2,500.
         </p>
 
-        <button type="button" class="btn btn-dark" data-open-contact="offer_band">Talk To Terrence Now</button>
+        <button type="button" class="btn btn-dark" data-open-contact="offer_band">Request a Consultation</button>
 
         <button type="button" class="btn btn-outline-dark" data-open-service="comeback">
           Reserve The Comeback
@@ -1985,7 +1994,7 @@
             </div>
 
             <button type="button" id="schedulerSubmit" class="btn scheduler-btn">
-              Send Request To Terrence
+              Send My Request
             </button>
 
             <p class="whatsapp-note" id="schedulerNote">
@@ -2318,7 +2327,7 @@
 
 
   <!-- ==================================
-       REQUEST DIALOG — "Talk to Terrence" call-backs and "Learn how to SMP"
+       REQUEST DIALOG — consultation requests and "Learn how to SMP"
        training inquiries. Both go straight to Terrence's phone.
   =================================== -->
   <dialog id="reqDialog" class="book-dialog" aria-labelledby="reqTitle">
@@ -2327,8 +2336,8 @@
       <button type="button" class="book-close" id="reqClose" aria-label="Close">×</button>
 
       <div id="reqFormView">
-        <span class="eyebrow" id="reqEyebrow">Talk To Terrence</span>
-        <h3 id="reqTitle">Request A Call</h3>
+        <span class="eyebrow" id="reqEyebrow">Consultation</span>
+        <h3 id="reqTitle">Let’s Talk About Your SMP Goals</h3>
         <p class="book-sub" id="reqSub"></p>
 
         <form id="reqForm" novalidate>
@@ -2380,15 +2389,15 @@
             <textarea id="reqNotes" style="min-height:70px"></textarea>
           </div>
 
-          <button type="submit" class="btn" id="reqSubmit">Request A Call</button>
-          <p class="book-fine">Goes straight to Terrence's phone. He'll reach out personally.</p>
+          <button type="submit" class="btn" id="reqSubmit">Send My Request</button>
+          <p class="book-fine">Goes straight to the studio. No spam, ever.</p>
           <div class="form-status" id="reqStatus" role="alert"></div>
         </form>
       </div>
 
       <div id="reqDoneView" hidden>
-        <span class="eyebrow">Request Sent</span>
-        <h3>You're on Terrence's list.</h3>
+        <span class="eyebrow">Request Received</span>
+        <h3>Thank you.</h3>
         <p id="reqDoneText"></p>
         <button type="button" class="btn btn-ghost-dark" id="reqDoneClose">Close</button>
       </div>
@@ -2440,7 +2449,7 @@
     // One page_view per load.
     logEvent("page_view", window.location.pathname);
 
-    // Every "Talk To Terrence Now" button on the page carries a
+    // Every "Request a Consultation" button on the page carries a
     // data-open-contact attribute identifying where it lives (nav, hero,
     // results, objection, authority, process, offer_band, services).
     // Logged under the original "whatsapp_click" event name so the
@@ -2756,7 +2765,7 @@
 
 
     /*
-      REQUEST DIALOG — "Talk To Terrence Now" call-backs and the
+      REQUEST DIALOG — consultation requests and the
       "Learn how to SMP" training inquiry. Saves to the store database,
       which buzzes Terrence's phone.
     */
@@ -2778,11 +2787,11 @@
       document.getElementById("reqDoneView").hidden = true;
 
       const training = mode === "training";
-      document.getElementById("reqEyebrow").textContent = training ? "Learn SMP" : "Talk To Terrence";
-      document.getElementById("reqTitle").textContent = training ? "Learn How To SMP" : "Request A Call";
+      document.getElementById("reqEyebrow").textContent = training ? "Learn SMP" : "Consultation";
+      document.getElementById("reqTitle").textContent = training ? "Learn How To SMP" : "Let’s Talk About Your SMP Goals";
       document.getElementById("reqSub").textContent = training
         ? "Tell us a little about you and Terrence will reach out personally about training."
-        : "Leave your number and Terrence will call or text you personally.";
+        : "Leave your details, and Terrence or someone from the studio will reach out to discuss your goals and arrange a consultation.";
       document.getElementById("reqTimeWrap").hidden = training;
       document.getElementById("reqReferralWrap").hidden = training;
       document.getElementById("reqLevelWrap").hidden = !training;
@@ -2790,7 +2799,7 @@
         ? "Tell us about your experience and what you'd like to learn (optional)"
         : "Anything you'd like Terrence to know? (optional)";
       const submit = document.getElementById("reqSubmit");
-      submit.textContent = training ? "Send My Training Inquiry" : "Request A Call";
+      submit.textContent = training ? "Send My Training Inquiry" : "Send My Request";
       submit.disabled = false;
 
       if (typeof reqDlg.showModal === "function") {
@@ -2844,14 +2853,14 @@
           p_referred_by: training ? null : (document.getElementById("reqReferral").value.trim() || null),
           p_inquiry: training ? "training" : "client",
         });
-        document.getElementById("reqDoneText").textContent =
-          "Your request (" + result.code + ") was sent straight to Terrence's phone. " +
-          (training ? "He'll reach out personally about training." : "He'll call or text you personally.");
+        document.getElementById("reqDoneText").textContent = training
+          ? "Your request (" + result.code + ") was sent straight to Terrence's phone. He'll reach out personally about training."
+          : "Thanks! Your request has been received. The studio will reach out to arrange your consultation.";
         document.getElementById("reqFormView").hidden = true;
         document.getElementById("reqDoneView").hidden = false;
       } catch (err) {
         submit.disabled = false;
-        submit.textContent = training ? "Send My Training Inquiry" : "Request A Call";
+        submit.textContent = training ? "Send My Training Inquiry" : "Send My Request";
         setReqStatus(err.message, "error");
       }
     });
@@ -2903,7 +2912,7 @@
           p_date: dateVal || null, p_time: timeVal || null, p_notes: null,
           p_referred_by: (schedulerReferralInput.value.trim() || null), p_inquiry: "client",
         }).then(function () {
-          setSchedulerNote("Request sent — it went straight to Terrence's phone. He'll confirm with you directly.", "#7ee2a0");
+          setSchedulerNote("Thanks! Your request has been received. The studio will reach out to arrange your consultation.", "#7ee2a0");
         }).catch(function (err) {
           setSchedulerNote(err.message, "#ff8a80");
         }).finally(function () {
@@ -2951,7 +2960,7 @@
           p_inquiry: "client",
         });
         consultForm.reset();
-        setConsultStatus("Thanks — your request is in. Terrence has been notified and will reach out personally.", "success");
+        setConsultStatus("Thanks! Your request has been received. The studio will reach out to arrange your consultation.", "success");
       } catch (err) {
         setConsultStatus(err.message, "error");
       } finally {
@@ -3036,7 +3045,7 @@
         if (hero) new IntersectionObserver(function (en) { if (en[0].isIntersecting) mark(""); }, { rootMargin: "-45% 0px -50% 0px" }).observe(hero);
       }
 
-      /* Sticky "Request A Call": after the first screen, never over the form or the menu. */
+      /* Sticky "Request a Consultation": after the first screen, never over the form or the menu. */
       var pastHero = false, onForm = false;
       function updateBar() { if (bar) bar.classList.toggle("show", pastHero && !onForm && !isOpen); }
       if ("IntersectionObserver" in window && bar) {
