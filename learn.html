@@ -248,6 +248,7 @@
     <footer>&copy; Swurl Kurl Studios &middot; <a href="index.html">swurl-kurl.onrender.com</a></footer>
   </div>
 
+  <script src="assets/site.js" defer></script>
   <script>
     /* Saves to the same store database as the main site, which buzzes Terrence's phone
        and files this under Training in the store app. Only the public anon key lives here;
@@ -316,6 +317,7 @@
         $("doneCode").textContent = r && r.code ? "Reference " + r.code : "";
         $("doneCode").hidden = !(r && r.code);
         $("formView").hidden = true; $("doneView").hidden = false;
+        if (window.SK) SK.track("training");
         $("apply").scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (err) {
         btn.disabled = false; btn.textContent = "Send My Application";

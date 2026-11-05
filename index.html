@@ -10,6 +10,7 @@
     content="Request an SMP consultation with Swurl Kurl Studios. The Comeback 21-day offer: two scalp micropigmentation sessions for $2,000 (limited time, regularly $2,500)."
   />
 
+  <script src="assets/site.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -806,6 +807,13 @@
       margin-bottom: 2px;
     }
 
+    .reviews { padding: 80px 0; background: var(--near-black); color: #fff; }
+    .reviews h2 { margin: 8px 0 28px; }
+    .reviews-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .review-card { margin: 0; padding: 26px; border: 1px solid rgba(232,179,81,.4); background: rgba(255,255,255,.04); }
+    .review-card blockquote { margin: 0 0 14px; font-size: 1.02rem; line-height: 1.6; color: #e6e6e6; }
+    .review-card figcaption { font-size: .8rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--gold); }
+
     .form-alt-heading {
       margin-bottom: 20px;
       padding-bottom: 20px;
@@ -1587,6 +1595,15 @@
     <!-- ==================================
          NATURAL LOOK / VIDEO
     =================================== -->
+    <!-- Reviews: stays hidden until real, permitted quotes are added in assets/site.js -->
+    <section class="reviews" id="reviews" hidden aria-labelledby="reviewsH">
+      <div class="container">
+        <span class="eyebrow">In Their Words</span>
+        <h2 id="reviewsH">What Clients <span class="gold">Say.</span></h2>
+        <div class="reviews-list" id="reviewsList"></div>
+      </div>
+    </section>
+
     <section class="objection">
 
       <div class="container two-col">
@@ -2172,7 +2189,8 @@
               By submitting this form, you agree that Swurl Kurl Studios
               may contact you about your consultation request by phone,
               text message, or email, using the details you provide.
-              Message and data rates may apply.
+              Message and data rates may apply. See our
+              <a href="privacy.html" style="color:inherit;text-decoration:underline">Privacy Policy</a>.
             </p>
 
             <button type="submit" class="btn">
@@ -2214,7 +2232,9 @@
 
       <div class="footer-small">
         <a href="heart-of-the-matter.html" style="color:inherit;text-decoration:underline">The Heart Of The Matter</a> &middot;
-        <a href="learn.html" style="color:inherit;text-decoration:underline">Student Application</a><br>
+        <a href="learn.html" style="color:inherit;text-decoration:underline">Student Application</a> &middot;
+        <a href="privacy.html" style="color:inherit;text-decoration:underline">Privacy</a><br>
+        <div id="siteContact" hidden></div>
         © <span id="year"></span> Swurl Kurl Studios.
         All rights reserved.
       </div>
@@ -2747,6 +2767,7 @@
           "He'll reach out personally to confirm the details.";
         document.getElementById("bookFormView").hidden = true;
         document.getElementById("bookDoneView").hidden = false;
+        if (window.SK) SK.track("booking");
       } catch (err) {
         submit.disabled = false;
         submit.textContent = "Try Again";
@@ -2849,6 +2870,7 @@
           : "Thanks! Your request has been received. The studio will reach out to arrange your consultation.";
         document.getElementById("reqFormView").hidden = true;
         document.getElementById("reqDoneView").hidden = false;
+        if (window.SK) SK.track(training ? "training" : "consultation");
       } catch (err) {
         submit.disabled = false;
         submit.textContent = training ? "Send My Training Inquiry" : "Send My Request";
@@ -2898,6 +2920,7 @@
           p_inquiry: "client",
         });
         consultForm.reset();
+        if (window.SK) SK.track("consultation");
         setConsultStatus("Thanks! Your request has been received. The studio will reach out to arrange your consultation.", "success");
       } catch (err) {
         setConsultStatus(err.message, "error");
