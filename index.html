@@ -11,6 +11,7 @@
   />
 
   <script src="assets/site.js" defer></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"Swurl Kurl Studios","description":"Scalp micropigmentation (SMP) studio in Detroit, Michigan. Free consultations.","telephone":"+1-313-399-2532","address":{"@type":"PostalAddress","streetAddress":"277 Jos Campau","addressLocality":"Detroit","addressRegion":"MI","postalCode":"48207","addressCountry":"US"}}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -805,6 +806,56 @@
       display: block;
       color: #fff;
       margin-bottom: 2px;
+    }
+
+    /* cost explainer */
+    .invest { background: var(--near-black); color: #fff; }
+    .invest .section-heading p { color: #bdbdbd; }
+    .invest-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; align-items: stretch; }
+    .invest-factors { border-top: 1px solid rgba(255,255,255,.14); }
+    .factor { display: grid; grid-template-columns: 96px 1fr; gap: 18px; padding: 22px 0; border-bottom: 1px solid rgba(255,255,255,.14); align-items: start; }
+    .factor-k { color: var(--gold); font-weight: 700; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; padding-top: 4px; }
+    .factor h3 { font-size: 1.05rem; margin: 0 0 6px; color: #fff; }
+    .factor p { margin: 0; color: #bdbdbd; font-size: .94rem; }
+    .invest-card { padding: 34px 30px; border: 1px solid var(--gold); background: rgba(232,179,81,.06); display: flex; flex-direction: column; align-items: flex-start; }
+    .invest-card h3 { font-size: 1.5rem; margin: 0 0 6px; color: #fff; }
+    .invest-price { font-size: clamp(2.6rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -.02em; line-height: 1; color: var(--gold); margin: 8px 0 10px; }
+    .invest-line { margin: 0 0 14px; color: #e6e6e6; }
+    .invest-note { margin: 0 0 22px; color: #bdbdbd; font-size: .9rem; }
+    .invest-card .btn { margin-top: auto; width: 100%; }
+    .touchup { margin-top: 34px; padding: 30px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.03); }
+    .touchup > h3 { margin: 0 0 18px; font-size: 1.15rem; color: #fff; text-transform: uppercase; letter-spacing: .04em; }
+    .touchup-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+    .touchup h4 { margin: 0 0 6px; color: var(--gold); font-size: .82rem; letter-spacing: .1em; text-transform: uppercase; }
+    .touchup p { margin: 0; color: #cfcfcf; font-size: .92rem; }
+    .touchup .touchup-fine { margin-top: 20px; font-size: .78rem; color: #8f8f8f; }
+    @media (max-width: 900px) {
+      .invest-grid { grid-template-columns: 1fr; }
+      .touchup-cols { grid-template-columns: 1fr; gap: 20px; }
+      .factor { grid-template-columns: 78px 1fr; }
+    }
+
+    /* footer location card */
+    .footer-location { display: grid; grid-template-columns: 1fr 1.2fr; gap: 0; margin-bottom: 40px; border: 1px solid rgba(232,179,81,.4); background: #0b0b0b; }
+    .loc-info { padding: 34px 32px; }
+    .loc-info address { font-style: normal; font-size: 1.35rem; font-weight: 700; line-height: 1.3; color: #fff; margin: 4px 0 10px; }
+    .loc-hours { margin: 0 0 20px; color: #bdbdbd; font-size: .92rem; }
+    .loc-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn-line { background: transparent; color: var(--gold); }
+    .btn-line:hover { background: var(--gold); color: var(--black); }
+    .loc-sub { margin: 16px 0 0; font-size: .8rem; color: #8f8f8f; }
+    .loc-sub a { color: inherit; text-decoration: underline; }
+    .loc-map { position: relative; min-height: 260px; border-left: 1px solid rgba(232,179,81,.3); overflow: hidden; background: #0d0d0d; }
+    .loc-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .loc-cap { position: absolute; left: 18px; bottom: 16px; font-size: .7rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(232,179,81,.85); }
+    .loc-load { position: absolute; right: 16px; bottom: 12px; min-height: 40px; padding: 8px 16px; border: 1px solid var(--gold); background: rgba(11,11,11,.85); color: var(--gold); font: inherit; font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+    .loc-load:hover { background: var(--gold); color: var(--black); }
+    .loc-map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: grayscale(1) invert(.92) contrast(.9) sepia(.45) saturate(1.5); }
+    @media (max-width: 900px) {
+      .footer-location { grid-template-columns: 1fr; }
+      .loc-map { border-left: 0; border-top: 1px solid rgba(232,179,81,.3); min-height: 240px; }
+      .loc-info { padding: 28px 22px; }
+      .loc-actions .btn { flex: 1 1 100%; }
     }
 
     .reviews { padding: 80px 0; background: var(--near-black); color: #fff; }
@@ -1808,6 +1859,91 @@
          Swurl Kurl store app show up here). The list below is only a
          fallback snapshot used if the database can't be reached.
     =================================== -->
+    <!-- ==================================
+         COST EXPLAINER + TOUCH-UP POLICY
+    =================================== -->
+    <section class="invest" id="investment" aria-labelledby="investH">
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="eyebrow">Straight Talk On Cost</span>
+          <h2 id="investH">What Shapes The Cost Of <span class="gold">SMP</span></h2>
+          <p>
+            No two scalps are the same, so no two plans are either. Here's
+            what actually moves the number, and what you'll know before you
+            decide.
+          </p>
+        </div>
+
+        <div class="invest-grid">
+
+          <div class="invest-factors">
+            <div class="factor">
+              <span class="factor-k">Area</span>
+              <div>
+                <h3>How much scalp we're treating</h3>
+                <p>A hairline refresh and full coverage are different amounts of work, and the plan is sized to match.</p>
+              </div>
+            </div>
+            <div class="factor">
+              <span class="factor-k">Look</span>
+              <div>
+                <h3>The result you want</h3>
+                <p>A soft, natural hairline, added density, or a closely shaved finish each call for a different approach.</p>
+              </div>
+            </div>
+            <div class="factor">
+              <span class="factor-k">Scars</span>
+              <div>
+                <h3>Scars and special cases</h3>
+                <p>Scar tissue holds pigment less predictably, so it can take more sessions. We look at it in person before quoting.</p>
+              </div>
+            </div>
+            <div class="factor">
+              <span class="factor-k">Sessions</span>
+              <div>
+                <h3>How many it takes</h3>
+                <p>Many clients complete their results in two sessions. Your consultation sets the number for your scalp.</p>
+              </div>
+            </div>
+          </div>
+
+          <aside class="invest-card">
+            <span class="eyebrow">Right Now</span>
+            <h3>The Comeback</h3>
+            <div class="invest-price">$2,000</div>
+            <p class="invest-line">Two SMP sessions during the 21-day campaign.<br />Limited-time offer. Regularly $2,500.</p>
+            <p class="invest-note">
+              Other plans, including women's SMP and scar work, are quoted at
+              your free consultation once we've seen what you're working with.
+            </p>
+            <button type="button" class="btn" data-open-contact="investment">Request a Consultation</button>
+          </aside>
+
+        </div>
+
+        <div class="touchup">
+          <h3>Touch-Ups, Explained</h3>
+          <div class="touchup-cols">
+            <div>
+              <h4>Fading is normal</h4>
+              <p>SMP is long-lasting, not maintenance-free. Over the years the pigment can soften or lighten. How fast depends on your skin, sun exposure and aftercare.</p>
+            </div>
+            <div>
+              <h4>A touch-up refreshes it</h4>
+              <p>Many clients book one to sharpen edges and restore density. It's usually years down the road rather than weeks, though it varies from person to person.</p>
+            </div>
+            <div>
+              <h4>You'll know how it works</h4>
+              <p>What a touch-up costs and when it's recommended depends on your plan and how your results hold. We walk you through it in your free consultation, before you decide to move forward.</p>
+            </div>
+          </div>
+          <p class="touchup-fine">Results and timelines vary by person.</p>
+        </div>
+
+      </div>
+    </section>
+
     <section class="services" id="services">
 
       <div class="container">
@@ -1882,10 +2018,12 @@
           <details>
             <summary>Will My SMP Look Natural?</summary>
             <p>
-              Yes. Natural results are the entire point of the process. SMP is
-              applied to replicate the look of closely shaved, natural hair
-              follicles — not a tattoo, and not an obvious hairline. That's
-              the standard every session is built around.
+              That's the goal, and it's the standard every session is built
+              around. SMP is applied to replicate the look of closely shaved,
+              natural hair follicles — not a tattoo, and not an obvious
+              hairline. Results vary from person to person, which is why we
+              talk through your skin, your hair and the look you want during
+              your consultation.
             </p>
           </details>
 
@@ -1900,21 +2038,56 @@
           </details>
 
           <details>
+            <summary>Can SMP Cover Scars?</summary>
+            <p>
+              Often it can help soften how a scar looks, but scar tissue
+              behaves differently from healthy scalp skin. It can hold pigment
+              less predictably, so results vary from one scar to the next.
+              Realistically, that can mean more than one session with healing
+              time in between, and sometimes a touch-up sooner than you'd need
+              elsewhere. Some scars may not be a good fit at all. The type of
+              scar, how old it is and how well it has healed all matter, so we
+              look at it in person during your free consultation and talk
+              through what to expect, including whether SMP is the right
+              choice for you. That goes for transplant scars, injury scars and
+              surgical scars alike.
+            </p>
+          </details>
+
+          <details>
+            <summary>Do You Offer SMP For Women?</summary>
+            <p>
+              Yes, we offer SMP for women. Women's goals are often different,
+              such as the look of more density through thinning areas, a
+              widening part, or less contrast between hair and scalp, so your
+              plan is built around you. SMP creates the appearance of fuller
+              coverage; it doesn't regrow hair. Let's talk through your goals
+              in a free consultation.
+            </p>
+          </details>
+
+          <details>
             <summary>Does SMP Hurt?</summary>
             <p>
-              No. SMP is a far more comfortable process than most people
-              expect. If you're more tender-headed or simply want extra
-              comfort during your session, numbing spray and cream are
-              available.
+              Comfort varies from person to person, and from one area of the
+              scalp to another. Many clients find it manageable, and some
+              areas, like the hairline and temples, can feel more sensitive.
+              Numbing spray and cream are available, and if you're more
+              tender-headed, tell us and we'll plan your session around your
+              comfort. Mild redness or tenderness afterward is common.
             </p>
           </details>
 
           <details>
             <summary>How Long Does SMP Last?</summary>
             <p>
-              SMP is permanent. Once it's done, it's done — regular daily
-              hair and scalp care products are all it takes to keep your
-              results looking their best.
+              SMP is long-lasting, not forever. The pigment stays in the skin,
+              but it can soften or lighten gradually over the years, often
+              noticeably after several years, depending on your skin, sun
+              exposure, aftercare and how your body holds pigment. Many
+              clients book a touch-up down the road to refresh density and
+              edges. Day to day, regular hair and scalp care products are all
+              it takes. See "Touch-Ups, Explained" above for how that works.
             </p>
           </details>
 
@@ -2214,6 +2387,49 @@
   =================================== -->
   <footer>
 
+    <div class="container footer-location" id="visit">
+
+      <div class="loc-info">
+        <span class="eyebrow">Visit The Studio</span>
+        <address>277 Jos Campau<br />Detroit, MI 48207</address>
+        <p class="loc-hours">By appointment only</p>
+        <div class="loc-actions">
+          <a class="btn" href="tel:+13133992532" data-track="call">Call 313-399-2532</a>
+          <a class="btn btn-line" data-track="directions" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/dir/?api=1&amp;destination=277+Jos+Campau%2C+Detroit%2C+MI+48207">Get Directions</a>
+        </div>
+        <p class="loc-sub">
+          <a href="https://maps.apple.com/?daddr=277+Jos+Campau%2C+Detroit%2C+MI+48207" target="_blank" rel="noopener">Open in Apple Maps</a>
+          &middot;
+          <a href="#consultation">Request a consultation</a>
+        </p>
+      </div>
+
+      <div class="loc-map" id="locMap">
+        <svg class="loc-art" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+          <defs>
+            <pattern id="locGrid" width="26" height="26" patternUnits="userSpaceOnUse">
+              <path d="M26 0H0V26" fill="none" stroke="rgba(232,179,81,.10)" stroke-width="1" />
+            </pattern>
+            <radialGradient id="locGlow" cx="50%" cy="46%" r="46%">
+              <stop offset="0" stop-color="rgba(232,179,81,.28)" />
+              <stop offset="1" stop-color="rgba(232,179,81,0)" />
+            </radialGradient>
+          </defs>
+          <rect width="400" height="260" fill="#0d0d0d" />
+          <rect width="400" height="260" fill="url(#locGrid)" />
+          <rect width="400" height="260" fill="url(#locGlow)" />
+          <circle cx="200" cy="118" r="42" fill="none" stroke="rgba(232,179,81,.35)" />
+          <circle cx="200" cy="118" r="70" fill="none" stroke="rgba(232,179,81,.16)" />
+          <path d="M200 148c-17-22-30-37-30-54a30 30 0 0 1 60 0c0 17-13 32-30 54z" fill="#e8b351" />
+          <circle cx="200" cy="94" r="11" fill="#0d0d0d" />
+        </svg>
+        <div class="loc-cap">277 Jos Campau &middot; Detroit</div>
+        <button type="button" class="loc-load" id="locLoad">View Live Map</button>
+      </div>
+
+    </div>
+
     <div class="container footer-grid">
 
       <div class="footer-brand">
@@ -2234,7 +2450,6 @@
         <a href="heart-of-the-matter.html" style="color:inherit;text-decoration:underline">The Heart Of The Matter</a> &middot;
         <a href="learn.html" style="color:inherit;text-decoration:underline">Student Application</a> &middot;
         <a href="privacy.html" style="color:inherit;text-decoration:underline">Privacy</a><br>
-        <div id="siteContact" hidden></div>
         © <span id="year"></span> Swurl Kurl Studios.
         All rights reserved.
       </div>
