@@ -314,8 +314,20 @@
     }
 
     .trend-bar-fill {
+      display: block;          /* spans are inline by default, which hid the bars */
       height: 100%;
       background: var(--gray);
+      transform-origin: left center;
+      animation: barGrow .7s ease-out both;
+    }
+
+    @keyframes barGrow {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .trend-bar-fill, .source-bar-fill { animation: none; }
     }
 
     .trend-bar-fill.wa {
@@ -385,8 +397,48 @@
     }
 
     .source-bar-fill {
+      display: block;
       height: 100%;
       background: var(--gold);
+      transform-origin: left center;
+      animation: barGrow .7s ease-out both;
+    }
+
+    .source-item {
+      padding: 12px 0 13px;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .source-item:last-child { border-bottom: 0; }
+
+    .source-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-size: .88rem;
+    }
+
+    .source-title { flex: 1; font-weight: 600; }
+    .source-num { font-weight: 700; }
+    .source-pct { width: 44px; text-align: right; color: var(--gray); font-size: .78rem; }
+
+    .source-desc {
+      margin: 3px 0 8px;
+      color: var(--gray);
+      font-size: .78rem;
+      line-height: 1.4;
+    }
+
+    .source-item .source-bar-track {
+      margin: 0;
+      height: 8px;
+    }
+
+    .panel-intro {
+      margin: -4px 0 14px;
+      color: var(--gray);
+      font-size: .8rem;
+      line-height: 1.45;
     }
 
     .empty-note {
@@ -526,6 +578,7 @@
             <span><span class="legend-dot"></span> Site Visits</span>
             <span><span class="legend-dot wa"></span> Contact Clicks</span>
           </div>
+          <p class="panel-intro" style="margin-top:-6px">Each row is one day. The two bars compare that day's site visits and contact clicks, and the numbers on the right read <b>visits / contact clicks</b>.</p>
 
           <div id="trendList">
             <p class="empty-note">No data yet.</p>
@@ -534,6 +587,7 @@
 
         <div class="panel">
           <h2>Contact Clicks By Button</h2>
+          <p class="panel-intro">Every “Request a Consultation” button on the site reports where it was tapped. This shows which spots on the page are actually getting people to reach out. The bar shows each button's share of all contact clicks.</p>
 
           <div id="sourceList">
             <p class="empty-note">No data yet.</p>
@@ -622,8 +676,39 @@
       return res.json();
     }
 
+    // Plain-English names for each button's tag (the tag is set in index.html as data-open-contact)
+    var SOURCE_INFO = {
+      nav:         ["Top menu button", "The gold “Request a Consultation” button in the header at the very top. It stays on screen as people scroll, so it is always one tap away, which is why it usually gets the most clicks."],
+      menu:        ["Phone menu button", "The consultation button inside the slide-out menu on phones (after tapping the menu icon)."],
+      sticky_bar:  ["Bottom bar (phones)", "The button pinned to the bottom of the screen on phones while scrolling."],
+      hero:        ["Top of page (first screen)", "The first button visitors see, right under the headline and The Comeback offer."],
+      results:     ["Under the results photos", "The button right after the before-and-after results."],
+      objection:   ["“Will it look natural?” section", "The button at the end of the section that answers the biggest worry, whether SMP will look natural. A click here means that answer won people over."],
+      authority:   ["Meet Terrence section", "The button after Terrence's 30 years of experience and approach."],
+      process:     ["What Happens Next section", "The button after the step-by-step explanation of the process."],
+      investment:  ["Cost explainer card", "The button on The Comeback pricing card in “What Shapes The Cost Of SMP”."],
+      services:    ["“Reserve Your Comeback” link", "The text link in the Reserve Your Comeback section, for people with questions first."],
+      offer_band:  ["Bottom offer banner", "The big button in the “Ready To Make Your Move?” banner near the end of the page."],
+      scheduler:   ["Date and time picker (older)", "From an earlier version of the page that had a pick-a-date scheduler. That button is no longer on the site, so these are past clicks only."],
+      unlabeled:   ["Unlabeled button", "A consultation button that did not report where it lives."],
+      training_learn: ["Training: “Learn SMP” button", "People who tapped “I Want To Learn How To SMP” (the student side, not clients)."]
+    };
+
     function formatSourceLabel(key) {
-      return String(key).replace(/_/g, " ");
+      var info = SOURCE_INFO[key];
+      if (info) return info[0];
+      return String(key).replace(/_/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+    }
+
+    function sourceDescription(key) {
+      var info = SOURCE_INFO[key];
+      return info ? info[1] : "";
+    }
+
+    function esc(t) {
+      return String(t).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
     }
 
     function renderStats(data) {
@@ -660,17 +745,22 @@
       if (sourceEntries.length === 0) {
         sourceList.innerHTML = '<p class="empty-note">No contact clicks logged yet.</p>';
       } else {
-        const maxCount = sourceEntries[0][1];
+        const totalClicks = sourceEntries.reduce(function (sum, e) { return sum + e[1]; }, 0);
         sourceList.innerHTML = sourceEntries
           .map(function ([source, count]) {
-            const pct = maxCount > 0 ? Math.round((count / maxCount) * 100) : 0;
+            const share = totalClicks > 0 ? count / totalClicks : 0;
+            const barPct = count > 0 ? Math.max(3, Math.round(share * 100)) : 0;
+            const desc = sourceDescription(source);
             return (
-              '<div class="source-row">' +
-              '<span class="source-name">' + formatSourceLabel(source) + '</span>' +
-              '<span class="source-count">' + count.toLocaleString() + '</span>' +
-              '<span></span>' +
+              '<div class="source-item">' +
+              '<div class="source-head">' +
+              '<span class="source-title">' + esc(formatSourceLabel(source)) + '</span>' +
+              '<span class="source-num">' + count.toLocaleString() + '</span>' +
+              '<span class="source-pct">' + Math.round(share * 100) + '%</span>' +
               '</div>' +
-              '<div class="source-bar-track"><div class="source-bar-fill" style="width:' + pct + '%;"></div></div>'
+              (desc ? '<p class="source-desc">' + esc(desc) + '</p>' : '') +
+              '<div class="source-bar-track"><span class="source-bar-fill" style="width:' + barPct + '%;"></span></div>' +
+              '</div>'
             );
           })
           .join("");
@@ -695,15 +785,15 @@
               "en-US",
               { month: "short", day: "numeric" }
             );
-            const pvPct = Math.round((day.page_view / maxDaily) * 100);
-            const waPct = Math.round((day.whatsapp_click / maxDaily) * 100);
+            const pvPct = day.page_view > 0 ? Math.max(2, Math.round((day.page_view / maxDaily) * 100)) : 0;
+            const waPct = day.whatsapp_click > 0 ? Math.max(2, Math.round((day.whatsapp_click / maxDaily) * 100)) : 0;
 
             return (
               '<div class="trend-row">' +
               '<span class="trend-date">' + label + '</span>' +
               '<span class="trend-bars">' +
-              '<span class="trend-bar-track"><span class="trend-bar-fill" style="width:' + pvPct + '%;"></span></span>' +
-              '<span class="trend-bar-track"><span class="trend-bar-fill wa" style="width:' + waPct + '%;"></span></span>' +
+              '<span class="trend-bar-track" title="' + day.page_view + ' site visits"><span class="trend-bar-fill" style="width:' + pvPct + '%;"></span></span>' +
+              '<span class="trend-bar-track" title="' + day.whatsapp_click + ' contact clicks"><span class="trend-bar-fill wa" style="width:' + waPct + '%;"></span></span>' +
               '</span>' +
               '<span class="trend-count">' + day.page_view + ' / ' + day.whatsapp_click + '</span>' +
               '</div>'
